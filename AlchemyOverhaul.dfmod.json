@@ -1,0 +1,14 @@
+{
+    "ModTitle": "AlchemyOverhaul",
+    "ModVersion": "1.00",
+    "ModAuthor": "Kirk.O",
+    "ContactInfo": "kirkoliveri@gmail.com",
+    "DFUnity_Version": "1.0.0",
+    "ModDescription": "A complete overhaul of Daggerfall's alchemy system.",
+    "GUID": "5b7a2164-c571-4701-ba7d-f28127e788dd",
+    "Files": [
+        "Assets/Game/Mods/DFU-Mod_Alchemy_Overhaul/modsettings.json",
+        "Assets/Game/Mods/DFU-Mod_Alchemy_Overhaul/Scripts/AlchemyOverhaulMain.cs"
+    ],
+    "Dependencies": []
+}
