@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		1/15/2026, 12:30 AM
+// Last Edit:		1/15/2026, 11:15 PM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:
@@ -81,6 +81,105 @@ namespace AlchemyOverhaul
         }
     }
 
+    public static class AlchemyExecutionAdapter
+    {
+        /// <summary>
+        /// Executes a fully-resolved potion effect.
+        /// All scaling, randomness, stacking, and validation MUST be done before calling this.
+        /// </summary>
+        public static void ApplyPotionEffect(string effectKey, int magnitude, int durationSeconds)
+        {
+            PlayerEntity player = GameManager.Instance.PlayerEntity;
+            EntityEffectBroker broker = GameManager.Instance.EntityEffectBroker;
+
+            // Pull template (execution only)
+            IEntityEffect template = broker.GetEffectTemplate(effectKey);
+            if (template == null)
+                return;
+
+            // Hard-freeze effect math
+            EffectSettings settings = new EffectSettings
+            {
+                MagnitudeBaseMin = magnitude,
+                MagnitudeBaseMax = magnitude,
+                DurationBase = durationSeconds,
+                ChanceBase = 100,
+
+                // Safe per-level values
+                MagnitudePerLevel = 1,
+                DurationPerLevel = 1,
+                ChancePerLevel = 1,
+
+                // Neutralize scaling
+                MagnitudePlusMin = 0,
+                MagnitudePlusMax = 0,
+                DurationPlus = 0,
+                ChancePlus = 0,
+            };
+
+            EffectEntry[] entries = new EffectEntry[]
+            {
+                new EffectEntry(effectKey, settings)
+            };
+
+            EffectBundleSettings bundleSettings = new EffectBundleSettings
+            {
+                Version = EntityEffectBroker.CurrentSpellVersion,
+                Name = "AO_PotionEffect",
+                BundleType = BundleTypes.Potion,
+                TargetType = TargetTypes.CasterOnly,
+                Effects = entries,
+            };
+
+            EntityEffectBundle bundle =
+                new EntityEffectBundle(bundleSettings, GameManager.Instance.PlayerEntityBehaviour);
+
+            // Force application — no DFU logic allowed
+            GameManager.Instance.PlayerEffectManager.AssignBundle(
+                bundle,
+                AssignBundleFlags.BypassChance |
+                AssignBundleFlags.BypassSavingThrows
+            );
+        }
+    }
+
+    public class CustomPotion
+    {
+        public string Id;
+        public CustomPotionEffect[] Effects;
+    }
+
+    public class CustomPotionEffect
+    {
+        // Must map to DFU effect key
+        public string EffectKey;
+
+        // Final resolved values (NO DFU scaling)
+        public int Magnitude;
+        public int DurationSeconds;
+    }
+
+    public static class PotionResolver
+    {
+        public static CustomPotion ResolveTestPotion()
+        {
+            return new CustomPotion
+            {
+                Id = "test_potion_regen",
+
+                Effects = new CustomPotionEffect[]
+                {
+                    new CustomPotionEffect
+                    {
+                        EffectKey = "Regenerate",
+                        Magnitude = 10,
+                        DurationSeconds = 5,
+                    }
+                }
+            };
+        }
+    }
+
     //Test Potion
     public class ItemTestPotion : DaggerfallUnityItem
     {
@@ -91,47 +190,23 @@ namespace AlchemyOverhaul
 
         public override bool UseItem(ItemCollection collection)
         {
-            // Resolve DFU state safely at runtime
-            PlayerEntity player = GameManager.Instance.PlayerEntity;
-            EntityEffectBroker broker = GameManager.Instance.EntityEffectBroker;
+            // Resolve potion using YOUR system
+            CustomPotion potion = PotionResolver.ResolveTestPotion();
 
-            // --- Phase 1: hardcoded Restore Health over time ---
-            IEntityEffect effect = broker.GetEffectTemplate("Regenerate");
-
-            EffectSettings newSettings = new EffectSettings
+            // Execute resolved effects
+            foreach (CustomPotionEffect effect in potion.Effects)
             {
-                MagnitudeBaseMin = 10,
-                MagnitudeBaseMax = 10,
-                MagnitudePerLevel = 1, // Had to add this because it would cause a divide by zero error otherwise.
-                DurationBase = 5,
-                DurationPerLevel = 1 // Had to add this because it would cause a divide by zero error otherwise.
-            };
+                AlchemyExecutionAdapter.ApplyPotionEffect(
+                    effect.EffectKey,
+                    effect.Magnitude,
+                    effect.DurationSeconds
+                );
+            }
 
-            // I'll continue playing around with this tomorrow, atleast got the simple regeneration effect to work without errors.
-
-            effect.Settings = newSettings;
-
-            EffectEntry[] potionEffects = new EffectEntry[] { new EffectEntry("Regenerate", effect.Settings) };
-
-            // Create the effect bundle settings.
-            EffectBundleSettings bundleSettings = new EffectBundleSettings()
-            {
-                Version = EntityEffectBroker.CurrentSpellVersion,
-                Name = "TestPotion",
-                BundleType = BundleTypes.Potion,
-                TargetType = TargetTypes.CasterOnly,
-                Effects = potionEffects,
-            };
-            // Assign effect bundle.
-            EntityEffectBundle bundle = new EntityEffectBundle(bundleSettings, GameManager.Instance.PlayerEntityBehaviour);
-            GameManager.Instance.PlayerEffectManager.AssignBundle(bundle, AssignBundleFlags.BypassSavingThrows | AssignBundleFlags.BypassChance);
-
-            //effect.Start(player.EntityBehaviour.GetComponent<EntityEffectManager>(), GameManager.Instance.PlayerEntityBehaviour);
-
-            // Consume the item manually
+            // Consume item
             collection.RemoveItem(this);
 
-            // Returning true suppresses vanilla behavior
+            // Suppress vanilla behavior
             return true;
         }
     }
