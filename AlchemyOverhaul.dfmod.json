@@ -5,10 +5,10 @@
     "ContactInfo": "kirkoliveri@gmail.com",
     "DFUnity_Version": "1.0.0",
     "ModDescription": "A complete overhaul of Daggerfall's alchemy system.",
-    "GUID": "5b7a2164-c571-4701-ba7d-f28127e788dd",
+    "GUID": "70d86bd0-8aeb-4456-9fd1-4c67f806a6d3",
     "Files": [
-        "Assets/Game/Mods/DFU-Mod_Alchemy_Overhaul/modsettings.json",
-        "Assets/Game/Mods/DFU-Mod_Alchemy_Overhaul/Scripts/AlchemyOverhaulMain.cs"
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/AlchemyOverhaul.dfmod.json",
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/AlchemyOverhaulMain.cs"
     ],
     "Dependencies": []
 }

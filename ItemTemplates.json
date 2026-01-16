@@ -1,0 +1,22 @@
+[
+    {
+        "index": 1234588311,
+        "name": "Graving Chisel",
+        "baseWeight": 0.6,
+        "hitPoints": 200,
+        "capacityOrTarget": 0,
+        "basePrice": 225,
+        "enchantmentPoints": 0,
+        "rarity": 1,
+        "variants": 0,
+        "drawOrderOrEffect": 0,
+        "isBluntWeapon": false,
+        "isLiquid": false,
+        "isOneHanded": false,
+        "isIngredient": false,
+        "worldTextureArchive": 205,
+        "worldTextureRecord": 11,
+        "playerTextureArchive": 0,
+        "playerTextureRecord": 0
+    }
+]
