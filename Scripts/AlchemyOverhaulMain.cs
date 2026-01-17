@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		1/15/2026, 11:15 PM
+// Last Edit:		1/16/2026, 11:00 PM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:
@@ -141,12 +141,65 @@ namespace AlchemyOverhaul
                 AssignBundleFlags.BypassSavingThrows
             );
         }
+
+        public static void ApplyInstantEffect(string effectKey, int magnitude)
+        {
+            PlayerEntity player = GameManager.Instance.PlayerEntity;
+            EntityEffectBroker broker = GameManager.Instance.EntityEffectBroker;
+
+            IEntityEffect template = broker.GetEffectTemplate(effectKey);
+            if (template == null)
+                return;
+
+            EffectSettings settings = new EffectSettings
+            {
+                MagnitudeBaseMin = magnitude,
+                MagnitudeBaseMax = magnitude,
+                ChanceBase = 100,
+
+                // Safe defaults
+                MagnitudePerLevel = 1,
+                ChancePerLevel = 1,
+                MagnitudePlusMin = 0,
+                MagnitudePlusMax = 0,
+                ChancePlus = 0,
+            };
+
+            EffectEntry[] entries = new EffectEntry[]
+            {
+                new EffectEntry(effectKey, settings)
+            };
+
+            EffectBundleSettings bundleSettings = new EffectBundleSettings
+            {
+                Version = EntityEffectBroker.CurrentSpellVersion,
+                Name = "AO_InstantPotion",
+                BundleType = BundleTypes.Potion,
+                TargetType = TargetTypes.CasterOnly,
+                Effects = entries,
+            };
+
+            EntityEffectBundle bundle =
+                new EntityEffectBundle(bundleSettings, GameManager.Instance.PlayerEntityBehaviour);
+
+            GameManager.Instance.PlayerEffectManager.AssignBundle(
+                bundle,
+                AssignBundleFlags.BypassChance |
+                AssignBundleFlags.BypassSavingThrows
+            );
+        }
     }
 
     public class CustomPotion
     {
         public string Id;
         public CustomPotionEffect[] Effects;
+    }
+
+    public enum PotionEffectDurationType
+    {
+        Instant,
+        Timed
     }
 
     public class CustomPotionEffect
@@ -157,10 +210,39 @@ namespace AlchemyOverhaul
         // Final resolved values (NO DFU scaling)
         public int Magnitude;
         public int DurationSeconds;
+
+        public PotionEffectDurationType DurationType;
     }
 
     public static class PotionResolver
     {
+        public static CustomPotion ResolveTestPotion()
+        {
+            return new CustomPotion
+            {
+                Id = "test_potion_mixed",
+
+                Effects = new CustomPotionEffect[]
+                {
+            new CustomPotionEffect
+            {
+                EffectKey = "Heal-Health",
+                Magnitude = 20,
+                DurationSeconds = 0,
+                DurationType = PotionEffectDurationType.Instant
+            },
+            new CustomPotionEffect
+            {
+                EffectKey = "Regenerate",
+                Magnitude = 5,
+                DurationSeconds = 4,
+                DurationType = PotionEffectDurationType.Timed
+            }
+                }
+            };
+        }
+
+        /*
         public static CustomPotion ResolveTestPotion()
         {
             return new CustomPotion
@@ -178,6 +260,7 @@ namespace AlchemyOverhaul
                 }
             };
         }
+        */
     }
 
     //Test Potion
@@ -196,11 +279,21 @@ namespace AlchemyOverhaul
             // Execute resolved effects
             foreach (CustomPotionEffect effect in potion.Effects)
             {
-                AlchemyExecutionAdapter.ApplyPotionEffect(
-                    effect.EffectKey,
-                    effect.Magnitude,
-                    effect.DurationSeconds
-                );
+                if (effect.DurationType == PotionEffectDurationType.Instant)
+                {
+                    AlchemyExecutionAdapter.ApplyInstantEffect(
+                        effect.EffectKey,
+                        effect.Magnitude
+                    );
+                }
+                else
+                {
+                    AlchemyExecutionAdapter.ApplyPotionEffect(
+                        effect.EffectKey,
+                        effect.Magnitude,
+                        effect.DurationSeconds
+                    );
+                }
             }
 
             // Consume item
