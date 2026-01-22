@@ -8,7 +8,8 @@
     "GUID": "70d86bd0-8aeb-4456-9fd1-4c67f806a6d3",
     "Files": [
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/AlchemyOverhaul.dfmod.json",
-        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/AlchemyOverhaulMain.cs"
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/AlchemyOverhaulMain.cs",
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/AlchemyOverhaulSaveData.cs"
     ],
     "Dependencies": []
 }

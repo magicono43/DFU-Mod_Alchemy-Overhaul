@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		1/16/2026, 11:00 PM
+// Last Edit:		1/22/2026, 12:40 AM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:
@@ -24,6 +24,7 @@ namespace AlchemyOverhaul
     public partial class AlchemyOverhaulMain : MonoBehaviour
     {
         public static AlchemyOverhaulMain Instance;
+        public static AlchemyOverhaulSaveData ModSaveData = new AlchemyOverhaulSaveData();
 
         static Mod mod;
 
@@ -42,6 +43,8 @@ namespace AlchemyOverhaul
             Debug.Log("Begin mod init: Alchemy Overhaul");
 
             Instance = this;
+
+            mod.SaveDataInterface = ModSaveData;
 
             DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(1234588311, ItemGroups.UselessItems1, typeof(ItemTestPotion)); // Register Test Potion item.
 
@@ -234,33 +237,13 @@ namespace AlchemyOverhaul
             new CustomPotionEffect
             {
                 EffectKey = "Regenerate",
-                Magnitude = 5,
-                DurationSeconds = 4,
+                Magnitude = 3,
+                DurationSeconds = 3,
                 DurationType = PotionEffectDurationType.Timed
             }
                 }
             };
         }
-
-        /*
-        public static CustomPotion ResolveTestPotion()
-        {
-            return new CustomPotion
-            {
-                Id = "test_potion_regen",
-
-                Effects = new CustomPotionEffect[]
-                {
-                    new CustomPotionEffect
-                    {
-                        EffectKey = "Regenerate",
-                        Magnitude = 10,
-                        DurationSeconds = 5,
-                    }
-                }
-            };
-        }
-        */
     }
 
     //Test Potion
