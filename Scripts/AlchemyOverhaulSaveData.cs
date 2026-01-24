@@ -10,68 +10,74 @@ using DaggerfallWorkshop.Game.Serialization;
 
 namespace AlchemyOverhaul
 {
-    public class ClosedChestData
-    {
-        public ulong loadID;
-        public Vector3 currentPosition;
-        public Quaternion currentRotation;
-        public int[] recentInspectValues;
-        public bool isLockJammed;
-        public bool hasBeenBashed;
-        public bool hasBeenInspected;
-        public int chestSturdiness;
-        public int chestMagicResist;
-        public int chestStartHP;
-        public int chestCurrentHP;
-        public int lockSturdiness;
-        public int lockMagicResist;
-        public int lockComplexity;
-        public int jamResist;
-        public int lockStartHP;
-        public int lockCurrentHP;
-        public int picksAttempted;
-        public int lockMechStartHP;
-        public int lockMechCurrentHP;
-        public ItemData_v1[] attachedLoot;
-    }
-
-    public class OpenChestData
-    {
-        public ulong loadID;
-        public Vector3 currentPosition;
-        public Quaternion currentRotation;
-        public int textureArchive;
-        public int textureRecord;
-        public ItemData_v1[] items;
-    }
-
     [FullSerializer.fsObject("v1")]
     public class AlchemyOverhaulSaveData : IHasModSaveData
     {
-        public Dictionary<ulong, ClosedChestData> ClosedChests;
-        public Dictionary<ulong, OpenChestData> OpenChests;
+        internal class AlchemyOverhaulSaveState
+        {
+            public Dictionary<ulong, PotionItemRecord> PotionItems = new Dictionary<ulong, PotionItemRecord>();
+        }
+
+        internal class PotionItemRecord
+        {
+            public string PotionId;
+        }
 
         public Type SaveDataType
         {
-            get { return typeof(AlchemyOverhaulSaveData); }
+            get { return typeof(AlchemyOverhaulSaveState); }
+        }
+
+        internal AlchemyOverhaulSaveState state;
+
+        public AlchemyOverhaulSaveData()
+        {
+            state = new AlchemyOverhaulSaveState();
         }
 
         public object NewSaveData()
         {
-            AlchemyOverhaulSaveData emptyData = new AlchemyOverhaulSaveData();
-            emptyData.ClosedChests = new Dictionary<ulong, ClosedChestData>();
-            emptyData.OpenChests = new Dictionary<ulong, OpenChestData>();
-            return emptyData;
+            state = new AlchemyOverhaulSaveState();
+            return state;
         }
 
         public object GetSaveData()
         {
-            return null;
+            return state;
         }
 
-        public void RestoreSaveData(object dataIn)
+        public void RestoreSaveData(object saveData)
         {
-            //
+            if (saveData is AlchemyOverhaulSaveState loaded)
+                state = loaded;
+            else
+                state = new AlchemyOverhaulSaveState();
+        }
+
+        // ---- Runtime helpers ----
+
+        public bool TryGetPotionRecord(ulong uid, out string potionId)
+        {
+            potionId = null;
+
+            if (!state.PotionItems.TryGetValue(uid, out PotionItemRecord record))
+                return false;
+
+            potionId = record.PotionId;
+            return true;
+        }
+
+        public void AddPotionRecord(ulong uid, string potionId)
+        {
+            state.PotionItems[uid] = new PotionItemRecord
+            {
+                PotionId = potionId
+            };
+        }
+
+        public void RemovePotionRecord(ulong uid)
+        {
+            state.PotionItems.Remove(uid);
         }
     }
 }

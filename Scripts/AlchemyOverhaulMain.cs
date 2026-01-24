@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		1/22/2026, 12:40 AM
+// Last Edit:		1/23/2026, 9:50 PM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:
@@ -18,13 +18,15 @@ using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.MagicAndEffects;
 using Wenzil.Console;
 using DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects;
+using System.Collections.Generic;
+using DaggerfallWorkshop.Game.Serialization;
 
 namespace AlchemyOverhaul
 {
     public partial class AlchemyOverhaulMain : MonoBehaviour
     {
         public static AlchemyOverhaulMain Instance;
-        public static AlchemyOverhaulSaveData ModSaveData = new AlchemyOverhaulSaveData();
+        public static AlchemyOverhaulSaveData ModSaveData;
 
         static Mod mod;
 
@@ -32,6 +34,7 @@ namespace AlchemyOverhaul
         public static void Init(InitParams initParams)
         {
             mod = initParams.Mod;
+
             var go = new GameObject(mod.Title);
             go.AddComponent<AlchemyOverhaulMain>(); // Add script to the scene.
 
@@ -44,6 +47,7 @@ namespace AlchemyOverhaul
 
             Instance = this;
 
+            ModSaveData = new AlchemyOverhaulSaveData();
             mod.SaveDataInterface = ModSaveData;
 
             DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(1234588311, ItemGroups.UselessItems1, typeof(ItemTestPotion)); // Register Test Potion item.
@@ -77,6 +81,9 @@ namespace AlchemyOverhaul
                 DaggerfallWorkshop.Game.Entity.PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
 
                 DaggerfallUnityItem item = ItemBuilder.CreateItem(ItemGroups.UselessItems1, 1234588311);
+
+                ModSaveData.AddPotionRecord(item.UID, "ao:potion:test_heal_regen_v1");
+
                 playerEntity.Items.AddItem(item);
 
                 return "Gave you a test potion.";
@@ -217,6 +224,7 @@ namespace AlchemyOverhaul
         public PotionEffectDurationType DurationType;
     }
 
+    /*
     public static class PotionResolver
     {
         public static CustomPotion ResolveTestPotion()
@@ -245,6 +253,44 @@ namespace AlchemyOverhaul
             };
         }
     }
+    */
+
+    public static class PotionResolver
+    {
+        private static readonly Dictionary<string, CustomPotion> potionDefinitions =
+            new Dictionary<string, CustomPotion>
+            {
+            {
+                "ao:potion:test_heal_regen_v1",
+                new CustomPotion
+                {
+                    Id = "ao:potion:test_heal_regen_v1",
+                    Effects = new CustomPotionEffect[]
+                    {
+                        new CustomPotionEffect
+                        {
+                            EffectKey = "Heal-Health",
+                            Magnitude = 20,
+                            DurationType = PotionEffectDurationType.Instant
+                        },
+                        new CustomPotionEffect
+                        {
+                            EffectKey = "Regenerate",
+                            Magnitude = 3,
+                            DurationSeconds = 3,
+                            DurationType = PotionEffectDurationType.Timed
+                        }
+                    }
+                }
+            }
+            };
+
+        public static CustomPotion ResolveById(string potionId)
+        {
+            potionDefinitions.TryGetValue(potionId, out CustomPotion potion);
+            return potion;
+        }
+    }
 
     //Test Potion
     public class ItemTestPotion : DaggerfallUnityItem
@@ -254,35 +300,32 @@ namespace AlchemyOverhaul
             shortName = "Test Potion (AO)";
         }
 
+        public override ItemData_v1 GetSaveData()
+        {
+            ItemData_v1 data = base.GetSaveData();
+            data.className = typeof(ItemTestPotion).ToString();
+            return data;
+        }
+
         public override bool UseItem(ItemCollection collection)
         {
-            // Resolve potion using YOUR system
-            CustomPotion potion = PotionResolver.ResolveTestPotion();
+            if (!AlchemyOverhaulMain.ModSaveData.TryGetPotionRecord(this.UID, out string potionId))
+                return true;
 
-            // Execute resolved effects
+            CustomPotion potion = PotionResolver.ResolveById(potionId);
+            if (potion == null)
+                return true;
+
             foreach (CustomPotionEffect effect in potion.Effects)
             {
                 if (effect.DurationType == PotionEffectDurationType.Instant)
-                {
-                    AlchemyExecutionAdapter.ApplyInstantEffect(
-                        effect.EffectKey,
-                        effect.Magnitude
-                    );
-                }
+                    AlchemyExecutionAdapter.ApplyInstantEffect(effect.EffectKey, effect.Magnitude);
                 else
-                {
-                    AlchemyExecutionAdapter.ApplyPotionEffect(
-                        effect.EffectKey,
-                        effect.Magnitude,
-                        effect.DurationSeconds
-                    );
-                }
+                    AlchemyExecutionAdapter.ApplyPotionEffect(effect.EffectKey, effect.Magnitude, effect.DurationSeconds);
             }
 
-            // Consume item
+            AlchemyOverhaulMain.ModSaveData.RemovePotionRecord(this.UID);
             collection.RemoveItem(this);
-
-            // Suppress vanilla behavior
             return true;
         }
     }
