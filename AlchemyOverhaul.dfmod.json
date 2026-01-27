@@ -9,7 +9,9 @@
     "Files": [
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/AlchemyOverhaul.dfmod.json",
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/AlchemyOverhaulMain.cs",
-        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/AlchemyOverhaulSaveData.cs"
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/AlchemyOverhaulSaveData.cs",
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/AlchemyPotionData_v1.cs",
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/AlchemyPotionRuntime.cs"
     ],
     "Dependencies": []
 }
