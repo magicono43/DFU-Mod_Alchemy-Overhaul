@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		1/23/2026, 9:50 PM
+// Last Edit:		1/25/2026, 10:45 PM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:
@@ -53,6 +53,8 @@ namespace AlchemyOverhaul
             DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(1234588311, ItemGroups.UselessItems1, typeof(ItemTestPotion)); // Register Test Potion item.
 
             RegisterConsoleCommands();
+
+            WorldTime.OnNewDay += ModSaveData.RemoveStalePotionRecords_OnNewDay;
 
             Debug.Log("Finished mod init: Alchemy Overhaul");
         }
