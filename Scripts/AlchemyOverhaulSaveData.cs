@@ -14,8 +14,11 @@ namespace AlchemyOverhaul
     [FullSerializer.fsObject("v1")]
     public class AlchemyOverhaulSaveData : IHasModSaveData
     {
+        public const int CURRENT_SAVE_VERSION = 1;
+
         internal class AlchemyOverhaulSaveState
         {
+            public int Version;
             public ulong TimeOfPreviousStalePotionRecordCleanup = 0;
             public Dictionary<ulong, PotionItemRecord> PotionItems = new Dictionary<ulong, PotionItemRecord>();
         }
@@ -39,8 +42,10 @@ namespace AlchemyOverhaul
 
         public object NewSaveData()
         {
-            state = new AlchemyOverhaulSaveState();
-            return state;
+            return new AlchemyOverhaulSaveState
+            {
+                Version = CURRENT_SAVE_VERSION
+            };
         }
 
         public object GetSaveData()
@@ -50,10 +55,46 @@ namespace AlchemyOverhaul
 
         public void RestoreSaveData(object saveData)
         {
-            if (saveData is AlchemyOverhaulSaveState loaded)
-                state = loaded;
-            else
-                state = new AlchemyOverhaulSaveState();
+            state = saveData as AlchemyOverhaulSaveState;
+
+            if (state == null)
+            {
+                state = new AlchemyOverhaulSaveState
+                {
+                    Version = CURRENT_SAVE_VERSION
+                };
+                return;
+            }
+
+            if (state.Version < CURRENT_SAVE_VERSION)
+            {
+                UpgradeSaveData(state);
+            }
+        }
+
+        private void UpgradeSaveData(AlchemyOverhaulSaveState state)
+        {
+            while (state.Version < CURRENT_SAVE_VERSION)
+            {
+                switch (state.Version)
+                {
+                    case 1:
+                        UpgradeFromV1ToV2(state);
+                        break;
+
+                    default:
+                        Debug.LogWarning(
+                            $"[AO] Unknown save version {state.Version}, forcing reset.");
+                        state.Version = CURRENT_SAVE_VERSION;
+                        break;
+                }
+            }
+        }
+
+        private void UpgradeFromV1ToV2(AlchemyOverhaulSaveState state)
+        {
+            state.TimeOfPreviousStalePotionRecordCleanup = DaggerfallUnity.Instance.WorldTime.DaggerfallDateTime.ToSeconds();
+            state.Version = 2;
         }
 
         // ---- Runtime helpers ----
