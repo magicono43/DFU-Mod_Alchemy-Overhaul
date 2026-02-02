@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		1/26/2026, 11:50 PM
+// Last Edit:		2/2/2026, 7:15 AM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:
@@ -14,12 +14,10 @@ using DaggerfallWorkshop.Game.Utility.ModSupport;
 using System;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game.Items;
-using DaggerfallWorkshop.Game.Entity;
-using DaggerfallWorkshop.Game.MagicAndEffects;
 using Wenzil.Console;
-using DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects;
-using System.Collections.Generic;
-using DaggerfallWorkshop.Game.Serialization;
+using AlchemyOverhaul.Items;
+using AlchemyOverhaul.Systems;
+using AlchemyOverhaul.Data.Runtime;
 
 namespace AlchemyOverhaul
 {
@@ -50,7 +48,7 @@ namespace AlchemyOverhaul
             ModSaveData = new AlchemyOverhaulSaveData();
             mod.SaveDataInterface = ModSaveData;
 
-            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(1234588311, ItemGroups.UselessItems1, typeof(ItemTestPotion)); // Register Test Potion item.
+            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(AOConstants.ItemIds.TestPotion, ItemGroups.UselessItems1, typeof(ItemTestPotion)); // Register Test Potion item.
 
             RegisterConsoleCommands();
 
@@ -82,253 +80,20 @@ namespace AlchemyOverhaul
             {
                 DaggerfallWorkshop.Game.Entity.PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
 
-                DaggerfallUnityItem item = ItemBuilder.CreateItem(ItemGroups.UselessItems1, 1234588311);
+                DaggerfallUnityItem item = ItemBuilder.CreateItem(ItemGroups.UselessItems1, AOConstants.ItemIds.TestPotion);
 
-                ModSaveData.AddPotionRecord(item.UID, "ao:potion:test_heal_regen_v1");
+                // 1. Resolve definition → runtime data
+                PotionData potionData = PotionRegistry.CreatePotion(AOConstants.PotionIds.TestHealRegenV1);
+
+                if (potionData == null)
+                    return "Potion definition not found.";
+
+                ModSaveData.AddPotion(item.UID, potionData);
 
                 playerEntity.Items.AddItem(item);
 
                 return "Gave you a test potion.";
             }
-        }
-    }
-
-    public static class AlchemyExecutionAdapter
-    {
-        /// <summary>
-        /// Executes a fully-resolved potion effect.
-        /// All scaling, randomness, stacking, and validation MUST be done before calling this.
-        /// </summary>
-        public static void ApplyPotionEffect(string effectKey, int magnitude, int durationSeconds)
-        {
-            PlayerEntity player = GameManager.Instance.PlayerEntity;
-            EntityEffectBroker broker = GameManager.Instance.EntityEffectBroker;
-
-            // Pull template (execution only)
-            IEntityEffect template = broker.GetEffectTemplate(effectKey);
-            if (template == null)
-                return;
-
-            // Hard-freeze effect math
-            EffectSettings settings = new EffectSettings
-            {
-                MagnitudeBaseMin = magnitude,
-                MagnitudeBaseMax = magnitude,
-                DurationBase = durationSeconds,
-                ChanceBase = 100,
-
-                // Safe per-level values
-                MagnitudePerLevel = 1,
-                DurationPerLevel = 1,
-                ChancePerLevel = 1,
-
-                // Neutralize scaling
-                MagnitudePlusMin = 0,
-                MagnitudePlusMax = 0,
-                DurationPlus = 0,
-                ChancePlus = 0,
-            };
-
-            EffectEntry[] entries = new EffectEntry[]
-            {
-                new EffectEntry(effectKey, settings)
-            };
-
-            EffectBundleSettings bundleSettings = new EffectBundleSettings
-            {
-                Version = EntityEffectBroker.CurrentSpellVersion,
-                Name = "AO_PotionEffect",
-                BundleType = BundleTypes.Potion,
-                TargetType = TargetTypes.CasterOnly,
-                Effects = entries,
-            };
-
-            EntityEffectBundle bundle =
-                new EntityEffectBundle(bundleSettings, GameManager.Instance.PlayerEntityBehaviour);
-
-            // Force application — no DFU logic allowed
-            GameManager.Instance.PlayerEffectManager.AssignBundle(
-                bundle,
-                AssignBundleFlags.BypassChance |
-                AssignBundleFlags.BypassSavingThrows
-            );
-        }
-
-        public static void ApplyInstantEffect(string effectKey, int magnitude)
-        {
-            PlayerEntity player = GameManager.Instance.PlayerEntity;
-            EntityEffectBroker broker = GameManager.Instance.EntityEffectBroker;
-
-            IEntityEffect template = broker.GetEffectTemplate(effectKey);
-            if (template == null)
-                return;
-
-            EffectSettings settings = new EffectSettings
-            {
-                MagnitudeBaseMin = magnitude,
-                MagnitudeBaseMax = magnitude,
-                ChanceBase = 100,
-
-                // Safe defaults
-                MagnitudePerLevel = 1,
-                ChancePerLevel = 1,
-                MagnitudePlusMin = 0,
-                MagnitudePlusMax = 0,
-                ChancePlus = 0,
-            };
-
-            EffectEntry[] entries = new EffectEntry[]
-            {
-                new EffectEntry(effectKey, settings)
-            };
-
-            EffectBundleSettings bundleSettings = new EffectBundleSettings
-            {
-                Version = EntityEffectBroker.CurrentSpellVersion,
-                Name = "AO_InstantPotion",
-                BundleType = BundleTypes.Potion,
-                TargetType = TargetTypes.CasterOnly,
-                Effects = entries,
-            };
-
-            EntityEffectBundle bundle =
-                new EntityEffectBundle(bundleSettings, GameManager.Instance.PlayerEntityBehaviour);
-
-            GameManager.Instance.PlayerEffectManager.AssignBundle(
-                bundle,
-                AssignBundleFlags.BypassChance |
-                AssignBundleFlags.BypassSavingThrows
-            );
-        }
-    }
-
-    public class CustomPotion
-    {
-        public string Id;
-        public CustomPotionEffect[] Effects;
-    }
-
-    public enum PotionEffectDurationType
-    {
-        Instant,
-        Timed
-    }
-
-    public class CustomPotionEffect
-    {
-        // Must map to DFU effect key
-        public string EffectKey;
-
-        // Final resolved values (NO DFU scaling)
-        public int Magnitude;
-        public int DurationSeconds;
-
-        public PotionEffectDurationType DurationType;
-    }
-
-    /*
-    public static class PotionResolver
-    {
-        public static CustomPotion ResolveTestPotion()
-        {
-            return new CustomPotion
-            {
-                Id = "test_potion_mixed",
-
-                Effects = new CustomPotionEffect[]
-                {
-            new CustomPotionEffect
-            {
-                EffectKey = "Heal-Health",
-                Magnitude = 20,
-                DurationSeconds = 0,
-                DurationType = PotionEffectDurationType.Instant
-            },
-            new CustomPotionEffect
-            {
-                EffectKey = "Regenerate",
-                Magnitude = 3,
-                DurationSeconds = 3,
-                DurationType = PotionEffectDurationType.Timed
-            }
-                }
-            };
-        }
-    }
-    */
-
-    public static class PotionResolver
-    {
-        private static readonly Dictionary<string, CustomPotion> potionDefinitions =
-            new Dictionary<string, CustomPotion>
-            {
-            {
-                "ao:potion:test_heal_regen_v1",
-                new CustomPotion
-                {
-                    Id = "ao:potion:test_heal_regen_v1",
-                    Effects = new CustomPotionEffect[]
-                    {
-                        new CustomPotionEffect
-                        {
-                            EffectKey = "Heal-Health",
-                            Magnitude = 20,
-                            DurationType = PotionEffectDurationType.Instant
-                        },
-                        new CustomPotionEffect
-                        {
-                            EffectKey = "Regenerate",
-                            Magnitude = 3,
-                            DurationSeconds = 3,
-                            DurationType = PotionEffectDurationType.Timed
-                        }
-                    }
-                }
-            }
-            };
-
-        public static CustomPotion ResolveById(string potionId)
-        {
-            potionDefinitions.TryGetValue(potionId, out CustomPotion potion);
-            return potion;
-        }
-    }
-
-    //Test Potion
-    public class ItemTestPotion : DaggerfallUnityItem
-    {
-        public ItemTestPotion() : base(ItemGroups.UselessItems1, 1234588311)
-        {
-            shortName = "Test Potion (AO)";
-        }
-
-        public override ItemData_v1 GetSaveData()
-        {
-            ItemData_v1 data = base.GetSaveData();
-            data.className = typeof(ItemTestPotion).ToString();
-            return data;
-        }
-
-        public override bool UseItem(ItemCollection collection)
-        {
-            if (!AlchemyOverhaulMain.ModSaveData.TryGetPotionRecord(this.UID, out string potionId))
-                return true;
-
-            CustomPotion potion = PotionResolver.ResolveById(potionId);
-            if (potion == null)
-                return true;
-
-            foreach (CustomPotionEffect effect in potion.Effects)
-            {
-                if (effect.DurationType == PotionEffectDurationType.Instant)
-                    AlchemyExecutionAdapter.ApplyInstantEffect(effect.EffectKey, effect.Magnitude);
-                else
-                    AlchemyExecutionAdapter.ApplyPotionEffect(effect.EffectKey, effect.Magnitude, effect.DurationSeconds);
-            }
-
-            AlchemyOverhaulMain.ModSaveData.RemovePotionRecord(this.UID);
-            collection.RemoveItem(this);
-            return true;
         }
     }
 }

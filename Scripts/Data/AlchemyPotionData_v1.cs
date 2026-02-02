@@ -27,6 +27,7 @@ namespace AlchemyOverhaul.Data
     {
         public List<IngredientEntry> ingredients = new List<IngredientEntry>();
         public PreparationMethod preparationMethod;
+        public AlchemyToolFlags toolsUsed;
 
         public int alchemySkillAtBrew;
         public int labQuality;
@@ -49,6 +50,12 @@ namespace AlchemyOverhaul.Data
     public class PotionResultData
     {
         public List<PotionEffectData> effects = new List<PotionEffectData>();
+
+        public float basePotency;
+        public float baseToxicity;
+        public float basePalatability;
+        public float baseInstability;
+        public float baseSpoilageRate;
 
         public float instability;
         public float potencyMultiplier;
@@ -75,6 +82,7 @@ namespace AlchemyOverhaul.Data
         public int maxUses;
 
         public int ageInDays;
+        public bool isSpoiled;
         public bool identified;
     }
 
@@ -83,9 +91,21 @@ namespace AlchemyOverhaul.Data
     // =========================
     public enum PreparationMethod
     {
-        MortarAndPestle,
-        Alembic,
-        EnchantedLab
+        FieldKit,
+        AlchemyTable,
+        AlchemyLab,
+        AdvancedLab
+    }
+
+    [Flags]
+    public enum AlchemyToolFlags
+    {
+        None = 0,
+        Mortar = 1 << 0,
+        Alembic = 1 << 1,
+        Calcinator = 1 << 2,
+        Retort = 1 << 3,
+        Brazier = 1 << 4
     }
 
     public enum EffectTarget
@@ -99,9 +119,9 @@ namespace AlchemyOverhaul.Data
     public enum EffectApplicationFlags
     {
         None = 0,
-        Instant = 1,
-        OverTime = 2,
-        Harmful = 4,
-        Beneficial = 8
+        Instant = 1 << 0,
+        OverTime = 1 << 1,
+        Harmful = 1 << 2,
+        Beneficial = 1 << 3
     }
 }

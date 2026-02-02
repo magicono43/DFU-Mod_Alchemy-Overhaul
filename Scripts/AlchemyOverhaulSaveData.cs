@@ -8,6 +8,9 @@ using System;
 using System.Collections.Generic;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.Entity;
+using AlchemyOverhaul.Data.Save;
+using AlchemyOverhaul.Systems;
+using AlchemyOverhaul.Data.Runtime;
 
 namespace AlchemyOverhaul
 {
@@ -20,12 +23,9 @@ namespace AlchemyOverhaul
         {
             public int Version;
             public ulong TimeOfPreviousStalePotionRecordCleanup = 0;
-            public Dictionary<ulong, PotionItemRecord> PotionItems = new Dictionary<ulong, PotionItemRecord>();
-        }
-
-        internal class PotionItemRecord
-        {
-            public string PotionId;
+            
+            // UID -> versioned potion save data
+            public Dictionary<ulong, PotionDataSave> PotionItems = new Dictionary<ulong, PotionDataSave>();
         }
 
         public Type SaveDataType
@@ -70,6 +70,11 @@ namespace AlchemyOverhaul
             {
                 UpgradeSaveData(state);
             }
+            
+            PotionRegistry.LoadFromSave(state.PotionItems);
+
+            // Immediately reconcile reality
+            PotionCleanupSystem.RunCleanup(GameManager.Instance.PlayerEntity);
         }
 
         private void UpgradeSaveData(AlchemyOverhaulSaveState state)
@@ -158,34 +163,33 @@ namespace AlchemyOverhaul
             foreach (ulong uid in stalePotionUIDs)
             {
                 state.PotionItems.Remove(uid);
+                PotionRegistry.UnregisterPotion(uid); // runtime sync
                 Debug.Log($"[AO] Removed stale potion record UID {uid}");
             }
 
             state.TimeOfPreviousStalePotionRecordCleanup = currentTime;
         }
-
-        public bool TryGetPotionRecord(ulong uid, out string potionId)
+        
+        public bool TryGetPotionData(ulong uid, out PotionData data)
         {
-            potionId = null;
-
-            if (!state.PotionItems.TryGetValue(uid, out PotionItemRecord record))
-                return false;
-
-            potionId = record.PotionId;
-            return true;
+            return PotionRegistry.TryGetPotion(uid, out data);
         }
-
-        public void AddPotionRecord(ulong uid, string potionId)
+        
+        public void AddPotion(ulong uid, PotionData data)
         {
-            state.PotionItems[uid] = new PotionItemRecord
-            {
-                PotionId = potionId
-            };
+            PotionRegistry.RegisterPotion(uid, data);
+            state.PotionItems[uid] = PotionDataConverter.ToSave(data);
         }
-
-        public void RemovePotionRecord(ulong uid)
+        
+        public void RemovePotion(ulong uid)
         {
+            PotionRegistry.UnregisterPotion(uid);
             state.PotionItems.Remove(uid);
+        }
+        
+        public void SyncPotionSaveData()
+        {
+            state.PotionItems = PotionRegistry.ToSaveData();
         }
     }
 }

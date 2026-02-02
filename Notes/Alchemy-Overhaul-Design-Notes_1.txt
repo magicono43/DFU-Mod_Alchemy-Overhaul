@@ -1,0 +1,63 @@
+Last Edit: 1/28/2026, 10:50 PM
+
+
+1. Ingredients can have up to 5 different effects associated with them, the 5th is always a "special" one that is only expressed when certain 
+conditions are met during preparation, such as bringing the solution it is used in to a certain heat, being ground to a certain fineness 
+(so probably a better quality mortar and player strength amount.) Prepared in a certain type of lab (so field kit might not work), combined 
+with a certain other ingredients, or using a certain type of solvent. Alot of things basically could express that 5th trait, and it will likely 
+be alot stronger of an effect for whatever it is compared to the other 4 primary effects. 
+
+2. Similiar to the later TES games, atleast 2 different ingredients with matching effects must be present to make a potion with that matching effect. I'm not certain if the 
+rules will be the same mathmatically in all cases, like the base effects will just add to one another, or multiply. I'm thinking it will depend on other factors which occurs, 
+like if heating is used, if a certain tool is being used, etc. 
+
+3. Each effect on an ingredient will have a different "base" value of that effect. Skyrim has a sort of similar system that is used sometimes for more rare ingredients 
+that being basically a multiplier that is applied when certain ingredients are present with these modifiers. In this mod's case, every ingredient effect will have different 
+base values for whatever effects attached to it. So like a common flower might have a relatively weak base restore health effect attached to it, but a rarer ingredient might 
+have a much more powerful version of that effect, base atleast. 
+
+4. Potions can be brewed with up to 6 primary ingredients, base DFU's basic alchemy system allows up to 8. But I think 6 makes sense to allow for more 
+than say Oblivion, but not an absurd amount at the same time. 
+
+5. Potion brewing probably won't be entirely deterministic like in say Oblivion where you know exactly what effects you will get and in what magnitudes and durations while brewing, 
+but instead they will have more randomness factored in, this randomness being swayed mostly by your current alchemy skill, lab equipment used (field kit, proper alchemy lab, etc.) 
+and your Luck stat. With this, during brewing you won't know exactly what will come out in the end, and likely won't even know what the effects are until you identify them somehow, 
+either through experimentation or high alchemy skill, intelligence, and willpower to make predictions more accurate. Maybe at worst you will get an idea of the effects, or atleast 
+the primary one, but not the magnitude and duration. 
+
+6. There are 4 different tools that can be used or not to modify many parts of your brewing results, the only 1 of the 4 that is required is the mortar, 
+every other one is entirely optional. These will just be the same ones used in the later games. So the 4 are Mortar, Alembic, Retort, and Calcinator. Similarly 
+these tools will also have their own quality values, likely represented Apprentice, Journeyman, Master, etc. 
+
+7. You will have the option during brewing to use certain levels of heating, likely: None, Low, Med, High. This could have many different effects depending on the 
+ingredients used and what solvent is used. 
+
+8. Many attributes will be used in some form during the brewing process itself, some in larger ways than others. Intellect likely being for possibly having an effect on the 
+end result of the effects, similar to Morrowind, but probably mostly for helping identify/predict what the end result will likely be more accurately. Strength probably mostly 
+for increasing how finely ingredients get ground up, thus having some effect on occasion, as well as reducing how much in-game time it takes to brew due to the faster preparation 
+from the grinding process I suppose. Speed just overall reducing the time of the brewing. Willpower maybe being thrown in there as a perception sort of thing to help with 
+end result prediction similar to intelligence. And Luck just having a general small factor in most of these more than likely, effecting any rounding and such basically. Stuff 
+like Endurance will be used alot more later outside the brewing process, like when actually using the potions and such, how many you can handle at a time, etc. 
+
+9. There will be a janky Alchemy skill as well, which will have a major effect on many aspects of the brewing process and identifying what ingredients have what effects and such. 
+I say janky because it won't be "properly" incorperated into the game because those systems are pretty much impossible to mess with atm without just overriding existing skills. 
+I mean I guess I could do that in theory, but I'd rather not and just make it entirely tracked by the mod instead, good enough for now I guess while those systems are still 
+not really supported for modding by DFU atleast. 
+
+10. Potions will also have other attributes, not just the effects. Those being Toxicity, Palatability, and Spoilage Rate. All of these will be important after brewing and before 
+use. Toxicity being the limiter of how many and how often you can use potions before you hit a "limit." Oblivion has something like this, I think it is like 3-4 potions with some 
+amount of time or something. The toxicity will be much more variable, based on your character attributes, race, the potion itself, etc. Maybe you can even go over this toxicity limit 
+but there will be different effects if you do this, like poisoning yourself or something like that, Endurance will be the main attribute that will determine your toxicity thresholds 
+and how quickly your toxicity goes down, stuff like magical poison resistances or traits will likely have an effect on this as well. Palatability will basically be how and if you 
+can consume a potion at all, like if it is too disgusting to drink maybe you will vomit it up after drinking it, thus wasting it probably, so you will want your potions to also be 
+atleast somewhat palatable as well as effective. Various things will have an effect on how much a character is able to handle less than palatable potions, race, traits, endurance, 
+and especially willpower. During brewing many factors will effect palatability, such as the ingredients themselves, preparation method, and what solvent was used. Spoilage Rate will 
+determine how quickly a potion "spoils" essentially. This will be determined when brewing, and will be periodically updated on the potions after being brewed. It will basically be 
+a true or false, if a potion has spoiled or not, and it will depend what sort of things occur when a potion spoils, likely palatability will be brought way down, toxicity way up, 
+effects might be altered somehow, maybe even some beneficial depending on what you are looking for, but more than likely usually you won't want a spoiled potion over a fresh one, 
+the gold value as well more than likely. 
+
+11. I plan to have an entirely custom UI window for both the brewing process, as well as viewing the potions and naming them and such. So smooth interaction with the vanilla 
+inventory window isn't super necessary, since I don't want to override that window or do massive janky hacking to get everything to work with the existing somewhat limited 
+vanilla item descriptions and macro-text code. The potions will still be usable from the magic menu and inventory, but descriptions of effects and such likely won't work 
+well from the inventory, so the custom window as mentioned will be used for viewing these more than likely. 
