@@ -2,19 +2,20 @@ using System.Collections.Generic;
 using AlchemyOverhaul.Data.Runtime;
 using AlchemyOverhaul.Data.Save;
 using AlchemyOverhaul.Potions;
+using AlchemyOverhaul.Data.Definitions;
 
 namespace AlchemyOverhaul.Systems
 {
     public static class PotionRegistry
     {
         // Runtime cache
-        private static readonly Dictionary<ulong, PotionData> potionsByUid = new Dictionary<ulong, PotionData>();
+        private static readonly Dictionary<ulong, PotionData> potionsById = new Dictionary<ulong, PotionData>();
 
         // ===== Creation =====
 
         public static PotionData CreatePotion(string potionId)
         {
-            CustomPotion definition = PotionResolver.ResolveById(potionId);
+            PotionDefinition definition = PotionResolver.ResolveById(potionId);
             if (definition == null)
                 return null;
 
@@ -23,26 +24,26 @@ namespace AlchemyOverhaul.Systems
 
         // ===== Registration =====
 
-        public static void RegisterPotion(ulong itemUid, PotionData data)
+        public static void RegisterPotion(ulong potionId, PotionData data)
         {
-            potionsByUid[itemUid] = data;
+            potionsById[potionId] = data;
         }
 
-        public static bool TryGetPotion(ulong itemUid, out PotionData data)
+        public static bool TryGetPotion(ulong potionId, out PotionData data)
         {
-            return potionsByUid.TryGetValue(itemUid, out data);
+            return potionsById.TryGetValue(potionId, out data);
         }
 
-        public static void UnregisterPotion(ulong itemUid)
+        public static void UnregisterPotion(ulong potionId)
         {
-            potionsByUid.Remove(itemUid);
+            potionsById.Remove(potionId);
         }
 
         // ===== Enumeration =====
 
         public static IEnumerable<KeyValuePair<ulong, PotionData>> AllPotions()
         {
-            return potionsByUid;
+            return potionsById;
         }
 
         // ===== Save Integration =====
@@ -51,7 +52,7 @@ namespace AlchemyOverhaul.Systems
         {
             var dict = new Dictionary<ulong, PotionDataSave>();
 
-            foreach (var kvp in potionsByUid)
+            foreach (var kvp in potionsById)
                 dict[kvp.Key] = PotionDataConverter.ToSave(kvp.Value);
 
             return dict;
@@ -59,10 +60,10 @@ namespace AlchemyOverhaul.Systems
 
         public static void LoadFromSave(Dictionary<ulong, PotionDataSave> saveData)
         {
-            potionsByUid.Clear();
+            potionsById.Clear();
 
             foreach (var kvp in saveData)
-                potionsByUid[kvp.Key] = PotionDataConverter.FromSave(kvp.Value);
+                potionsById[kvp.Key] = PotionDataConverter.FromSave(kvp.Value);
         }
     }
 }

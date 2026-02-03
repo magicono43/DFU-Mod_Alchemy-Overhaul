@@ -22,7 +22,6 @@
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Data/Save/PotionDataV1.cs",
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Execution/AlchemyExecutionAdapter.cs",
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Items/ItemTestPotion.cs",
-        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Potions/CustomPotion.cs",
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Potions/PotionResolver.cs",
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Potions/PotionEffectDurationType.cs",
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Runtime/AlchemyPotionRuntime.cs",
@@ -31,7 +30,8 @@
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Systems/PotionRegistry.cs",
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Systems/PotionDataConverter.cs",
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Systems/PotionSpoilageSystem.cs",
-        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Systems/PotionStackingUtility.cs"
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Systems/PotionStackingUtility.cs",
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Data/Definitions/PotionDefinition.cs"
     ],
     "Dependencies": []
 }

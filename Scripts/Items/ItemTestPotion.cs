@@ -3,6 +3,7 @@ using DaggerfallWorkshop.Game.Serialization;
 using AlchemyOverhaul.Potions;
 using AlchemyOverhaul.Execution;
 using AlchemyOverhaul.Data.Runtime;
+using AlchemyOverhaul.Data.Definitions;
 
 namespace AlchemyOverhaul.Items
 {
@@ -26,7 +27,7 @@ namespace AlchemyOverhaul.Items
             if (!AlchemyOverhaulMain.ModSaveData.TryGetPotionData(this.UID, out Data.Runtime.PotionData data))
                 return true;
 
-            CustomPotion potion = PotionResolver.ResolveById(data.PotionInstanceId);
+            PotionDefinition potion = PotionResolver.ResolveById(data.PotionInstanceId);
             if (potion == null)
                 return true;
 

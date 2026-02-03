@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		2/2/2026, 8:00 PM
+// Last Edit:		2/2/2026, 10:00 PM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:
@@ -18,6 +18,7 @@ using Wenzil.Console;
 using AlchemyOverhaul.Items;
 using AlchemyOverhaul.Systems;
 using AlchemyOverhaul.Data.Runtime;
+using AlchemyOverhaul.Data.Definitions;
 
 namespace AlchemyOverhaul
 {
@@ -82,13 +83,12 @@ namespace AlchemyOverhaul
 
                 DaggerfallUnityItem item = ItemBuilder.CreateItem(ItemGroups.UselessItems1, AOConstants.ItemIds.TestPotion);
 
-                // 1. Resolve definition → runtime data
-                PotionData potionData = PotionRegistry.CreatePotion(AOConstants.PotionIds.TestHealRegenV1);
+                PotionData data = PotionRegistry.CreatePotion(AOConstants.PotionIds.TestHealRegenV1);
 
-                if (potionData == null)
-                    return "Potion definition not found.";
+                if (data == null)
+                    return "Failed to create potion.";
 
-                ModSaveData.AddPotion(item.UID, potionData);
+                ModSaveData.AddPotion(item.UID, data);
 
                 playerEntity.Items.AddItem(item);
 

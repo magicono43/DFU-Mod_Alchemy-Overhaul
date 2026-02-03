@@ -1,4 +1,3 @@
-using UnityEngine;
 using AlchemyOverhaul.Data.Runtime;
 
 namespace AlchemyOverhaul.Systems
@@ -7,13 +6,21 @@ namespace AlchemyOverhaul.Systems
     {
         public static bool AreStackable(PotionData a, PotionData b)
         {
-            if (a.IsSpoiled != b.IsSpoiled) return false;
+            // Null safety
+            if (a == null || b == null)
+                return false;
 
-            if (!Mathf.Approximately(a.Toxicity, b.Toxicity)) return false;
-            if (!Mathf.Approximately(a.Palatability, b.Palatability)) return false;
-            if (!Mathf.Approximately(a.SpoilageRate, b.SpoilageRate)) return false;
+            // 1. Runtime state must match
+            if (a.IsSpoiled != b.IsSpoiled)
+                return false;
 
-            if (a.Effects.Count != b.Effects.Count) return false;
+            // 2. Definition identity must match
+            if (a.PotionDefinitionId != b.PotionDefinitionId)
+                return false;
+
+            // 3. Effect payload must match exactly
+            if (a.Effects.Count != b.Effects.Count)
+                return false;
 
             for (int i = 0; i < a.Effects.Count; i++)
             {

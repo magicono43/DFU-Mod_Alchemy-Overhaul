@@ -12,6 +12,7 @@ namespace AlchemyOverhaul.Data.Runtime
     {
         // ===== Identity / Provenance =====
         public string PotionInstanceId;              // System.Guid.ToString()
+        public string PotionDefinitionId;
         public ulong CreatedGameTime;
         public int BrewerEntityId;              // Or -1 if unknown
         public int AlchemySkillAtBrew;
@@ -23,11 +24,6 @@ namespace AlchemyOverhaul.Data.Runtime
 
         // ===== Effect Payload =====
         public List<PotionEffectInstance> Effects;
-
-        // ===== Secondary Attributes =====
-        public float Toxicity;
-        public float Palatability;
-        public float SpoilageRate;
 
         // ===== Spoilage State =====
         public bool IsSpoiled;

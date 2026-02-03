@@ -1,17 +1,18 @@
 using System.Collections.Generic;
 using AlchemyOverhaul.Data.Enums;
 using AlchemyOverhaul.Data.Runtime;
+using AlchemyOverhaul.Data.Definitions;
 
 namespace AlchemyOverhaul.Potions
 {
     public static class PotionResolver
     {
-        private static readonly Dictionary<string, CustomPotion> potionDefinitions =
-            new Dictionary<string, CustomPotion>
+        private static readonly Dictionary<string, PotionDefinition> potionDefinitions =
+            new Dictionary<string, PotionDefinition>
             {
             {
                 AOConstants.PotionIds.TestHealRegenV1,
-                new CustomPotion
+                new PotionDefinition
                 {
                     Id = AOConstants.PotionIds.TestHealRegenV1,
                     Effects = new PotionEffectInstance[]
@@ -39,9 +40,9 @@ namespace AlchemyOverhaul.Potions
             }
             };
 
-        public static CustomPotion ResolveById(string potionId)
+        public static PotionDefinition ResolveById(string potionId)
         {
-            potionDefinitions.TryGetValue(potionId, out CustomPotion potion);
+            potionDefinitions.TryGetValue(potionId, out PotionDefinition potion);
             return potion;
         }
     }
