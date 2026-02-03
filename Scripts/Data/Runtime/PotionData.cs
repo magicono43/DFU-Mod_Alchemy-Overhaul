@@ -3,10 +3,15 @@ using AlchemyOverhaul.Data.Enums;
 
 namespace AlchemyOverhaul.Data.Runtime
 {
+    /// <summary>
+    /// Runtime-frozen potion instance.
+    /// All fields in this class are serialized via DFU mod save data.
+    /// No values are recomputed after creation.
+    /// </summary>
     public sealed class PotionData
     {
         // ===== Identity / Provenance =====
-        public string PotionGuid;              // System.Guid.ToString()
+        public string PotionInstanceId;              // System.Guid.ToString()
         public ulong CreatedGameTime;
         public int BrewerEntityId;              // Or -1 if unknown
         public int AlchemySkillAtBrew;

@@ -13,7 +13,7 @@ namespace AlchemyOverhaul.Data.Runtime
             PotionData data = new PotionData
             {
                 // ===== Identity =====
-                PotionGuid = Guid.NewGuid().ToString(),
+                PotionInstanceId = Guid.NewGuid().ToString(),
                 CreatedGameTime = DaggerfallUnity.Instance.WorldTime.DaggerfallDateTime.ToSeconds(),
                 BrewerEntityId = brewerEntityId,
                 AlchemySkillAtBrew = alchemySkill,

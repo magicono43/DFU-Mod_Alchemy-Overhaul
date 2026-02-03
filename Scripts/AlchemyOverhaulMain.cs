@@ -1,9 +1,9 @@
 // Project:         Alchemy Overhaul mod for Daggerfall Unity (http://www.dfworkshop.net)
-// Copyright:       Copyright (C) 2020 Kirk.O
+// Copyright:       Copyright (C) 2026 Kirk.O
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		2/2/2026, 7:00 PM
+// Last Edit:		2/2/2026, 8:00 PM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:

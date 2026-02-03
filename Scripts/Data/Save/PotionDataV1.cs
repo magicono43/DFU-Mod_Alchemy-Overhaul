@@ -8,7 +8,7 @@ namespace AlchemyOverhaul.Data.Save
     [Serializable]
     public sealed class PotionDataV1
     {
-        public string PotionGuid;
+        public string PotionInstanceId;
         public ulong CreatedGameTime;
         public int BrewerEntityId;
         public int AlchemySkillAtBrew;

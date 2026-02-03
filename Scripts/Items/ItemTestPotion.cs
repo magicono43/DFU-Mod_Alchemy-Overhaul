@@ -26,7 +26,7 @@ namespace AlchemyOverhaul.Items
             if (!AlchemyOverhaulMain.ModSaveData.TryGetPotionData(this.UID, out Data.Runtime.PotionData data))
                 return true;
 
-            CustomPotion potion = PotionResolver.ResolveById(data.PotionGuid);
+            CustomPotion potion = PotionResolver.ResolveById(data.PotionInstanceId);
             if (potion == null)
                 return true;
 
