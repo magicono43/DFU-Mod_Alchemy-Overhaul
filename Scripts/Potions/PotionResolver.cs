@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using AlchemyOverhaul.Data.Enums;
+using AlchemyOverhaul.Data.Runtime;
 
 namespace AlchemyOverhaul.Potions
 {
@@ -13,21 +14,26 @@ namespace AlchemyOverhaul.Potions
                 new CustomPotion
                 {
                     Id = AOConstants.PotionIds.TestHealRegenV1,
-                    Effects = new CustomPotionEffect[]
+                    Effects = new PotionEffectInstance[]
                     {
-                        new CustomPotionEffect
-                        {
-                            EffectKey = PotionEffectKey.RestoreHealth,
-                            Magnitude = 20,
-                            DurationType = PotionEffectDurationType.Instant
-                        },
-                        new CustomPotionEffect
-                        {
-                            EffectKey = PotionEffectKey.RegenerateHealth,
-                            Magnitude = 3,
-                            DurationSeconds = 3,
-                            DurationType = PotionEffectDurationType.Timed
-                        }
+                        new PotionEffectInstance
+                        (
+                            PotionEffectKey.RestoreHealth.ToString(),
+                            20,
+                            0,
+                            PotionEffectDurationType.Instant,
+                            EffectScalingModel.Additive,
+                            EffectIdentificationLevel.Full
+                        ),
+                        new PotionEffectInstance
+                        (
+                            PotionEffectKey.RegenerateHealth.ToString(),
+                            3,
+                            3,
+                            PotionEffectDurationType.Timed,
+                            EffectScalingModel.Additive,
+                            EffectIdentificationLevel.Full
+                        )
                     }
                 }
             }

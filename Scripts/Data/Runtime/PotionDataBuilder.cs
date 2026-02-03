@@ -36,15 +36,17 @@ namespace AlchemyOverhaul.Data.Runtime
             };
 
             // Resolve effects into runtime instances
-            foreach (CustomPotionEffect effect in definition.Effects)
+            foreach (PotionEffectInstance effect in definition.Effects)
             {
                 data.Effects.Add(new PotionEffectInstance
-                {
-                    EffectKey = effect.EffectKey,
-                    Magnitude = effect.Magnitude,
-                    Duration = effect.DurationSeconds,
-                    DurationType = effect.DurationType
-                });
+                (
+                    effect.EffectKey,
+                    effect.Magnitude,
+                    effect.Duration,
+                    effect.DurationType,
+                    effect.ScalingModel,
+                    effect.IdentificationLevel
+                ));
             }
 
             return data;

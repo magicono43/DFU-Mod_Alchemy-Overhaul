@@ -5,19 +5,44 @@ using AlchemyOverhaul.Potions;
 namespace AlchemyOverhaul.Data.Runtime
 {
     [Serializable]
-    public struct PotionEffectInstance
+    public sealed class PotionEffectInstance
     {
-        public PotionEffectKey EffectKey;
+        // ===== Identity =====
+        public readonly string EffectKey;
 
-        public float Magnitude;
-        public float Duration;
+        // ===== Final frozen values =====
+        public readonly int Magnitude;
+        public readonly int Duration;
+        public readonly PotionEffectDurationType DurationType;
 
-        public PotionEffectDurationType DurationType;
+        // ===== Other values =====
+        public readonly EffectScalingModel ScalingModel;
+        public readonly EffectIdentificationLevel IdentificationLevel;
 
-        public EffectScalingModel ScalingModel;
+        // ===== Optional execution flags =====
+        public readonly bool IsHarmful;
+        public readonly bool IsBeneficial;
 
-        public bool IsPrimary;
+        // Constructor enforces correctness
+        public PotionEffectInstance(string effectKey, int magnitude, int duration, PotionEffectDurationType durationType, EffectScalingModel scalingModel, EffectIdentificationLevel identificationLevel, bool isHarmful = false, bool isBeneficial = true)
+        {
+            if (string.IsNullOrEmpty(effectKey))
+                throw new ArgumentException("EffectKey cannot be null or empty.");
 
-        public EffectIdentificationLevel IdentificationLevel;
+            if (magnitude <= 0)
+                throw new ArgumentOutOfRangeException(nameof(magnitude));
+
+            if (durationType == PotionEffectDurationType.Timed && duration <= 0)
+                throw new ArgumentOutOfRangeException(nameof(duration));
+
+            EffectKey = effectKey;
+            Magnitude = magnitude;
+            Duration = duration;
+            DurationType = durationType;
+            ScalingModel = scalingModel;
+            IdentificationLevel = identificationLevel;
+            IsHarmful = isHarmful;
+            IsBeneficial = isBeneficial;
+        }
     }
 }

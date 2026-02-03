@@ -1,8 +1,10 @@
+using AlchemyOverhaul.Data.Runtime;
+
 namespace AlchemyOverhaul.Potions
 {
-	public class CustomPotion
+    public class CustomPotion
     {
         public string Id;
-        public CustomPotionEffect[] Effects;
+        public PotionEffectInstance[] Effects;
     }
 }

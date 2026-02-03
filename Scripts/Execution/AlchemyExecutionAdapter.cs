@@ -11,7 +11,7 @@ namespace AlchemyOverhaul.Execution
         /// Executes a fully-resolved potion effect.
         /// All scaling, randomness, stacking, and validation MUST be done before calling this.
         /// </summary>
-        public static void ApplyPotionEffect(PotionEffectKey effectKey, int magnitude, int durationSeconds)
+        public static void ApplyPotionEffect(string effectKey, int magnitude, int duration)
         {
             PlayerEntity player = GameManager.Instance.PlayerEntity;
             EntityEffectBroker broker = GameManager.Instance.EntityEffectBroker;
@@ -26,7 +26,7 @@ namespace AlchemyOverhaul.Execution
             {
                 MagnitudeBaseMin = magnitude,
                 MagnitudeBaseMax = magnitude,
-                DurationBase = durationSeconds,
+                DurationBase = duration,
                 ChanceBase = 100,
 
                 // Safe per-level values
@@ -66,7 +66,7 @@ namespace AlchemyOverhaul.Execution
             );
         }
 
-        public static void ApplyInstantEffect(PotionEffectKey effectKey, int magnitude)
+        public static void ApplyInstantEffect(string effectKey, int magnitude)
         {
             PlayerEntity player = GameManager.Instance.PlayerEntity;
             EntityEffectBroker broker = GameManager.Instance.EntityEffectBroker;
