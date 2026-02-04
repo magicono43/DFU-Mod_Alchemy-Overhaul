@@ -62,8 +62,41 @@ namespace AlchemyOverhaul.Systems
         {
             potionsById.Clear();
 
+            if (saveData == null)
+                return;
+
             foreach (var kvp in saveData)
-                potionsById[kvp.Key] = PotionDataConverter.FromSave(kvp.Value);
+            {
+                ulong potionId = kvp.Key;
+                PotionDataSave save = kvp.Value;
+
+                PotionData runtime = PotionDataConverter.FromSave(save);
+                if (runtime == null)
+                    continue;
+
+                // Definition must exist
+                if (string.IsNullOrEmpty(runtime.PotionDefinitionId))
+                    continue;
+
+                PotionDefinition definition =
+                    PotionResolver.ResolveById(runtime.PotionDefinitionId);
+
+                if (definition == null)
+                    continue;
+
+                // Rebind definition-derived data
+                runtime.ApplyDefinition(definition);
+
+                // Final validation before registration
+                RegisterPotion(potionId, runtime);
+            }
+        }
+
+        // ===== Helpers =====
+
+        public static void Clear()
+        {
+            potionsById.Clear();
         }
     }
 }
