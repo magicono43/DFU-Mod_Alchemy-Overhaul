@@ -3,7 +3,6 @@ using DaggerfallWorkshop.Game.Serialization;
 using AlchemyOverhaul.Potions;
 using AlchemyOverhaul.Execution;
 using AlchemyOverhaul.Data.Runtime;
-using AlchemyOverhaul.Data.Definitions;
 
 namespace AlchemyOverhaul.Items
 {
@@ -24,14 +23,10 @@ namespace AlchemyOverhaul.Items
 
         public override bool UseItem(ItemCollection collection)
         {
-            if (!AlchemyOverhaulMain.ModSaveData.TryGetPotionData(this.UID, out Data.Runtime.PotionData data))
+            if (!AlchemyOverhaulMain.ModSaveData.TryGetPotionData(this.UID, out PotionData data))
                 return true;
 
-            PotionDefinition potion = PotionResolver.ResolveById(data.PotionInstanceId);
-            if (potion == null)
-                return true;
-
-            foreach (PotionEffectInstance effect in potion.Effects)
+            foreach (PotionEffectInstance effect in data.Effects)
             {
                 if (effect.DurationType == PotionEffectDurationType.Instant)
                     AlchemyExecutionAdapter.ApplyInstantEffect(effect.EffectKey, effect.Magnitude);

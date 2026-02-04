@@ -37,8 +37,17 @@ namespace AlchemyOverhaul.Data.Runtime
         {
             Definition = definition;
 
-            // Optional: rebuild effects if desired
-            // Effects = PotionEffectFactory.Build(definition, AlchemySkillAtBrew);
+            if (Effects == null || definition.Effects == null)
+                return;
+
+            for (int i = Effects.Count - 1; i >= 0; i--)
+            {
+                if (!definition.TryValidateEffect(Effects[i]))
+                {
+                    // Rule: removed effects are deleted
+                    Effects.RemoveAt(i);
+                }
+            }
         }
     }
 }

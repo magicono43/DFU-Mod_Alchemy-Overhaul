@@ -3,6 +3,7 @@ using DaggerfallWorkshop;
 using System.Collections.Generic;
 using AlchemyOverhaul.Data.Enums;
 using AlchemyOverhaul.Data.Definitions;
+using AlchemyOverhaul.Potions;
 
 namespace AlchemyOverhaul.Data.Runtime
 {
@@ -32,16 +33,19 @@ namespace AlchemyOverhaul.Data.Runtime
             };
 
             // Resolve effects into runtime instances
-            foreach (PotionEffectInstance effect in definition.Effects)
+            foreach (PotionEffectBlueprint blueprint in definition.Effects)
             {
                 data.Effects.Add(new PotionEffectInstance
                 (
-                    effect.EffectKey,
-                    effect.Magnitude,
-                    effect.Duration,
-                    effect.DurationType,
-                    effect.ScalingModel,
-                    effect.IdentificationLevel
+                    blueprint.EffectKey,
+
+                    // Initial values (design-time defaults)
+                    blueprint.MaxMagnitude,     // or MinMagnitude, or derived later
+                    blueprint.MaxDuration,
+
+                    PotionEffectDurationType.Timed, // or store this in blueprint
+                    EffectScalingModel.Additive,
+                    EffectIdentificationLevel.Full
                 ));
             }
 
