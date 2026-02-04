@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using AlchemyOverhaul.Data.Enums;
 using AlchemyOverhaul.Data.Definitions;
+using AlchemyOverhaul.Data.Runtime;
 
 namespace AlchemyOverhaul.Potions
 {
@@ -18,7 +19,7 @@ namespace AlchemyOverhaul.Potions
                         {
                             new PotionEffectBlueprint
                             {
-                                EffectKey = PotionEffectKey.RestoreHealth.ToString(),
+                                EffectKey = PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RestoreHealth),
                                 MinMagnitude = 20,
                                 MaxMagnitude = 20,
                                 MinDuration = 0,
@@ -29,7 +30,7 @@ namespace AlchemyOverhaul.Potions
                             },
                             new PotionEffectBlueprint
                             {
-                                EffectKey = PotionEffectKey.RegenerateHealth.ToString(),
+                                EffectKey = PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RegenerateHealth),
                                 MinMagnitude = 3,
                                 MaxMagnitude = 3,
                                 MinDuration = 3,

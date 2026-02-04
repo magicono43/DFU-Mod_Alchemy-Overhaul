@@ -12,14 +12,7 @@ namespace AlchemyOverhaul.Systems
         {
             HashSet<ulong> validUids = new HashSet<ulong>();
 
-            // Player inventory
-            ItemCollection items = player.Items;
-
-            for (int i = 0; i < items.Count; i++)
-            {
-                DaggerfallUnityItem item = items.GetItem(i);
-                validUids.Add(item.UID);
-            }
+            validUids = CollectAllValidItemUids(player);
 
             // Remove orphaned potion data
             List<ulong> toRemove = new List<ulong>();

@@ -12,8 +12,8 @@ namespace AlchemyOverhaul.Data.Runtime
     public sealed class PotionData
     {
         // ===== Identity / Provenance =====
-        public string PotionInstanceId;              // System.Guid.ToString()
         public string PotionDefinitionId;
+        public string PotionInstanceId;              // System.Guid.ToString()
         public ulong CreatedGameTime;
         public int BrewerEntityId;                   // Or -1 if unknown
         public int AlchemySkillAtBrew;

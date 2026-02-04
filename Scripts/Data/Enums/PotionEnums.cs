@@ -6,9 +6,6 @@ namespace AlchemyOverhaul.Data.Enums
     {
         RestoreHealth,
         RegenerateHealth,
-        FortifyStrength,
-        DamageFatigue,
-        CurePoison,
         // etc
     }
     

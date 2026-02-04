@@ -3,7 +3,6 @@ using DaggerfallWorkshop;
 using System.Collections.Generic;
 using AlchemyOverhaul.Data.Enums;
 using AlchemyOverhaul.Data.Definitions;
-using AlchemyOverhaul.Potions;
 
 namespace AlchemyOverhaul.Data.Runtime
 {
@@ -14,8 +13,8 @@ namespace AlchemyOverhaul.Data.Runtime
             PotionData data = new PotionData
             {
                 // ===== Identity =====
-                PotionInstanceId = Guid.NewGuid().ToString(),
                 PotionDefinitionId = definition.Id,
+                PotionInstanceId = Guid.NewGuid().ToString(),
                 CreatedGameTime = DaggerfallUnity.Instance.WorldTime.DaggerfallDateTime.ToSeconds(),
                 BrewerEntityId = brewerEntityId,
                 AlchemySkillAtBrew = alchemySkill,
@@ -43,9 +42,9 @@ namespace AlchemyOverhaul.Data.Runtime
                     blueprint.MaxMagnitude,     // or MinMagnitude, or derived later
                     blueprint.MaxDuration,
 
-                    PotionEffectDurationType.Timed, // or store this in blueprint
-                    EffectScalingModel.Additive,
-                    EffectIdentificationLevel.Full
+                    blueprint.DurationType,
+                    blueprint.ScalingModel,
+                    blueprint.IdentificationLevel
                 ));
             }
 

@@ -32,7 +32,8 @@
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Systems/PotionSpoilageSystem.cs",
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Systems/PotionStackingUtility.cs",
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Data/Definitions/PotionDefinition.cs",
-        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Data/Definitions/PotionEffectBlueprint.cs"
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Data/Definitions/PotionEffectBlueprint.cs",
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Data/Runtime/PotionEffectKeyMapper.cs"
     ],
     "Dependencies": []
 }

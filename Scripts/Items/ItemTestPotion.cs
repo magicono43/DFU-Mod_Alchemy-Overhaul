@@ -3,6 +3,7 @@ using DaggerfallWorkshop.Game.Serialization;
 using AlchemyOverhaul.Potions;
 using AlchemyOverhaul.Execution;
 using AlchemyOverhaul.Data.Runtime;
+using AlchemyOverhaul.Systems;
 
 namespace AlchemyOverhaul.Items
 {
@@ -34,7 +35,7 @@ namespace AlchemyOverhaul.Items
                     AlchemyExecutionAdapter.ApplyPotionEffect(effect.EffectKey, effect.Magnitude, effect.Duration);
             }
 
-            AlchemyOverhaulMain.ModSaveData.RemovePotion(this.UID);
+            PotionConsumptionHook.OnPotionConsumed(this);
             collection.RemoveItem(this);
             return true;
         }

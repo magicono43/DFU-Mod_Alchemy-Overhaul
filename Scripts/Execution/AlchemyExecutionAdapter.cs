@@ -1,7 +1,6 @@
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.MagicAndEffects;
-using AlchemyOverhaul.Data.Enums;
 
 namespace AlchemyOverhaul.Execution
 {
