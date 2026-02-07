@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using AlchemyOverhaul.Data.Save;
 using AlchemyOverhaul.Systems;
 using AlchemyOverhaul.Data.Runtime;
+using AlchemyOverhaul.Ingredients.Knowledge;
 
 namespace AlchemyOverhaul
 {
@@ -22,6 +23,9 @@ namespace AlchemyOverhaul
             
             // UID -> versioned potion save data
             public Dictionary<ulong, PotionDataSave> PotionItems = new Dictionary<ulong, PotionDataSave>();
+            
+            // IngredientId -> learned flags
+            public Dictionary<string, IngredientEffectKnowledge> IngredientKnowledge = new Dictionary<string, IngredientEffectKnowledge>();
         }
 
         internal AlchemyOverhaulSaveState state;
@@ -48,6 +52,7 @@ namespace AlchemyOverhaul
         {
             // Always regenerate from runtime truth
             SyncPotionSaveData();
+            state.IngredientKnowledge = IngredientKnowledgeSystem.GetSaveData();
             return state;
         }
 
@@ -70,6 +75,7 @@ namespace AlchemyOverhaul
             // Runtime registry is authoritative
             PotionRegistry.Clear();
             PotionRegistry.LoadFromSave(state.PotionItems);
+            IngredientKnowledgeSystem.LoadFromSave(state.IngredientKnowledge);
 
             // Immediate reconciliation
             PotionCleanupSystem.RunCleanup(GameManager.Instance.PlayerEntity);
