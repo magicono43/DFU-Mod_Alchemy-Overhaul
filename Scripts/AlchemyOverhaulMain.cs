@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		2/8/2026, 7:15 PM
+// Last Edit:		2/18/2026, 7:45 PM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:
@@ -33,29 +33,36 @@ namespace AlchemyOverhaul
         public const KeyCode InfoWindowKey = KeyCode.G;
 
         // Mod Textures || GUI
-        public Texture2D EquipInfoGUITexture;
-        public Texture2D EquipInfoSlotBorderTexture;
-        public Texture2D EquipInfoExtraRightPanelTexture;
-        public Texture2D EquipInfoExtraLeftPanelTexture;
-        public Texture2D EquipInfoExtraRightGreenUpArrowTexture;
-        public Texture2D EquipInfoExtraRightGreenDownArrowTexture;
-        public Texture2D EquipInfoExtraLeftGreenUpArrowTexture;
-        public Texture2D EquipInfoExtraLeftGreenDownArrowTexture;
-        public Texture2D EquipInfoExtraRightRedUpArrowTexture;
-        public Texture2D EquipInfoExtraRightRedDownArrowTexture;
-        public Texture2D EquipInfoExtraLeftRedUpArrowTexture;
-        public Texture2D EquipInfoExtraLeftRedDownArrowTexture;
-        public Texture2D EquipInfoRightComparisonPanelTexture;
-        public Texture2D EquipInfoLeftComparisonPanelTexture;
-        public Texture2D EquipInfoSortButtonBackgroundTexture;
-        public Texture2D EquipInfoSortButtonActiveBorderTexture;
-        public Texture2D EquipInfoSortIconCheckmarkTexture;
-        public Texture2D EquipInfoSortIconXmarkTexture;
-        public Texture2D EquipInfoSortIconPercentTexture;
-        public Texture2D EquipInfoSortIconSwordTexture;
-        public Texture2D EquipInfoSortIconShieldTexture;
-        public Texture2D EquipInfoSortIconAscendingTexture;
-        public Texture2D EquipInfoSortIconDescendingTexture;
+        public Texture2D BrewingLocalSearchBarTexture;
+        public Texture2D BrewingLocalInventoryPanelTexture;
+        public Texture2D BrewingPrimaryHoverTextPanelTexture;
+        public Texture2D BrewingAlchemyToolsPanelTexture;
+        public Texture2D BrewingResultInfoPanelTexture;
+        public Texture2D BrewingIngredientInputPanelTexture;
+        public Texture2D BrewingBrewButtonActiveTexture;
+        public Texture2D BrewingHeatActiveIconTexture;
+        public Texture2D BrewingHeatSettingButtonTexture;
+        public Texture2D BrewingMiscInfoPanelTexture;
+        public Texture2D BrewingRecipeSearchBarTexture;
+        public Texture2D BrewingRecipeListPanelTexture;
+        public Texture2D BrewingHelpButtonActiveTexture;
+        public Texture2D BrewingExitButtonTexture;
+
+        public Texture2D ExtraRightGreenUpArrowTexture;
+        public Texture2D ExtraRightGreenDownArrowTexture;
+        public Texture2D ExtraLeftGreenUpArrowTexture;
+        public Texture2D ExtraLeftGreenDownArrowTexture;
+        public Texture2D ExtraRightRedUpArrowTexture;
+        public Texture2D ExtraRightRedDownArrowTexture;
+        public Texture2D ExtraLeftRedUpArrowTexture;
+        public Texture2D ExtraLeftRedDownArrowTexture;
+        public Texture2D SortButtonBackgroundTexture;
+        public Texture2D SortButtonActiveBorderTexture;
+        public Texture2D SortIconCheckmarkTexture;
+        public Texture2D SortIconXmarkTexture;
+        public Texture2D SortIconPercentTexture;
+        public Texture2D SortIconAscendingTexture;
+        public Texture2D SortIconDescendingTexture;
 
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
@@ -114,32 +121,39 @@ namespace AlchemyOverhaul
             ModManager modManager = ModManager.Instance;
             bool success = true;
 
-            success &= modManager.TryGetAsset("PCO_Equip_Info_GUI_1", false, out EquipInfoGUITexture);
-            success &= modManager.TryGetAsset("Slot_Selected_Border_1", false, out EquipInfoSlotBorderTexture);
-            success &= modManager.TryGetAsset("Extra_Panel_Right_1", false, out EquipInfoExtraRightPanelTexture);
-            success &= modManager.TryGetAsset("Extra_Panel_Left_1", false, out EquipInfoExtraLeftPanelTexture);
-            success &= modManager.TryGetAsset("Right_Green_Arrow_Up_1", false, out EquipInfoExtraRightGreenUpArrowTexture);
-            success &= modManager.TryGetAsset("Right_Green_Arrow_Down_1", false, out EquipInfoExtraRightGreenDownArrowTexture);
-            success &= modManager.TryGetAsset("Left_Green_Arrow_Up_1", false, out EquipInfoExtraLeftGreenUpArrowTexture);
-            success &= modManager.TryGetAsset("Left_Green_Arrow_Down_1", false, out EquipInfoExtraLeftGreenDownArrowTexture);
-            success &= modManager.TryGetAsset("Right_Red_Arrow_Up_1", false, out EquipInfoExtraRightRedUpArrowTexture);
-            success &= modManager.TryGetAsset("Right_Red_Arrow_Down_1", false, out EquipInfoExtraRightRedDownArrowTexture);
-            success &= modManager.TryGetAsset("Left_Red_Arrow_Up_1", false, out EquipInfoExtraLeftRedUpArrowTexture);
-            success &= modManager.TryGetAsset("Left_Red_Arrow_Down_1", false, out EquipInfoExtraLeftRedDownArrowTexture);
-            success &= modManager.TryGetAsset("Item_Comparison_Panel_Right", false, out EquipInfoRightComparisonPanelTexture);
-            success &= modManager.TryGetAsset("Item_Comparison_Panel_Left", false, out EquipInfoLeftComparisonPanelTexture);
-            success &= modManager.TryGetAsset("Sort_Button_Background_And_Border_1", false, out EquipInfoSortButtonBackgroundTexture);
-            success &= modManager.TryGetAsset("Sort_Button_Active_Border_1", false, out EquipInfoSortButtonActiveBorderTexture);
-            success &= modManager.TryGetAsset("Sort_Button_Icon_Checkmark_1", false, out EquipInfoSortIconCheckmarkTexture);
-            success &= modManager.TryGetAsset("Sort_Button_Icon_X_Mark_1", false, out EquipInfoSortIconXmarkTexture);
-            success &= modManager.TryGetAsset("Sort_Button_Icon_Percent_1", false, out EquipInfoSortIconPercentTexture);
-            success &= modManager.TryGetAsset("Sort_Button_Icon_Sword_1", false, out EquipInfoSortIconSwordTexture);
-            success &= modManager.TryGetAsset("Sort_Button_Icon_Shield_1", false, out EquipInfoSortIconShieldTexture);
-            success &= modManager.TryGetAsset("Sort_Button_Icon_Ascending_Arrow_1", false, out EquipInfoSortIconAscendingTexture);
-            success &= modManager.TryGetAsset("Sort_Button_Icon_Descending_Arrow_1", false, out EquipInfoSortIconDescendingTexture);
+            success &= modManager.TryGetAsset("AO_Potion_Crafting_Search_Bar_1", false, out BrewingLocalSearchBarTexture);
+            success &= modManager.TryGetAsset("AO_Potion_Crafting_Ingredient_Inventory_Panel_1", false, out BrewingLocalInventoryPanelTexture);
+            success &= modManager.TryGetAsset("AO_Potion_Crafting_Primary_Info_Panel", false, out BrewingPrimaryHoverTextPanelTexture);
+            success &= modManager.TryGetAsset("AO_Potion_Crafting_Brewing_Tool_Panel", false, out BrewingAlchemyToolsPanelTexture);
+            success &= modManager.TryGetAsset("AO_Potion_Crafting_Brewing_Result_Panel", false, out BrewingResultInfoPanelTexture);
+            success &= modManager.TryGetAsset("AO_Potion_Crafting_Brewing_Input_Panel_1", false, out BrewingIngredientInputPanelTexture);
+            success &= modManager.TryGetAsset("AO_Potion_Crafting_Brew_Button", false, out BrewingBrewButtonActiveTexture);
+            success &= modManager.TryGetAsset("AO_Potion_Crafting_Brewing_Heat_Icon_Active", false, out BrewingHeatActiveIconTexture);
+            success &= modManager.TryGetAsset("AO_Potion_Crafting_Brewing_Heat_Setting_Panel", false, out BrewingHeatSettingButtonTexture);
+            success &= modManager.TryGetAsset("AO_Potion_Crafting_Misc_Info_Panel", false, out BrewingMiscInfoPanelTexture);
+            success &= modManager.TryGetAsset("AO_Potion_Crafting_Search_Bar_2", false, out BrewingRecipeSearchBarTexture);
+            success &= modManager.TryGetAsset("AO_Potion_Crafting_Recipe_Panel_1", false, out BrewingRecipeListPanelTexture);
+            success &= modManager.TryGetAsset("AO_Potion_Crafting_Help_Button", false, out BrewingHelpButtonActiveTexture);
+            success &= modManager.TryGetAsset("AO_Potion_Crafting_Exit_Button", false, out BrewingExitButtonTexture);
+
+            success &= modManager.TryGetAsset("Right_Green_Arrow_Up_1", false, out ExtraRightGreenUpArrowTexture);
+            success &= modManager.TryGetAsset("Right_Green_Arrow_Down_1", false, out ExtraRightGreenDownArrowTexture);
+            success &= modManager.TryGetAsset("Left_Green_Arrow_Up_1", false, out ExtraLeftGreenUpArrowTexture);
+            success &= modManager.TryGetAsset("Left_Green_Arrow_Down_1", false, out ExtraLeftGreenDownArrowTexture);
+            success &= modManager.TryGetAsset("Right_Red_Arrow_Up_1", false, out ExtraRightRedUpArrowTexture);
+            success &= modManager.TryGetAsset("Right_Red_Arrow_Down_1", false, out ExtraRightRedDownArrowTexture);
+            success &= modManager.TryGetAsset("Left_Red_Arrow_Up_1", false, out ExtraLeftRedUpArrowTexture);
+            success &= modManager.TryGetAsset("Left_Red_Arrow_Down_1", false, out ExtraLeftRedDownArrowTexture);
+            success &= modManager.TryGetAsset("Sort_Button_Background_And_Border_1", false, out SortButtonBackgroundTexture);
+            success &= modManager.TryGetAsset("Sort_Button_Active_Border_1", false, out SortButtonActiveBorderTexture);
+            success &= modManager.TryGetAsset("Sort_Button_Icon_Checkmark_1", false, out SortIconCheckmarkTexture);
+            success &= modManager.TryGetAsset("Sort_Button_Icon_X_Mark_1", false, out SortIconXmarkTexture);
+            success &= modManager.TryGetAsset("Sort_Button_Icon_Percent_1", false, out SortIconPercentTexture);
+            success &= modManager.TryGetAsset("Sort_Button_Icon_Ascending_Arrow_1", false, out SortIconAscendingTexture);
+            success &= modManager.TryGetAsset("Sort_Button_Icon_Descending_Arrow_1", false, out SortIconDescendingTexture);
 
             if (!success)
-                throw new Exception("PhysicalCombatOverhaul: Missing texture asset");
+                throw new Exception("AlchemyOverhaul: Missing texture asset");
         }
 
         public static void RegisterConsoleCommands()

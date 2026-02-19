@@ -11,7 +11,7 @@ using AlchemyOverhaul;
 namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 {
     /// <summary>
-    /// Implements Alchemy Overhaul's Custom Potion Crafting Window.
+    /// Implements Alchemy Overhaul's Custom Potion Crafting/Brewing Window.
     /// </summary>
     public class AOPotionCraftingWindow : DaggerfallPopupWindow
     {
@@ -45,21 +45,38 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
         #region UI Textures
 
-        Texture2D baseTexture;
-        Texture2D slotBorderTexture;
-        Texture2D rightExtraEquipTexture;
-        Texture2D leftExtraEquipTexture;
-        Texture2D rightItemComparisonTexture;
-        Texture2D leftItemComparisonTexture;
+        Texture2D localSearchBarTexture;
+        Texture2D localInventoryPanelTexture;
+        Texture2D primaryHoverTextPanelTexture;
+
+        Texture2D alchemyToolsPanelTexture;
+        Texture2D resultInfoPanelTexture;
+        Texture2D ingredientInputPanelTexture;
+        Texture2D brewButtonActiveTexture;
+        Texture2D heatActiveIconTexture;
+        Texture2D heatSettingButtonTexture;
+
+        Texture2D miscInfoPanelTexture;
+        Texture2D recipeSearchBarTexture;
+        Texture2D recipeListPanelTexture;
+        Texture2D helpButtonActiveTexture;
+        Texture2D exitButtonTexture;
+
+        Texture2D rightGreenUpArrowTexture;
+        Texture2D rightGreenDownArrowTexture;
+        Texture2D leftGreenUpArrowTexture;
+        Texture2D leftGreenDownArrowTexture;
+        Texture2D rightRedUpArrowTexture;
+        Texture2D rightRedDownArrowTexture;
+        Texture2D leftRedUpArrowTexture;
+        Texture2D leftRedDownArrowTexture;
         Texture2D sortButtonBackgroundTexture;
         Texture2D sortButtonActiveBorderTexture;
         Texture2D sortIconCheckmarkTexture;
         Texture2D sortIconXmarkTexture;
         Texture2D sortIconPercentTexture;
-        Texture2D sortIconSwordTexture;
-        Texture2D sortIconShieldTexture;
-        Texture2D sortIconAscendArrowTexture;
-        Texture2D sortIconDescendArrowTexture;
+        Texture2D sortIconAscendingTexture;
+        Texture2D sortIconDescendingTexture;
 
         #endregion
 
@@ -80,7 +97,6 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
             // Setup native panel background
             NativePanel.BackgroundColor = ScreenDimColor;
-            NativePanel.BackgroundTexture = baseTexture;
 
             SetupChestChoiceButtons();
 
@@ -91,21 +107,38 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
         protected virtual void LoadTextures()
         {
-            baseTexture = AlchemyOverhaulMain.Instance.EquipInfoGUITexture;
-            slotBorderTexture = AlchemyOverhaulMain.Instance.EquipInfoSlotBorderTexture;
-            rightExtraEquipTexture = AlchemyOverhaulMain.Instance.EquipInfoExtraRightPanelTexture;
-            leftExtraEquipTexture = AlchemyOverhaulMain.Instance.EquipInfoExtraLeftPanelTexture;
-            rightItemComparisonTexture = AlchemyOverhaulMain.Instance.EquipInfoRightComparisonPanelTexture;
-            leftItemComparisonTexture = AlchemyOverhaulMain.Instance.EquipInfoLeftComparisonPanelTexture;
-            sortButtonBackgroundTexture = AlchemyOverhaulMain.Instance.EquipInfoSortButtonBackgroundTexture;
-            sortButtonActiveBorderTexture = AlchemyOverhaulMain.Instance.EquipInfoSortButtonActiveBorderTexture;
-            sortIconCheckmarkTexture = AlchemyOverhaulMain.Instance.EquipInfoSortIconCheckmarkTexture;
-            sortIconXmarkTexture = AlchemyOverhaulMain.Instance.EquipInfoSortIconXmarkTexture;
-            sortIconPercentTexture = AlchemyOverhaulMain.Instance.EquipInfoSortIconPercentTexture;
-            sortIconSwordTexture = AlchemyOverhaulMain.Instance.EquipInfoSortIconSwordTexture;
-            sortIconShieldTexture = AlchemyOverhaulMain.Instance.EquipInfoSortIconShieldTexture;
-            sortIconAscendArrowTexture = AlchemyOverhaulMain.Instance.EquipInfoSortIconAscendingTexture;
-            sortIconDescendArrowTexture = AlchemyOverhaulMain.Instance.EquipInfoSortIconDescendingTexture;
+            localSearchBarTexture = AlchemyOverhaulMain.Instance.BrewingLocalSearchBarTexture;
+            localInventoryPanelTexture = AlchemyOverhaulMain.Instance.BrewingLocalInventoryPanelTexture;
+            primaryHoverTextPanelTexture = AlchemyOverhaulMain.Instance.BrewingPrimaryHoverTextPanelTexture;
+
+            alchemyToolsPanelTexture = AlchemyOverhaulMain.Instance.BrewingAlchemyToolsPanelTexture;
+            resultInfoPanelTexture = AlchemyOverhaulMain.Instance.BrewingResultInfoPanelTexture;
+            ingredientInputPanelTexture = AlchemyOverhaulMain.Instance.BrewingIngredientInputPanelTexture;
+            brewButtonActiveTexture = AlchemyOverhaulMain.Instance.BrewingBrewButtonActiveTexture;
+            heatActiveIconTexture = AlchemyOverhaulMain.Instance.BrewingHeatActiveIconTexture;
+            heatSettingButtonTexture = AlchemyOverhaulMain.Instance.BrewingHeatSettingButtonTexture;
+
+            miscInfoPanelTexture = AlchemyOverhaulMain.Instance.BrewingMiscInfoPanelTexture;
+            recipeSearchBarTexture = AlchemyOverhaulMain.Instance.BrewingRecipeSearchBarTexture;
+            recipeListPanelTexture = AlchemyOverhaulMain.Instance.BrewingRecipeListPanelTexture;
+            helpButtonActiveTexture = AlchemyOverhaulMain.Instance.BrewingHelpButtonActiveTexture;
+            exitButtonTexture = AlchemyOverhaulMain.Instance.BrewingExitButtonTexture;
+
+            rightGreenUpArrowTexture = AlchemyOverhaulMain.Instance.ExtraRightGreenUpArrowTexture;
+            rightGreenDownArrowTexture = AlchemyOverhaulMain.Instance.ExtraRightGreenDownArrowTexture;
+            leftGreenUpArrowTexture = AlchemyOverhaulMain.Instance.ExtraLeftGreenUpArrowTexture;
+            leftGreenDownArrowTexture = AlchemyOverhaulMain.Instance.ExtraLeftGreenDownArrowTexture;
+            rightRedUpArrowTexture = AlchemyOverhaulMain.Instance.ExtraRightRedUpArrowTexture;
+            rightRedDownArrowTexture = AlchemyOverhaulMain.Instance.ExtraRightRedDownArrowTexture;
+            leftRedUpArrowTexture = AlchemyOverhaulMain.Instance.ExtraLeftRedUpArrowTexture;
+            leftRedDownArrowTexture = AlchemyOverhaulMain.Instance.ExtraLeftRedDownArrowTexture;
+            sortButtonBackgroundTexture = AlchemyOverhaulMain.Instance.SortButtonBackgroundTexture;
+            sortButtonActiveBorderTexture = AlchemyOverhaulMain.Instance.SortButtonActiveBorderTexture;
+            sortIconCheckmarkTexture = AlchemyOverhaulMain.Instance.SortIconCheckmarkTexture;
+            sortIconXmarkTexture = AlchemyOverhaulMain.Instance.SortIconXmarkTexture;
+            sortIconPercentTexture = AlchemyOverhaulMain.Instance.SortIconPercentTexture;
+            sortIconAscendingTexture = AlchemyOverhaulMain.Instance.SortIconAscendingTexture;
+            sortIconDescendingTexture = AlchemyOverhaulMain.Instance.SortIconDescendingTexture;
         }
 
         public static TextLabel CreateCenteredTextLabel(string text, Vector2 position, int maxWidth, Panel parentPanel, float textScale = 1, Color32? color = null)
