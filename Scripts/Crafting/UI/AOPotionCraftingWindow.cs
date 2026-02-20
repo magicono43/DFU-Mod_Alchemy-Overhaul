@@ -80,6 +80,53 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
         #endregion
 
+        Panel leftMainPanel;
+        Panel localSearchBarPanel;
+        Panel localSortButtonOnePanel;
+        Panel localSortButtonTwoPanel;
+        Panel localSortButtonThreePanel;
+        Panel localSortButtonFourPanel;
+        Panel localSortButtonFivePanel;
+        Panel localSortButtonSixPanel;
+        Panel localInventoryPanel;
+        Panel primaryHoverTextPanel;
+
+        Panel middleMainPanel;
+        Panel alchemyToolsPanel;
+        Panel resultInfoPanel;
+        Panel ingredientInputPanel;
+        Panel brewButtonActivePanel;
+        Panel heatActiveIconPanel;
+        Panel heatSettingButtonPanel;
+
+        Panel rightMainPanel;
+        Panel miscInfoPanel;
+        Panel recipeSearchBarPanel;
+        Panel recipeSortButtonOnePanel;
+        Panel recipeSortButtonTwoPanel;
+        Panel recipeSortButtonThreePanel;
+        Panel recipeSortButtonFourPanel;
+        Panel recipeSortButtonFivePanel;
+        Panel recipeListPanel;
+        Panel helpButtonActivePanel;
+        Panel exitButtonPanel;
+
+        Panel rightGreenUpArrowPanel;
+        Panel rightGreenDownArrowPanel;
+        Panel leftGreenUpArrowPanel;
+        Panel leftGreenDownArrowPanel;
+        Panel rightRedUpArrowPanel;
+        Panel rightRedDownArrowPanel;
+        Panel leftRedUpArrowPanel;
+        Panel leftRedDownArrowPanel;
+        Panel sortButtonBackgroundPanel;
+        Panel sortButtonActiveBorderPanel;
+        Panel sortIconCheckmarkPanel;
+        Panel sortIconXmarkPanel;
+        Panel sortIconPercentPanel;
+        Panel sortIconAscendingPanel;
+        Panel sortIconDescendingPanel;
+
         AOItemListScroller localAOItemListScroller;
 
         ItemCollection localItems = null;
@@ -102,7 +149,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
             localItems = Player.Items;
 
-            SetupTestItemImagePanels();
+            SetupTestImagePanels();
         }
 
         protected virtual void LoadTextures()
@@ -139,6 +186,40 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             sortIconPercentTexture = AlchemyOverhaulMain.Instance.SortIconPercentTexture;
             sortIconAscendingTexture = AlchemyOverhaulMain.Instance.SortIconAscendingTexture;
             sortIconDescendingTexture = AlchemyOverhaulMain.Instance.SortIconDescendingTexture;
+        }
+
+        protected void SetupTestImagePanels()
+        {
+            leftMainPanel = DaggerfallUI.AddPanel(new Rect(0, 0, 100, 200), NativePanel);
+            localSearchBarPanel = DaggerfallUI.AddPanel(new Rect(0, 0, 100, 9), leftMainPanel);
+            localSortButtonOnePanel = DaggerfallUI.AddPanel(new Rect(0, 10, 15, 12), leftMainPanel);
+            localSortButtonTwoPanel = DaggerfallUI.AddPanel(new Rect(15, 10, 15, 12), leftMainPanel);
+            localSortButtonThreePanel = DaggerfallUI.AddPanel(new Rect(30, 10, 15, 12), leftMainPanel);
+            localSortButtonFourPanel = DaggerfallUI.AddPanel(new Rect(45, 10, 15, 12), leftMainPanel);
+            localSortButtonFivePanel = DaggerfallUI.AddPanel(new Rect(60, 10, 15, 12), leftMainPanel);
+            localSortButtonSixPanel = DaggerfallUI.AddPanel(new Rect(75, 10, 15, 12), leftMainPanel);
+            localInventoryPanel = DaggerfallUI.AddPanel(new Rect(0, 22, 100, 110), leftMainPanel);
+            primaryHoverTextPanel = DaggerfallUI.AddPanel(new Rect(0, 133, 100, 67), leftMainPanel);
+
+            middleMainPanel = DaggerfallUI.AddPanel(new Rect(118, 0, 101, 200), NativePanel);
+            alchemyToolsPanel = DaggerfallUI.AddPanel(new Rect(0, 6, 101, 22), middleMainPanel);
+            resultInfoPanel = DaggerfallUI.AddPanel(new Rect(0, 32, 101, 63), middleMainPanel);
+            ingredientInputPanel = DaggerfallUI.AddPanel(new Rect(0, 99, 101, 69), middleMainPanel);
+            brewButtonActivePanel = DaggerfallUI.AddPanel(new Rect(33, 123, 35, 13), middleMainPanel);
+            heatActiveIconPanel = DaggerfallUI.AddPanel(new Rect(46, 163, 9, 15), middleMainPanel);
+            heatSettingButtonPanel = DaggerfallUI.AddPanel(new Rect(33, 180, 34, 14), middleMainPanel);
+
+            rightMainPanel = DaggerfallUI.AddPanel(new Rect(237, 0, 83, 200), NativePanel);
+            miscInfoPanel = DaggerfallUI.AddPanel(new Rect(0, 0, 83, 87), rightMainPanel);
+            recipeSearchBarPanel = DaggerfallUI.AddPanel(new Rect(0, 92, 83, 9), rightMainPanel);
+            recipeSortButtonOnePanel = DaggerfallUI.AddPanel(new Rect(8, 102, 15, 12), rightMainPanel);
+            recipeSortButtonTwoPanel = DaggerfallUI.AddPanel(new Rect(23, 102, 15, 12), rightMainPanel);
+            recipeSortButtonThreePanel = DaggerfallUI.AddPanel(new Rect(38, 102, 15, 12), rightMainPanel);
+            recipeSortButtonFourPanel = DaggerfallUI.AddPanel(new Rect(53, 102, 15, 12), rightMainPanel);
+            recipeSortButtonFivePanel = DaggerfallUI.AddPanel(new Rect(68, 102, 15, 12), rightMainPanel);
+            recipeListPanel = DaggerfallUI.AddPanel(new Rect(0, 114, 83, 65), rightMainPanel);
+            helpButtonActivePanel = DaggerfallUI.AddPanel(new Rect(0, 185, 35, 15), rightMainPanel);
+            exitButtonPanel = DaggerfallUI.AddPanel(new Rect(48, 185, 35, 15), rightMainPanel);
         }
 
         public static TextLabel CreateCenteredTextLabel(string text, Vector2 position, int maxWidth, Panel parentPanel, float textScale = 1, Color32? color = null)
