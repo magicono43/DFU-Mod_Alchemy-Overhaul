@@ -143,13 +143,14 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             ParentPanel.BackgroundColor = ScreenDimColor;
 
             // Setup native panel background
-            NativePanel.BackgroundColor = ScreenDimColor;
+            NativePanel.BackgroundColor = new Color32(0, 0, 0, 170);
 
-            SetupChestChoiceButtons();
+            //SetupChestChoiceButtons();
 
             localItems = Player.Items;
 
-            SetupTestImagePanels();
+            SetupTestPanelPositions();
+            SetupTextPanelBackgroundTextures();
         }
 
         protected virtual void LoadTextures()
@@ -188,7 +189,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             sortIconDescendingTexture = AlchemyOverhaulMain.Instance.SortIconDescendingTexture;
         }
 
-        protected void SetupTestImagePanels()
+        protected void SetupTestPanelPositions()
         {
             leftMainPanel = DaggerfallUI.AddPanel(new Rect(0, 0, 100, 200), NativePanel);
             localSearchBarPanel = DaggerfallUI.AddPanel(new Rect(0, 0, 100, 9), leftMainPanel);
@@ -222,6 +223,37 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             exitButtonPanel = DaggerfallUI.AddPanel(new Rect(48, 185, 35, 15), rightMainPanel);
         }
 
+        protected void SetupTextPanelBackgroundTextures()
+        {
+            localSearchBarPanel.BackgroundTexture = localSearchBarTexture;
+            localSortButtonOnePanel.BackgroundTexture = sortButtonBackgroundTexture;
+            localSortButtonTwoPanel.BackgroundTexture = sortButtonBackgroundTexture;
+            localSortButtonThreePanel.BackgroundTexture = sortButtonBackgroundTexture;
+            localSortButtonFourPanel.BackgroundTexture = sortButtonBackgroundTexture;
+            localSortButtonFivePanel.BackgroundTexture = sortButtonBackgroundTexture;
+            localSortButtonSixPanel.BackgroundTexture = sortButtonBackgroundTexture;
+            localInventoryPanel.BackgroundTexture = localInventoryPanelTexture;
+            primaryHoverTextPanel.BackgroundTexture = primaryHoverTextPanelTexture;
+
+            alchemyToolsPanel.BackgroundTexture = alchemyToolsPanelTexture;
+            resultInfoPanel.BackgroundTexture = resultInfoPanelTexture;
+            ingredientInputPanel.BackgroundTexture = ingredientInputPanelTexture;
+            brewButtonActivePanel.BackgroundTexture = brewButtonActiveTexture;
+            heatActiveIconPanel.BackgroundTexture = heatActiveIconTexture;
+            heatSettingButtonPanel.BackgroundTexture = heatSettingButtonTexture;
+
+            miscInfoPanel.BackgroundTexture = miscInfoPanelTexture;
+            recipeSearchBarPanel.BackgroundTexture = recipeSearchBarTexture;
+            recipeSortButtonOnePanel.BackgroundTexture = sortButtonBackgroundTexture;
+            recipeSortButtonTwoPanel.BackgroundTexture = sortButtonBackgroundTexture;
+            recipeSortButtonThreePanel.BackgroundTexture = sortButtonBackgroundTexture;
+            recipeSortButtonFourPanel.BackgroundTexture = sortButtonBackgroundTexture;
+            recipeSortButtonFivePanel.BackgroundTexture = sortButtonBackgroundTexture;
+            recipeListPanel.BackgroundTexture = recipeListPanelTexture;
+            helpButtonActivePanel.BackgroundTexture = helpButtonActiveTexture;
+            exitButtonPanel.BackgroundTexture = exitButtonTexture;
+        }
+
         public static TextLabel CreateCenteredTextLabel(string text, Vector2 position, int maxWidth, Panel parentPanel, float textScale = 1, Color32? color = null)
         {
             if (color == null) { color = DaggerfallUI.DaggerfallDefaultTextColor; }
@@ -233,6 +265,8 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             label.HorizontalAlignment = HorizontalAlignment.Center;
             return label;
         }
+
+        /*
 
         private void SetupLocalAOItemListScroller(bool rightSide, EquipSlots slot)
         {
@@ -438,6 +472,8 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
                 }
             }
         }
+
+        */
 
         private void ExitButton_OnMouseClick(BaseScreenComponent sender, Vector2 position)
         {

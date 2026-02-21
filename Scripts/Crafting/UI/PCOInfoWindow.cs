@@ -167,6 +167,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
         protected virtual void LoadTextures()
         {
+            /*
             baseTexture = AlchemyOverhaulMain.Instance.EquipInfoGUITexture;
             slotBorderTexture = AlchemyOverhaulMain.Instance.EquipInfoSlotBorderTexture;
             rightExtraEquipTexture = AlchemyOverhaulMain.Instance.EquipInfoExtraRightPanelTexture;
@@ -182,6 +183,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             sortIconShieldTexture = AlchemyOverhaulMain.Instance.EquipInfoSortIconShieldTexture;
             sortIconAscendArrowTexture = AlchemyOverhaulMain.Instance.EquipInfoSortIconAscendingTexture;
             sortIconDescendArrowTexture = AlchemyOverhaulMain.Instance.EquipInfoSortIconDescendingTexture;
+            */
         }
 
         protected void SetupChestChoiceButtons()

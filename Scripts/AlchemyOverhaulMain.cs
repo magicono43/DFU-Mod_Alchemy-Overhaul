@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		2/19/2026, 8:30 PM
+// Last Edit:		2/21/2026, 8:00 AM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:
@@ -104,13 +104,13 @@ namespace AlchemyOverhaul
             // Handle key presses
             if (InputManager.Instance.GetKeyUp(InfoWindowKey))
             {
-                if (DaggerfallUI.Instance.UserInterfaceManager.TopWindow is AOInfoWindow)
+                if (DaggerfallUI.Instance.UserInterfaceManager.TopWindow is AOPotionCraftingWindow)
                 {
-                    (DaggerfallUI.Instance.UserInterfaceManager.TopWindow as AOInfoWindow).CloseWindow();
+                    (DaggerfallUI.Instance.UserInterfaceManager.TopWindow as AOPotionCraftingWindow).CloseWindow();
                 }
                 else if (!GameManager.IsGamePaused && GameManager.Instance.PlayerObject != null && DaggerfallUI.UIManager.WindowCount <= 0)
                 {
-                    AOInfoWindow infoWindow = new AOInfoWindow(DaggerfallUI.UIManager);
+                    AOPotionCraftingWindow infoWindow = new AOPotionCraftingWindow(DaggerfallUI.UIManager);
                     DaggerfallUI.UIManager.PushWindow(infoWindow);
                 }
             }
@@ -211,8 +211,8 @@ namespace AlchemyOverhaul
 
                 if (num <= 100 && num >= 0)
                 {
-                    AOInfoWindow.Instance.testNum1 = num;
-                    AOInfoWindow.Instance.UpdatePanels();
+                    AOPotionCraftingWindow.Instance.testNum1 = num;
+                    AOPotionCraftingWindow.Instance.UpdatePanels();
                     return string.Format("Test Number Adjusted To: {0}", num);
                 }
                 else
@@ -242,14 +242,14 @@ namespace AlchemyOverhaul
                     return string.Format("`{0}` is not a number, please use a number for [h].", args[4]);
 
                 if (buttNum == 1)
-                    AOInfoWindow.butt1 = new Rect(x, y, w, h);
+                    AOPotionCraftingWindow.butt1 = new Rect(x, y, w, h);
                 else if (buttNum == 2)
-                    AOInfoWindow.butt2 = new Rect(x, y, w, h);
+                    AOPotionCraftingWindow.butt2 = new Rect(x, y, w, h);
                 else if (buttNum == 3)
-                    AOInfoWindow.butt3 = new Rect(x, y, w, h);
+                    AOPotionCraftingWindow.butt3 = new Rect(x, y, w, h);
                 else
                     return "Error: Something went wrong.";
-                AOInfoWindow.Instance.UpdatePanels();
+                AOPotionCraftingWindow.Instance.UpdatePanels();
                 return string.Format("Button {0} Rect Adjusted.", buttNum);
             }
         }

@@ -490,6 +490,7 @@ namespace DaggerfallWorkshop.Game.UserInterface
 
         private void LoadTextures(bool rightSide)
         {
+            /*
             if (rightSide)
             {
                 GreenUpArrowTexture = AlchemyOverhaulMain.Instance.EquipInfoExtraRightGreenUpArrowTexture;
@@ -504,6 +505,7 @@ namespace DaggerfallWorkshop.Game.UserInterface
                 RedUpArrowTexture = AlchemyOverhaulMain.Instance.EquipInfoExtraLeftRedUpArrowTexture;
                 RedDownArrowTexture = AlchemyOverhaulMain.Instance.EquipInfoExtraLeftRedDownArrowTexture;
             }
+            */
         }
 
         private int GetScrollIndex()
