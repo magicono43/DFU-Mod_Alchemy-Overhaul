@@ -139,7 +139,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
         EquipSlots currentlyActiveEquipSlot = EquipSlots.None;
 
-        AOItemListScroller localAOItemListScroller;
+        AOBrewingLocalItemListScroller localAOItemListScroller;
 
         ItemCollection localItems = null;
         List<DaggerfallUnityItem> localItemsFiltered = new List<DaggerfallUnityItem>();
@@ -1474,7 +1474,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
         private void SetupLocalAOItemListScroller(bool rightSide, EquipSlots slot)
         {
-            localAOItemListScroller = new AOItemListScroller(defaultToolTip, slot, rightSide)
+            localAOItemListScroller = new AOBrewingLocalItemListScroller(defaultToolTip)
             {
                 Position = new Vector2(0, 0),
                 Size = new Vector2(54, 176),
@@ -1720,15 +1720,17 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             {
                 if (slot == EquipSlots.None)
                 {
-                    slot = localAOItemListScroller.AssociatedSlot;
+                    //slot = localAOItemListScroller.AssociatedSlot;
                 }
 
+                /*
                 if (slot == localAOItemListScroller.AssociatedSlot)
                 {
                     FilterLocalItems(slot);
                     SortBasedOnButtonStates();
                     localAOItemListScroller.Items = localItemsFiltered;
                 }
+                */
             }
 
             switch (slot)

@@ -11,11 +11,11 @@ namespace DaggerfallWorkshop.Game.UserInterface
     /// <summary>
     /// Item scroller UI panel component composed of scrollbar, scroll buttons and items list.
     /// </summary>
-    public class AOItemListScroller : Panel
+    public class AOBrewingLocalItemListScroller : Panel
     {
         #region UI Rects, Controls, Textures
 
-        Rect[] itemButtonRects = itemButtonRects16;
+        Rect[] itemButtonRects = itemButtonRects20;
 
         Texture2D GreenUpArrowTexture;
         Texture2D GreenDownArrowTexture;
@@ -37,16 +37,13 @@ namespace DaggerfallWorkshop.Game.UserInterface
 
         #region UI Rects, Textures for enhanced 16 item mode
 
-        static Rect[] itemButtonRects16 = new Rect[]
+        static Rect[] itemButtonRects20 = new Rect[]
         {
-            new Rect(0, 0, 23, 22),     new Rect(23, 0, 23, 22),
-            new Rect(0, 22, 23, 22),    new Rect(23, 22, 23, 22),
-            new Rect(0, 44, 23, 22),    new Rect(23, 44, 23, 22),
-            new Rect(0, 66, 23, 22),    new Rect(23, 66, 23, 22),
-            new Rect(0, 88, 23, 22),    new Rect(23, 88, 23, 22),
-            new Rect(0, 110, 23, 22),    new Rect(23, 110, 23, 22),
-            new Rect(0, 132, 23, 22),   new Rect(23, 132, 23, 22),
-            new Rect(0, 154, 23, 22),   new Rect(23, 154, 23, 22)
+            new Rect(0, 0, 23, 22),     new Rect(23, 0, 23, 22),    new Rect(46, 0, 23, 22),     new Rect(69, 0, 23, 22),
+            new Rect(0, 22, 23, 22),    new Rect(23, 22, 23, 22),   new Rect(46, 22, 23, 22),    new Rect(69, 22, 23, 22),
+            new Rect(0, 44, 23, 22),    new Rect(23, 44, 23, 22),   new Rect(46, 44, 23, 22),    new Rect(69, 44, 23, 22),
+            new Rect(0, 66, 23, 22),    new Rect(23, 66, 23, 22),   new Rect(46, 66, 23, 22),    new Rect(69, 66, 23, 22),
+            new Rect(0, 88, 23, 22),    new Rect(23, 88, 23, 22),   new Rect(46, 88, 23, 22),    new Rect(69, 88, 23, 22)
         };
 
         Texture2D[] itemListTextures;
@@ -55,8 +52,8 @@ namespace DaggerfallWorkshop.Game.UserInterface
 
         #region Fields
 
-        int listDisplayUnits = 8;   // Number of item rows displayed in scrolling areas
-        int listWidth = 2;          // Number of items on each row
+        int listDisplayUnits = 5;   // Number of item rows displayed in scrolling areas
+        int listWidth = 4;          // Number of items on each row
         int listDisplayTotal;       // Total number of items displayed in scrolling areas
         int itemButtonMargin = 1;   // Margin of item buttons
         float textScale = 0.75f;       // Scale of text on item buttons
@@ -70,7 +67,6 @@ namespace DaggerfallWorkshop.Game.UserInterface
         List<DaggerfallUnityItem> items = new List<DaggerfallUnityItem>();
 
         ToolTip toolTip;
-        EquipSlots associatedSlot;
         ItemBackgroundColourHandler backgroundColourHandler;
         ItemBackgroundAnimationHandler backgroundAnimationHandler;
         ItemForegroundAnimationHandler foregroundAnimationHandler;
@@ -98,13 +94,6 @@ namespace DaggerfallWorkshop.Game.UserInterface
 
         public delegate void OnItemHoverHandler(DaggerfallUnityItem item);
         public event OnItemHoverHandler OnItemHover;
-
-        /// <summary>Equipment Slot This Panel Is Related To</summary>
-        public EquipSlots AssociatedSlot
-        {
-            get { return associatedSlot; }
-            set { associatedSlot = value; }
-        }
 
         /// <summary>Handler for colour highlighting</summary>
         public ItemBackgroundColourHandler BackgroundColourHandler
@@ -157,12 +146,10 @@ namespace DaggerfallWorkshop.Game.UserInterface
 
         #region Constructors, Public methods
 
-        public AOItemListScroller(ToolTip toolTip, EquipSlots slot, bool rightSide = true)
+        public AOBrewingLocalItemListScroller(ToolTip toolTip)
             : base()
         {
             this.toolTip = toolTip;
-
-            AssociatedSlot = slot;
 
             listDisplayTotal = listDisplayUnits * listWidth;
             TextLabel miscLabelTemplate = new TextLabel()
@@ -173,73 +160,43 @@ namespace DaggerfallWorkshop.Game.UserInterface
                 TextScale = textScale
             };
 
-            LoadTextures(rightSide);
-            SetupScrollBar(rightSide);
-            SetupScrollButtons(rightSide);
-            SetupItemsList(true, miscLabelTemplate, rightSide);
+            LoadTextures();
+            SetupScrollBar();
+            SetupScrollButtons();
+            SetupItemsList(true, miscLabelTemplate);
         }
 
         #endregion
 
         #region Private, Setup methods}
 
-        void SetupScrollBar(bool rightSide)
+        void SetupScrollBar()
         {
-            if (rightSide)
+            itemListScrollBar = new VerticalScrollBar
             {
-                itemListScrollBar = new VerticalScrollBar
-                {
-                    Position = new Vector2(-1, 17),
-                    Size = new Vector2(8, 144),
-                    DisplayUnits = listDisplayUnits
-                };
-            }
-            else
-            {
-                itemListScrollBar = new VerticalScrollBar
-                {
-                    Position = new Vector2(46, 17),
-                    Size = new Vector2(8, 144),
-                    DisplayUnits = listDisplayUnits
-                };
-            }
+                Position = new Vector2(92, 15),
+                Size = new Vector2(8, 80),
+                DisplayUnits = listDisplayUnits
+            };
 
             Components.Add(itemListScrollBar);
             itemListScrollBar.OnScroll += ItemsScrollBar_OnScroll;
         }
 
-        void SetupScrollButtons(bool rightSide)
+        void SetupScrollButtons()
         {
-            if (rightSide)
+            itemListUpButton = new Button
             {
-                itemListUpButton = new Button
-                {
-                    Position = new Vector2(0, 1),
-                    Size = new Vector2(8, 15),
-                    BackgroundTexture = RedUpArrowTexture
-                };
-                itemListDownButton = new Button
-                {
-                    Position = new Vector2(0, 160),
-                    Size = new Vector2(8, 15),
-                    BackgroundTexture = RedDownArrowTexture
-                };
-            }
-            else
+                Position = new Vector2(92, 0),
+                Size = new Vector2(8, 15),
+                BackgroundTexture = RedUpArrowTexture
+            };
+            itemListDownButton = new Button
             {
-                itemListUpButton = new Button
-                {
-                    Position = new Vector2(46, 1),
-                    Size = new Vector2(8, 15),
-                    BackgroundTexture = RedUpArrowTexture
-                };
-                itemListDownButton = new Button
-                {
-                    Position = new Vector2(46, 160),
-                    Size = new Vector2(8, 15),
-                    BackgroundTexture = RedDownArrowTexture
-                };
-            }
+                Position = new Vector2(92, 95),
+                Size = new Vector2(8, 15),
+                BackgroundTexture = RedDownArrowTexture
+            };
 
             Components.Add(itemListUpButton);
             itemListUpButton.OnMouseClick += ItemsUpButton_OnMouseClick;
@@ -247,11 +204,10 @@ namespace DaggerfallWorkshop.Game.UserInterface
             itemListDownButton.OnMouseClick += ItemsDownButton_OnMouseClick;
         }
 
-        void SetupItemsList(bool enhanced, TextLabel miscLabelTemplate, bool rightSide)
+        void SetupItemsList(bool enhanced, TextLabel miscLabelTemplate)
         {
             Rect itemListPanelRect;
-            if (rightSide) { itemListPanelRect = new Rect(8, 0, 46, 176); }
-            else { itemListPanelRect = new Rect(0, 0, 46, 176); }
+            itemListPanelRect = new Rect(0, 0, 92, 110);
 
             // List panel for scrolling behaviour
             Panel itemsListPanel = DaggerfallUI.AddPanel(itemListPanelRect, this);
@@ -488,24 +444,12 @@ namespace DaggerfallWorkshop.Game.UserInterface
             }
         }
 
-        private void LoadTextures(bool rightSide)
+        private void LoadTextures()
         {
-            /*
-            if (rightSide)
-            {
-                GreenUpArrowTexture = AlchemyOverhaulMain.Instance.EquipInfoExtraRightGreenUpArrowTexture;
-                GreenDownArrowTexture = AlchemyOverhaulMain.Instance.EquipInfoExtraRightGreenDownArrowTexture;
-                RedUpArrowTexture = AlchemyOverhaulMain.Instance.EquipInfoExtraRightRedUpArrowTexture;
-                RedDownArrowTexture = AlchemyOverhaulMain.Instance.EquipInfoExtraRightRedDownArrowTexture;
-            }
-            else
-            {
-                GreenUpArrowTexture = AlchemyOverhaulMain.Instance.EquipInfoExtraLeftGreenUpArrowTexture;
-                GreenDownArrowTexture = AlchemyOverhaulMain.Instance.EquipInfoExtraLeftGreenDownArrowTexture;
-                RedUpArrowTexture = AlchemyOverhaulMain.Instance.EquipInfoExtraLeftRedUpArrowTexture;
-                RedDownArrowTexture = AlchemyOverhaulMain.Instance.EquipInfoExtraLeftRedDownArrowTexture;
-            }
-            */
+            GreenUpArrowTexture = AlchemyOverhaulMain.Instance.ExtraLeftGreenUpArrowTexture;
+            GreenDownArrowTexture = AlchemyOverhaulMain.Instance.ExtraLeftGreenDownArrowTexture;
+            RedUpArrowTexture = AlchemyOverhaulMain.Instance.ExtraLeftRedUpArrowTexture;
+            RedDownArrowTexture = AlchemyOverhaulMain.Instance.ExtraLeftRedDownArrowTexture;
         }
 
         private int GetScrollIndex()

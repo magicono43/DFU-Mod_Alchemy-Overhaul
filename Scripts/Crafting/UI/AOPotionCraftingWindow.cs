@@ -127,7 +127,9 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         Panel sortIconAscendingPanel;
         Panel sortIconDescendingPanel;
 
-        AOItemListScroller localAOItemListScroller;
+        Button exitButton;
+
+        AOBrewingLocalItemListScroller localAOItemListScroller;
 
         ItemCollection localItems = null;
         List<DaggerfallUnityItem> localItemsFiltered = new List<DaggerfallUnityItem>();
@@ -151,6 +153,8 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
             SetupTestPanelPositions();
             SetupTextPanelBackgroundTextures();
+            SetupLocalItemListScroller();
+            SetupButtons();
         }
 
         protected virtual void LoadTextures()
@@ -252,6 +256,97 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             recipeListPanel.BackgroundTexture = recipeListPanelTexture;
             helpButtonActivePanel.BackgroundTexture = helpButtonActiveTexture;
             exitButtonPanel.BackgroundTexture = exitButtonTexture;
+        }
+
+        private void SetupLocalItemListScroller()
+        {
+            localAOItemListScroller = new AOBrewingLocalItemListScroller(defaultToolTip)
+            {
+                Position = new Vector2(0, 0),
+                Size = new Vector2(100, 110),
+                //BackgroundColourHandler = ItemBackgroundColourHandler,
+                //ForegroundAnimationHandler = MagicItemForegroundAnimationHander,
+                //ForegroundAnimationDelay = magicAnimationDelay
+            };
+
+            localInventoryPanel.Components.Clear();
+
+            localInventoryPanel.Components.Add(localAOItemListScroller);
+
+            localAOItemListScroller.OnItemClick += LocalItemListScroller_OnItemLeftClick;
+            //localAOItemListScroller.OnItemRightClick += LocalItemListScroller_OnItemRightClick;
+            //localAOItemListScroller.OnItemMiddleClick += LocalItemListScroller_OnItemMiddleClick;
+            if (primaryHoverTextPanel != null) { localAOItemListScroller.OnItemHover += LocalItemListScroller_OnHover; }
+
+            FilterLocalItems();
+            //SortBasedOnButtonStates();
+            localAOItemListScroller.Items = localItemsFiltered;
+        }
+
+        private void FilterLocalItems()
+        {
+            // Clear current references
+            localItemsFiltered.Clear();
+
+            if (localItems != null)
+            {
+                // Add items to list
+                for (int i = 0; i < localItems.Count; i++)
+                {
+                    DaggerfallUnityItem item = localItems.GetItem(i);
+                    // Add if item is an ingredient
+                    if (item.IsIngredient)
+                    {
+                        AddLocalItem(item);
+                    }
+                }
+            }
+        }
+
+        private void AddLocalItem(DaggerfallUnityItem item)
+        {
+            localItemsFiltered.Add(item);
+        }
+
+        /*
+        private void SortBasedOnButtonStates()
+        {
+            if (percentItemConditionSortState == 1)
+            {
+                localItemsFiltered.Sort((a, b) =>
+                {
+                    int aPercent = a.ConditionPercentage;
+                    int bPercent = b.ConditionPercentage;
+                    return bPercent.CompareTo(aPercent); // descending i.e. highest to lowest
+                });
+            }
+            else if (percentItemConditionSortState == 2)
+            {
+                localItemsFiltered.Sort((a, b) =>
+                {
+                    int aPercent = a.ConditionPercentage;
+                    int bPercent = b.ConditionPercentage;
+                    return aPercent.CompareTo(bPercent); // ascending i.e. lowest to highest
+                });
+            }
+
+            if (itemEffectivenessSortState == 1)
+            {
+                localItemsFiltered.Sort((item1, item2) => CompareItemsByEffectiveness(item1, item2, true)); // descending
+            }
+            else if (itemEffectivenessSortState == 2)
+            {
+                localItemsFiltered.Sort((item1, item2) => CompareItemsByEffectiveness(item1, item2, false)); // ascending
+            }
+        }
+        */
+
+        protected void SetupButtons()
+        {
+            // Exit button
+            exitButton = DaggerfallUI.AddButton(new Rect(0, 0, 35, 15), exitButtonPanel);
+            exitButton.OnMouseClick += ExitButton_OnMouseClick;
+            exitButton.ClickSound = DaggerfallUI.Instance.GetAudioClip(SoundClips.ButtonClick);
         }
 
         public static TextLabel CreateCenteredTextLabel(string text, Vector2 position, int maxWidth, Panel parentPanel, float textScale = 1, Color32? color = null)
@@ -474,6 +569,31 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         }
 
         */
+
+        protected virtual void LocalItemListScroller_OnItemLeftClick(DaggerfallUnityItem item)
+        {
+            LocalItemListScroller_OnItemClick(item);
+        }
+
+        protected virtual void LocalItemListScroller_OnItemClick(DaggerfallUnityItem item)
+        {
+            //EquipItem(item);
+        }
+
+        protected virtual void LocalItemListScroller_OnHover(DaggerfallUnityItem item)
+        {
+            ItemListScroller_OnHover(item);
+            //RaiseOnItemHoverEvent(item, ItemHoverLocation.LocalList);
+        }
+
+        protected virtual void ItemListScroller_OnHover(DaggerfallUnityItem item)
+        {
+            // Update the info panel
+            if (primaryHoverTextPanel != null)
+            {
+                //UpdateItemInfoPanel(item);
+            }
+        }
 
         private void ExitButton_OnMouseClick(BaseScreenComponent sender, Vector2 position)
         {
