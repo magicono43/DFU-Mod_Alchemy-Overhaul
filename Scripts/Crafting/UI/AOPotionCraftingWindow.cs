@@ -167,12 +167,6 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             SetupLocalItemListScroller();
             SetupIngredientInputPanels();
             SetupButtons();
-
-            // Next time I work on this, figure out the but that allows for two
-            // ingredients of the same type to be in slot 6, but this seems to only happen if in localItems the item being added to slot 6 is the only one
-            // left in localItems and is the same type as the item in slot 6 currently, it's strange, when removed they will come back as a stack of 2
-            // so not sure why that is happening, will likely need to step through it using breakpoints and checking the values in those situations, etc.
-            // I'm guessing it might have to do with the "SplitStack" method being used before it? But I have no clue honestly.
         }
 
         public override void OnPush()
@@ -548,7 +542,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
                 }
                 else
                 {
-                    localItems.AddItem(brewingSlots[6]);
+                    localItems.AddItem(brewingSlots[6], noStack: true);
                     brewingSlots[6] = item;
                     localItems.RemoveItem(item);
                 }
@@ -566,7 +560,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
                     if (i == 5) // If all slots are occupied, replace the last slot with the clicked local item.
                     {
-                        localItems.AddItem(brewingSlots[5]);
+                        localItems.AddItem(brewingSlots[5], noStack: true);
                         brewingSlots[5] = item;
                         localItems.RemoveItem(item);
                     }
