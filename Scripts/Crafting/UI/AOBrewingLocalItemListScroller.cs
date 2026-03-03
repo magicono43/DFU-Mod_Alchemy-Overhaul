@@ -28,8 +28,8 @@ namespace DaggerfallWorkshop.Game.UserInterface
 
         Button[] itemButtons;
         Panel[] itemIconPanels;
-        Panel[] durabilityBarPanels;
-        Panel[] itemAnimPanels;
+        //Panel[] durabilityBarPanels;
+        //Panel[] itemAnimPanels;
         TextLabel[] itemStackLabels;
         TextLabel[] itemMiscLabels;
 
@@ -218,8 +218,8 @@ namespace DaggerfallWorkshop.Game.UserInterface
             // Setup buttons
             itemButtons = new Button[listDisplayTotal];
             itemIconPanels = new Panel[listDisplayTotal];
-            durabilityBarPanels = new Panel[listDisplayTotal];
-            itemAnimPanels = new Panel[listDisplayTotal];
+            //durabilityBarPanels = new Panel[listDisplayTotal];
+            //itemAnimPanels = new Panel[listDisplayTotal];
             itemStackLabels = new TextLabel[listDisplayTotal];
             itemMiscLabels = new TextLabel[listDisplayTotal];
 
@@ -242,8 +242,8 @@ namespace DaggerfallWorkshop.Game.UserInterface
                 itemButtons[i].OnMouseScrollDown += ItemButton_OnMouseEnter;
 
                 // Item foreground animation panel
-                itemAnimPanels[i] = DaggerfallUI.AddPanel(itemButtonRects[i], itemsListPanel);
-                itemAnimPanels[i].AnimationDelayInSeconds = foregroundAnimationDelay;
+                //itemAnimPanels[i] = DaggerfallUI.AddPanel(itemButtonRects[i], itemsListPanel);
+                //itemAnimPanels[i].AnimationDelayInSeconds = foregroundAnimationDelay;
 
                 // Icon image panel
                 itemIconPanels[i] = DaggerfallUI.AddPanel(itemButtons[i], AutoSizeModes.ScaleToFit);
@@ -259,7 +259,7 @@ namespace DaggerfallWorkshop.Game.UserInterface
                 itemStackLabels[i].TextScale = textScale;
                 itemStackLabels[i].TextColor = DaggerfallUI.DaggerfallUnityDefaultToolTipTextColor;
 
-                durabilityBarPanels[i] = DaggerfallUI.AddPanel(new Rect(1, 18, 19, 1), itemButtons[i]);
+                //durabilityBarPanels[i] = DaggerfallUI.AddPanel(new Rect(1, 18, 19, 1), itemButtons[i]);
 
                 // Misc labels
                 Vector2 position = miscLabelTemplate.Position;
@@ -275,6 +275,7 @@ namespace DaggerfallWorkshop.Game.UserInterface
             }
         }
 
+        /*
         public void AddItemMiniDurabilityBar(Panel itemDurPanel, DaggerfallUnityItem item)
         {
             if (item != null)
@@ -317,6 +318,7 @@ namespace DaggerfallWorkshop.Game.UserInterface
                 itemDurPanel.Components.Clear();
             }
         }
+        */
 
         void ClearItemsList()
         {
@@ -326,11 +328,11 @@ namespace DaggerfallWorkshop.Game.UserInterface
                 itemMiscLabels[i].Text = string.Empty;
                 itemButtons[i].ToolTipText = string.Empty;
                 itemIconPanels[i].BackgroundTexture = null;
-                durabilityBarPanels[i].Components.Clear();
+                //durabilityBarPanels[i].Components.Clear();
                 itemButtons[i].BackgroundColor = Color.clear;
                 itemButtons[i].AnimatedBackgroundTextures = null;
                 itemIconPanels[i].AnimatedBackgroundTextures = null;
-                itemAnimPanels[i].AnimatedBackgroundTextures = null;
+                //itemAnimPanels[i].AnimatedBackgroundTextures = null;
             }
             if (scroller)
             {
@@ -388,7 +390,7 @@ namespace DaggerfallWorkshop.Game.UserInterface
                     itemStackLabels[i].Text = item.stackCount.ToString();
 
                 // Add mini durability bars
-                AddItemMiniDurabilityBar(durabilityBarPanels[i], item);
+                //AddItemMiniDurabilityBar(durabilityBarPanels[i], item);
 
                 // Handle context specific background colour, animations & label
                 if (backgroundColourHandler != null)
@@ -397,10 +399,10 @@ namespace DaggerfallWorkshop.Game.UserInterface
                     itemButtons[i].AnimationDelayInSeconds = backgroundAnimationDelay;
                     itemButtons[i].AnimatedBackgroundTextures = backgroundAnimationHandler(item);
                 }
-                if (foregroundAnimationHandler != null) {
-                    itemAnimPanels[i].AnimationDelayInSeconds = foregroundAnimationDelay;
-                    itemAnimPanels[i].AnimatedBackgroundTextures = foregroundAnimationHandler(item);
-                }
+                //if (foregroundAnimationHandler != null) {
+                    //itemAnimPanels[i].AnimationDelayInSeconds = foregroundAnimationDelay;
+                    //itemAnimPanels[i].AnimatedBackgroundTextures = foregroundAnimationHandler(item);
+                //}
                 if (labelTextHandler != null)
                     itemMiscLabels[i].Text = labelTextHandler(item);
 

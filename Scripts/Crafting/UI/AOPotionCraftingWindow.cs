@@ -131,8 +131,19 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
         AOBrewingLocalItemListScroller localAOItemListScroller;
 
-        ItemCollection localItems = null;
+        Rect[] ingredientInputItemButtonRects = inputItemButtonRects;
+        Button[] ingredientInputItemButtons;
+        Panel[] ingredientInputItemImagePanels;
+
+        static Rect[] inputItemButtonRects = new Rect[]
+        {
+            new Rect(26, 0, 23, 22), new Rect(52, 0, 23, 22), new Rect(0, 22, 23, 22), new Rect(78, 22, 23, 22), new Rect(0, 47, 23, 22), new Rect(78, 47, 23, 22), new Rect(39, 39, 23, 22)
+        };
+
+        ItemCollection localItems = new ItemCollection();
         List<DaggerfallUnityItem> localItemsFiltered = new List<DaggerfallUnityItem>();
+
+        DaggerfallUnityItem[] brewingSlots = new DaggerfallUnityItem[7];
 
         protected override void Setup()
         {
@@ -154,7 +165,70 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             SetupTestPanelPositions();
             SetupTextPanelBackgroundTextures();
             SetupLocalItemListScroller();
+            SetupIngredientInputPanels();
             SetupButtons();
+
+            // Next time I work on this, figure out the but that allows for two
+            // ingredients of the same type to be in slot 6, but this seems to only happen if in localItems the item being added to slot 6 is the only one
+            // left in localItems and is the same type as the item in slot 6 currently, it's strange, when removed they will come back as a stack of 2
+            // so not sure why that is happening, will likely need to step through it using breakpoints and checking the values in those situations, etc.
+            // I'm guessing it might have to do with the "SplitStack" method being used before it? But I have no clue honestly.
+        }
+
+        public override void OnPush()
+        {
+            if (!IsSetup)
+                return;
+
+            Refresh();
+        }
+
+        public override void OnPop()
+        {
+            localItemsFiltered.Clear();
+            FreeBrewingInputSlots();
+        }
+
+        protected virtual void Refresh()
+        {
+            /*
+            // Update labels
+            goldLabel.Text = GameManager.Instance.PlayerEntity.GetGoldAmount().ToString();
+
+            // Add ingredient items to list and gather recipes - from inventory and wagon
+            ingredients.Clear();
+            List<DaggerfallUnityItem> recipeItems = new List<DaggerfallUnityItem>();
+            foreach (ItemCollection playerItems in new ItemCollection[] { GameManager.Instance.PlayerEntity.Items, GameManager.Instance.PlayerEntity.WagonItems })
+            {
+                for (int i = 0; i < playerItems.Count; i++)
+                {
+                    DaggerfallUnityItem item = playerItems.GetItem(i);
+                    if (item.IsIngredient && !item.IsEnchanted)
+                        ingredients.AddItem(item.Clone());
+                    else if (item.IsPotionRecipe)
+                        recipeItems.Add(item);
+                }
+            }
+            RefreshIngredientsList();
+            ingredientsListScroller.Items = ingredientsList;
+
+            // Clear cauldron and assign to scroller
+            cauldron.Clear();
+            cauldronListScroller.Items = cauldron;
+
+            // Populate picker from recipe items
+            recipes.Clear();
+            recipePicker.ListBox.ClearItems();
+            foreach (DaggerfallUnityItem recipeItem in recipeItems)
+            {
+                PotionRecipe potionRecipe = GameManager.Instance.EntityEffectBroker.GetPotionRecipe(recipeItem.PotionRecipeKey);
+                if (!recipes.Contains(potionRecipe))
+                    recipes.Add(potionRecipe);
+            }
+            recipes.Sort((x, y) => (x.DisplayName.CompareTo(y.DisplayName)));
+            foreach (PotionRecipe potionRecipe in recipes)
+                recipePicker.ListBox.AddItem(potionRecipe.DisplayName);
+            */
         }
 
         protected virtual void LoadTextures()
@@ -295,7 +369,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
                 {
                     DaggerfallUnityItem item = localItems.GetItem(i);
                     // Add if item is an ingredient
-                    if (item.IsIngredient)
+                    if (item.IsIngredient && !item.IsEnchanted)
                     {
                         AddLocalItem(item);
                     }
@@ -341,6 +415,94 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         }
         */
 
+        protected void RefreshLocalItemsFilteredList()
+        {
+            localItemsFiltered.Clear();
+            FilterLocalItems();
+            localAOItemListScroller.Items = localItemsFiltered;
+        }
+
+        protected void SetupIngredientInputPanels()
+        {
+            ingredientInputItemButtons = new Button[7];
+            ingredientInputItemImagePanels = new Panel[7];
+            for (int i = 0; i < brewingSlots.Length; i++) { brewingSlots[i] = null; } // Set brewing input slots to null, just in case.
+
+            for (int i = 0; i < 7; i++)
+            {
+                // Buttons (also handle highlight colours)
+                ingredientInputItemButtons[i] = DaggerfallUI.AddButton(ingredientInputItemButtonRects[i], ingredientInputPanel);
+                ingredientInputItemButtons[i].Name = i.ToString();
+                ingredientInputItemButtons[i].Tag = null; // Use the tag to store reference to the DaggerfallUnityItem, if none than keep this null.
+                ingredientInputItemButtons[i].ToolTip = defaultToolTip;
+                ingredientInputItemButtons[i].ToolTipText = ""; // Make this the name of the item, and if not that, show the name of the slot, such as "Solvent" etc.
+                ingredientInputItemButtons[i].BackgroundColor = Color.clear;
+                ingredientInputItemButtons[i].OnMouseClick += BrewingInputItems_OnLeftClick; // Likely just clear this ingredient slot and return item to local inventory scroller.
+                ingredientInputItemButtons[i].OnMouseEnter += BrewingInputItems_OnMouseEnter; // Likely just update the "Primary Info" hover text box and tooltip text.
+
+                // Item foreground animation panel
+                //itemAnimPanels[i] = DaggerfallUI.AddPanel(itemButtonRects[i], itemsListPanel);
+                //itemAnimPanels[i].AnimationDelayInSeconds = foregroundAnimationDelay;
+
+                // Icon image panel
+                ingredientInputItemImagePanels[i] = DaggerfallUI.AddPanel(ingredientInputItemButtons[i], AutoSizeModes.ScaleToFit);
+                ingredientInputItemImagePanels[i].HorizontalAlignment = HorizontalAlignment.Center;
+                ingredientInputItemImagePanels[i].VerticalAlignment = VerticalAlignment.Middle;
+                ingredientInputItemImagePanels[i].MaxAutoScale = 1f;
+            }
+
+            RefreshBrewingIngredientInputPanels();
+        }
+
+        protected void RefreshBrewingIngredientInputPanels()
+        {
+            // Update images and tooltips
+            for (int i = 0; i < brewingSlots.Length; i++)
+            {
+                // Get item and image
+                DaggerfallUnityItem item = brewingSlots[i];
+                if (item == null) { ClearBrewingInputSlot(i); continue; }
+                ImageData image = DaggerfallUnity.Instance.ItemHelper.GetInventoryImage(item);
+
+                // Set image to button icon
+                ingredientInputItemImagePanels[i].BackgroundTexture = image.texture;
+                // Use texture size if base image size is zero (i.e. new images that are not present in classic data)
+                if (image.width != 0 && image.height != 0)
+                    ingredientInputItemImagePanels[i].Size = new Vector2(image.width, image.height);
+                else
+                    ingredientInputItemImagePanels[i].Size = new Vector2(image.texture.width, image.texture.height);
+
+                // Set Tag to item object
+                ingredientInputItemButtons[i].Tag = item;
+
+                // Tooltip text
+                ingredientInputItemButtons[i].ToolTipText = item.LongName;
+            }
+        }
+
+        protected void ClearBrewingInputSlot(int slotIndex)
+        {
+            ingredientInputItemButtons[slotIndex].ToolTipText = GetBrewingInputSlotName(slotIndex);
+            ingredientInputItemButtons[slotIndex].Tag = null;
+            ingredientInputItemImagePanels[slotIndex].BackgroundTexture = null;
+        }
+
+        protected string GetBrewingInputSlotName(int slotIndex)
+        {
+            string name = "Ingredient Slot";
+            switch(slotIndex)
+            {
+                case 0: name = "Ingredient 1"; break;
+                case 1: name = "Ingredient 2"; break;
+                case 2: name = "Ingredient 3"; break;
+                case 3: name = "Ingredient 4"; break;
+                case 4: name = "Ingredient 5"; break;
+                case 5: name = "Ingredient 6"; break;
+                case 6: name = "Solvent"; break;
+            }
+            return name;
+        }
+
         protected void SetupButtons()
         {
             // Exit button
@@ -361,223 +523,61 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             return label;
         }
 
-        /*
-
-        private void SetupLocalAOItemListScroller(bool rightSide, EquipSlots slot)
+        protected virtual void LocalItemListScroller_OnItemLeftClick(DaggerfallUnityItem item)
         {
-            localAOItemListScroller = new AOItemListScroller(defaultToolTip, slot, rightSide)
+            LocalItemListScroller_OnItemClick(item);
+        }
+
+        protected virtual void LocalItemListScroller_OnItemClick(DaggerfallUnityItem item)
+        {
+            AttemptToAddItemToIngredientInput(item);
+            // Make the above a method for adding the clicked ingredient to the ingredient input panel, if valid of course, also remember the solvent thing.
+        }
+
+        protected void AttemptToAddItemToIngredientInput(DaggerfallUnityItem item)
+        {
+            if (item.IsAStack())
+                item = localItems.SplitStack(item, 1);
+
+            if (item.ItemTemplate.isLiquid) // Eventually make a proper list of valid "solvents" that will fit in this slot.
             {
-                Position = new Vector2(0, 0),
-                Size = new Vector2(54, 176),
-                //BackgroundColourHandler = ItemBackgroundColourHandler,
-                //ForegroundAnimationHandler = MagicItemForegroundAnimationHander,
-                //ForegroundAnimationDelay = magicAnimationDelay
-            };
+                if (brewingSlots[6] == null) // Final index of the brewingSlots array will be for the solvent, so only have to check that one, which I think would be index 6 in this case.
+                {
+                    brewingSlots[6] = item;
+                    localItems.RemoveItem(item);
+                }
+                else
+                {
+                    localItems.AddItem(brewingSlots[6]);
+                    brewingSlots[6] = item;
+                    localItems.RemoveItem(item);
+                }
+            }
+            else // For all other ingredients, loop through the slots to see which one is open, if full than put replace the last slot with this item instead, if valid.
+            {
+                for (int i = 0; i < brewingSlots.Length - 1; i++)
+                {
+                    if (brewingSlots[i] == null) // Whichever slot is found empty first, place the clicked item there.
+                    {
+                        brewingSlots[i] = item;
+                        localItems.RemoveItem(item);
+                        break;
+                    }
 
-            rightExtraEquipPanel.Components.Clear();
-            leftExtraEquipPanel.Components.Clear();
+                    if (i == 5) // If all slots are occupied, replace the last slot with the clicked local item.
+                    {
+                        localItems.AddItem(brewingSlots[5]);
+                        brewingSlots[5] = item;
+                        localItems.RemoveItem(item);
+                    }
+                }
+            }
 
-            if (rightSide) { rightExtraEquipPanel.Components.Add(localAOItemListScroller); }
-            else { leftExtraEquipPanel.Components.Add(localAOItemListScroller); }
-
-            localAOItemListScroller.OnItemClick += LocalItemListScroller_OnItemLeftClick;
-            //localAOItemListScroller.OnItemRightClick += LocalItemListScroller_OnItemRightClick;
-            //localAOItemListScroller.OnItemMiddleClick += LocalItemListScroller_OnItemMiddleClick;
-            if (extraInfoTextPanel != null) { localAOItemListScroller.OnItemHover += LocalItemListScroller_OnHover; }
-
-            FilterLocalItems(slot);
-            SortBasedOnButtonStates();
+            RefreshBrewingIngredientInputPanels();
+            RefreshLocalItemsFilteredList();
             localAOItemListScroller.Items = localItemsFiltered;
-        }
 
-        private void FilterLocalItems(EquipSlots slot)
-        {
-            // Clear current references
-            localItemsFiltered.Clear();
-
-            if (localItems != null)
-            {
-                // Add items to list
-                for (int i = 0; i < localItems.Count; i++)
-                {
-                    DaggerfallUnityItem item = localItems.GetItem(i);
-                    // Add if not equipped
-                    if (!item.IsEquipped)
-                    {
-                        if (restrictedItemFilterState)
-                        {
-                            if (ProhibitedItemCheck(item)) { continue; }
-                        }
-
-                        AddLocalItem(item, slot);
-                    }
-                }
-            }
-        }
-
-        private void AddLocalItem(DaggerfallUnityItem item, EquipSlots slot)
-        {
-            bool isWeaponOrArmor = (item.ItemGroup == ItemGroups.Weapons || item.ItemGroup == ItemGroups.Armor);
-
-            if (isWeaponOrArmor)
-            {
-                ItemHands whichHand = ItemEquipTable.GetItemHands(item);
-
-                if (slot == EquipSlots.LeftHand)
-                {
-                    if (whichHand == ItemHands.LeftOnly)
-                    {
-                        localItemsFiltered.Add(item);
-                        return;
-                    }
-                }
-
-                if (slot == EquipSlots.RightHand)
-                {
-                    if (whichHand == ItemHands.Either || whichHand == ItemHands.Both || whichHand == ItemHands.RightOnly)
-                    {
-                        localItemsFiltered.Add(item);
-                        return;
-                    }
-                }
-
-                if (slot == Player.ItemEquipTable.GetEquipSlot(item))
-                {
-                    localItemsFiltered.Add(item);
-                }
-            }
-        }
-
-        protected virtual void LocalItemListScroller_OnItemLeftClick(DaggerfallUnityItem item)
-        {
-            LocalItemListScroller_OnItemClick(item);
-        }
-
-        protected virtual void LocalItemListScroller_OnItemClick(DaggerfallUnityItem item)
-        {
-            EquipItem(item);
-        }
-
-        public void RefreshEquipScreen(EquipSlots slot = EquipSlots.None)
-        {
-            if (localAOItemListScroller != null)
-            {
-                if (slot == EquipSlots.None)
-                {
-                    slot = localAOItemListScroller.AssociatedSlot;
-                }
-
-                if (slot == localAOItemListScroller.AssociatedSlot)
-                {
-                    FilterLocalItems(slot);
-                    SortBasedOnButtonStates();
-                    localAOItemListScroller.Items = localItemsFiltered;
-                }
-            }
-
-            switch (slot)
-            {
-                case EquipSlots.Head:
-                    headItemIconPanel.Components.Clear();
-                    DrawEquipItemToIconPanel(headItemIconPanel, EquipSlots.Head);
-                    AddItemDurabilityBar(headItemDurabilityBarPanel, EquipSlots.Head);
-                    headItemTextPanel.Components.Clear();
-                    AddItemTextLabels(headItemTextPanel, EquipSlots.Head, "Head"); break;
-                case EquipSlots.RightArm:
-                    rightArmItemIconPanel.Components.Clear();
-                    DrawEquipItemToIconPanel(rightArmItemIconPanel, EquipSlots.RightArm);
-                    AddItemDurabilityBar(rightArmItemDurabilityBarPanel, EquipSlots.RightArm);
-                    rightArmItemTextPanel.Components.Clear();
-                    AddItemTextLabels(rightArmItemTextPanel, EquipSlots.RightArm, "Right Arm"); break;
-                case EquipSlots.ChestArmor:
-                    chestItemIconPanel.Components.Clear();
-                    DrawEquipItemToIconPanel(chestItemIconPanel, EquipSlots.ChestArmor);
-                    AddItemDurabilityBar(chestItemDurabilityBarPanel, EquipSlots.ChestArmor);
-                    chestItemTextPanel.Components.Clear();
-                    AddItemTextLabels(chestItemTextPanel, EquipSlots.ChestArmor, "Chest"); break;
-                case EquipSlots.Gloves:
-                    glovesItemIconPanel.Components.Clear();
-                    DrawEquipItemToIconPanel(glovesItemIconPanel, EquipSlots.Gloves);
-                    AddItemDurabilityBar(glovesItemDurabilityBarPanel, EquipSlots.Gloves);
-                    glovesItemTextPanel.Components.Clear();
-                    AddItemTextLabels(glovesItemTextPanel, EquipSlots.Gloves, "Gloves"); break;
-                case EquipSlots.LeftArm:
-                    leftArmItemIconPanel.Components.Clear();
-                    DrawEquipItemToIconPanel(leftArmItemIconPanel, EquipSlots.LeftArm);
-                    AddItemDurabilityBar(leftArmItemDurabilityBarPanel, EquipSlots.LeftArm);
-                    leftArmItemTextPanel.Components.Clear();
-                    AddItemTextLabels(leftArmItemTextPanel, EquipSlots.LeftArm, "Left Arm"); break;
-                case EquipSlots.LegsArmor:
-                    legsItemIconPanel.Components.Clear();
-                    DrawEquipItemToIconPanel(legsItemIconPanel, EquipSlots.LegsArmor);
-                    AddItemDurabilityBar(legsItemDurabilityBarPanel, EquipSlots.LegsArmor);
-                    legsItemTextPanel.Components.Clear();
-                    AddItemTextLabels(legsItemTextPanel, EquipSlots.LegsArmor, "Legs"); break;
-                case EquipSlots.Feet:
-                    bootsItemIconPanel.Components.Clear();
-                    DrawEquipItemToIconPanel(bootsItemIconPanel, EquipSlots.Feet);
-                    AddItemDurabilityBar(bootsItemDurabilityBarPanel, EquipSlots.Feet);
-                    bootsItemTextPanel.Components.Clear();
-                    AddItemTextLabels(bootsItemTextPanel, EquipSlots.Feet, "Feet"); break;
-                case EquipSlots.RightHand:
-                case EquipSlots.LeftHand:
-                    rightHandItemIconPanel.Components.Clear();
-                    DrawEquipItemToIconPanel(rightHandItemIconPanel, EquipSlots.RightHand);
-                    AddItemDurabilityBar(rightHandItemDurabilityBarPanel, EquipSlots.RightHand);
-                    rightHandItemTextPanel.Components.Clear();
-                    AddItemTextLabels(rightHandItemTextPanel, EquipSlots.RightHand, "Right Hand");
-                    leftHandItemIconPanel.Components.Clear();
-                    DrawEquipItemToIconPanel(leftHandItemIconPanel, EquipSlots.LeftHand);
-                    AddItemDurabilityBar(leftHandItemDurabilityBarPanel, EquipSlots.LeftHand);
-                    leftHandItemTextPanel.Components.Clear();
-                    AddItemTextLabels(leftHandItemTextPanel, EquipSlots.LeftHand, "Left Hand"); break;
-                default: return;
-            }
-
-            UpdateItemInfoPanel(null);
-        }
-
-        protected virtual void LocalItemListScroller_OnHover(DaggerfallUnityItem item)
-        {
-            ItemListScroller_OnHover(item);
-            //RaiseOnItemHoverEvent(item, ItemHoverLocation.LocalList);
-        }
-
-        protected virtual void ItemListScroller_OnHover(DaggerfallUnityItem item)
-        {
-            // Update the info panel if used
-            if (extraInfoTextPanel != null)
-            {
-                UpdateItemInfoPanel(item);
-            }
-
-            if (rightItemComparisonPanel.Enabled == true)
-            {
-                if (rightComparisonMainTextPanel != null)
-                {
-                    UpdateItemComparisonPanel(item, true);
-                }
-            }
-
-            if (leftItemComparisonPanel.Enabled == true)
-            {
-                if (leftComparisonMainTextPanel != null)
-                {
-                    UpdateItemComparisonPanel(item, false);
-                }
-            }
-        }
-
-        */
-
-        protected virtual void LocalItemListScroller_OnItemLeftClick(DaggerfallUnityItem item)
-        {
-            LocalItemListScroller_OnItemClick(item);
-        }
-
-        protected virtual void LocalItemListScroller_OnItemClick(DaggerfallUnityItem item)
-        {
-            //EquipItem(item);
+            DaggerfallUI.Instance.PlayOneShot(DaggerfallUI.Instance.GetAudioClip(SoundClips.ButtonClick));
         }
 
         protected virtual void LocalItemListScroller_OnHover(DaggerfallUnityItem item)
@@ -592,6 +592,47 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             if (primaryHoverTextPanel != null)
             {
                 //UpdateItemInfoPanel(item);
+            }
+        }
+
+        protected virtual void BrewingInputItems_OnLeftClick(BaseScreenComponent sender, Vector2 position)
+        {
+            BrewingInputItems_OnItemClick(sender, position);
+        }
+
+        protected virtual void BrewingInputItems_OnItemClick(BaseScreenComponent sender, Vector2 position)
+        {
+            RemoveItemFromIngredientInput(sender, position);
+        }
+
+        protected void RemoveItemFromIngredientInput(BaseScreenComponent sender, Vector2 position)
+        {
+            int slotIndex = int.Parse(sender.Name);
+            DaggerfallUnityItem item = (DaggerfallUnityItem)sender.Tag;
+            if (item == null) { return; }
+
+            localItems.AddItem(item);
+            brewingSlots[slotIndex] = null;
+
+            RefreshBrewingIngredientInputPanels();
+            RefreshLocalItemsFilteredList();
+            localAOItemListScroller.Items = localItemsFiltered;
+
+            DaggerfallUI.Instance.PlayOneShot(DaggerfallUI.Instance.GetAudioClip(SoundClips.ButtonClick));
+        }
+
+        protected virtual void BrewingInputItems_OnMouseEnter(BaseScreenComponent sender)
+        {
+            //
+        }
+
+        protected void FreeBrewingInputSlots()
+        {
+            for (int i = 0; i < brewingSlots.Length; i++)
+            {
+                if (brewingSlots[i] == null) { continue; }
+                localItems.AddItem(brewingSlots[i]);
+                brewingSlots[i] = null;
             }
         }
 
