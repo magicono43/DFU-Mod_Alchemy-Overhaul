@@ -78,6 +78,8 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         Texture2D sortIconAscendingTexture;
         Texture2D sortIconDescendingTexture;
 
+        Texture2D unknownEffectIconTexture;
+
         #endregion
 
         Panel leftMainPanel;
@@ -127,6 +129,11 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         Panel sortIconAscendingPanel;
         Panel sortIconDescendingPanel;
 
+        Rect[] primaryInfoTextPanelRects = primaryHoverInfoTextPanelRects;
+        Panel[] primaryHoverInfoTextPanels;
+        Panel[] ingredientEffectImageIconPanels;
+        Panel[] ingredientEffectInfoTextPanels;
+
         Button exitButton;
 
         AOBrewingLocalItemListScroller localAOItemListScroller;
@@ -139,6 +146,18 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         {
             new Rect(26, 0, 23, 22), new Rect(52, 0, 23, 22), new Rect(0, 22, 23, 22), new Rect(78, 22, 23, 22), new Rect(0, 47, 23, 22), new Rect(78, 47, 23, 22), new Rect(39, 39, 23, 22)
         };
+
+        static Rect[] primaryHoverInfoTextPanelRects = new Rect[]
+        {
+            new Rect(5, 5, 44, 16), new Rect(51, 5, 44, 16), new Rect(5, 22, 44, 16), new Rect(51, 22, 44, 16), new Rect(5, 39, 44, 16), new Rect(51, 39, 44, 16), new Rect(5, 56, 90, 7)
+        };
+
+        /*
+        static Rect[] primaryHoverInfoTextPanelRects = new Rect[]
+        {
+            new Rect(6, 6, 43, 13), new Rect(51, 6, 43, 13), new Rect(6, 21, 43, 13), new Rect(51, 21, 43, 13), new Rect(6, 36, 43, 13), new Rect(51, 36, 43, 13), new Rect(6, 51, 88, 11)
+        };
+        */
 
         ItemCollection localItems = new ItemCollection();
         List<DaggerfallUnityItem> localItemsFiltered = new List<DaggerfallUnityItem>();
@@ -166,7 +185,10 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             SetupTextPanelBackgroundTextures();
             SetupLocalItemListScroller();
             SetupIngredientInputPanels();
+            SetupPrimaryHoverInfoText();
             SetupButtons();
+
+            // Next time I work on this, maybe get the very basic display of text on the "Primary Hover Info Text Panel" set-up at the very least, then maybe after that the heat setting? Will see.
         }
 
         public override void OnPush()
@@ -259,6 +281,8 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             sortIconPercentTexture = AlchemyOverhaulMain.Instance.SortIconPercentTexture;
             sortIconAscendingTexture = AlchemyOverhaulMain.Instance.SortIconAscendingTexture;
             sortIconDescendingTexture = AlchemyOverhaulMain.Instance.SortIconDescendingTexture;
+
+            unknownEffectIconTexture = AlchemyOverhaulMain.Instance.UnknownEffectIconTexture;
         }
 
         protected void SetupTestPanelPositions()
@@ -434,10 +458,6 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
                 ingredientInputItemButtons[i].OnMouseClick += BrewingInputItems_OnLeftClick; // Likely just clear this ingredient slot and return item to local inventory scroller.
                 ingredientInputItemButtons[i].OnMouseEnter += BrewingInputItems_OnMouseEnter; // Likely just update the "Primary Info" hover text box and tooltip text.
 
-                // Item foreground animation panel
-                //itemAnimPanels[i] = DaggerfallUI.AddPanel(itemButtonRects[i], itemsListPanel);
-                //itemAnimPanels[i].AnimationDelayInSeconds = foregroundAnimationDelay;
-
                 // Icon image panel
                 ingredientInputItemImagePanels[i] = DaggerfallUI.AddPanel(ingredientInputItemButtons[i], AutoSizeModes.ScaleToFit);
                 ingredientInputItemImagePanels[i].HorizontalAlignment = HorizontalAlignment.Center;
@@ -497,6 +517,49 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             return name;
         }
 
+        protected void SetupPrimaryHoverInfoText()
+        {
+            int maxLineWidth = 29;
+            float textScale = 0.65f;
+
+            primaryHoverInfoTextPanels = new Panel[7];
+            ingredientEffectImageIconPanels = new Panel[7];
+            ingredientEffectInfoTextPanels = new Panel[7];
+
+            for (int i = 0; i < 7; i++)
+            {
+                primaryHoverInfoTextPanels[i] = DaggerfallUI.AddPanel(primaryInfoTextPanelRects[i], primaryHoverTextPanel);
+                primaryHoverInfoTextPanels[i].Name = i.ToString();
+                primaryHoverInfoTextPanels[i].Tag = null;
+                primaryHoverInfoTextPanels[i].BackgroundColor = new Color32(255, 0, 0, 110);
+
+                if (i <= 4)
+                {
+                    primaryHoverInfoTextPanels[i].BackgroundColor = Color.clear;
+
+                    ingredientEffectImageIconPanels[i] = DaggerfallUI.AddPanel(new Rect(0, 0, 16, 16), primaryHoverInfoTextPanels[i]);
+                    //ingredientEffectImageIconPanels[i].BackgroundColor = new Color32(0, 0, 255, 160);
+                    ingredientEffectImageIconPanels[i].BackgroundTexture = unknownEffectIconTexture;
+
+                    ingredientEffectInfoTextPanels[i] = DaggerfallUI.AddPanel(new Rect(16, 0, 28, 16), primaryHoverInfoTextPanels[i]);
+                    //ingredientEffectInfoTextPanels[i].BackgroundColor = new Color32(0, 255, 0, 160);
+
+                    CreateCenteredTextLabel("Nothing Ever Happens", new Vector2(1, 1), maxLineWidth, ingredientEffectInfoTextPanels[i], textScale);
+                }
+            }
+
+            RefreshPrimaryHoverInfoPanel();
+        }
+
+        protected void RefreshPrimaryHoverInfoPanel()
+        {
+            for (int i = 0; i < primaryHoverInfoTextPanels.Length; i++)
+            {
+                // Set effect icon image
+                //
+            }
+        }
+
         protected void SetupButtons()
         {
             // Exit button
@@ -511,9 +574,12 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
             TextLabel label = DaggerfallUI.AddTextLabel(DaggerfallUI.DefaultFont, position, text, parentPanel);
             label.TextColor = (Color)color;
+            label.ShadowColor = Color.clear;
             label.MaxWidth = maxWidth;
             label.TextScale = textScale;
-            label.HorizontalAlignment = HorizontalAlignment.Center;
+            label.HorizontalTextAlignment = TextLabel.HorizontalTextAlignmentSetting.Center;
+            label.WrapText = true;
+            label.WrapWords = true;
             return label;
         }
 

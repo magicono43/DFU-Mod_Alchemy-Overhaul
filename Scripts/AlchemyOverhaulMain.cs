@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		3/3/2026, 5:45 PM
+// Last Edit:		3/6/2026, 10:20 PM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:
@@ -63,6 +63,8 @@ namespace AlchemyOverhaul
         public Texture2D SortIconPercentTexture;
         public Texture2D SortIconAscendingTexture;
         public Texture2D SortIconDescendingTexture;
+
+        public Texture2D UnknownEffectIconTexture;
 
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
@@ -151,6 +153,8 @@ namespace AlchemyOverhaul
             success &= modManager.TryGetAsset("Sort_Button_Icon_Percent_1", false, out SortIconPercentTexture);
             success &= modManager.TryGetAsset("Sort_Button_Icon_Ascending_Arrow_1", false, out SortIconAscendingTexture);
             success &= modManager.TryGetAsset("Sort_Button_Icon_Descending_Arrow_1", false, out SortIconDescendingTexture);
+
+            success &= modManager.TryGetAsset("Unknown_Effect", false, out UnknownEffectIconTexture);
 
             if (!success)
                 throw new Exception("AlchemyOverhaul: Missing texture asset");
