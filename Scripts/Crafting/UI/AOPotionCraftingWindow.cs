@@ -134,7 +134,11 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         Panel[] ingredientEffectImageIconPanels;
         Panel[] ingredientEffectInfoTextPanels;
 
+        Panel heatSettingTextDisplayPanel;
+
         Button exitButton;
+        Button reduceHeatButton;
+        Button increaseHeatButton;
 
         AOBrewingLocalItemListScroller localAOItemListScroller;
 
@@ -186,6 +190,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             SetupLocalItemListScroller();
             SetupIngredientInputPanels();
             SetupPrimaryHoverInfoText();
+            SetupHeatSettingsPanels();
             SetupButtons();
 
             // Next time I work on this, maybe get the very basic display of text on the "Primary Hover Info Text Panel" set-up at the very least, then maybe after that the heat setting? Will see.
@@ -558,6 +563,69 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
                 // Set effect icon image
                 //
             }
+        }
+
+        protected void SetupHeatSettingsPanels()
+        {
+            heatSettingTextDisplayPanel = DaggerfallUI.AddPanel(new Rect(9, 3, 16, 8), heatSettingButtonPanel);
+            heatSettingTextDisplayPanel.ToolTip = defaultToolTip;
+            heatSettingTextDisplayPanel.ToolTipText = "Current Heat Setting";
+
+            reduceHeatButton = DaggerfallUI.AddButton(new Rect(0, 0, 8, 14), heatSettingButtonPanel);
+            reduceHeatButton.Name = "Reduce Heat";
+            reduceHeatButton.ToolTip = defaultToolTip;
+            reduceHeatButton.ToolTipText = "Decrease Heat";
+            reduceHeatButton.Tag = false;
+            reduceHeatButton.OnMouseClick += ChangeHeat_OnMouseClick;
+            reduceHeatButton.ClickSound = DaggerfallUI.Instance.GetAudioClip(SoundClips.ButtonClick);
+
+            increaseHeatButton = DaggerfallUI.AddButton(new Rect(26, 0, 8, 14), heatSettingButtonPanel);
+            increaseHeatButton.Name = "Increase Heat";
+            increaseHeatButton.ToolTip = defaultToolTip;
+            increaseHeatButton.ToolTipText = "Increase Heat";
+            increaseHeatButton.Tag = true;
+            increaseHeatButton.OnMouseClick += ChangeHeat_OnMouseClick;
+            increaseHeatButton.ClickSound = DaggerfallUI.Instance.GetAudioClip(SoundClips.ButtonClick);
+
+            //heatActiveIconPanel = DaggerfallUI.AddPanel(new Rect(46, 163, 9, 15), middleMainPanel);
+            //heatSettingButtonPanel = DaggerfallUI.AddPanel(new Rect(33, 180, 34, 14), middleMainPanel);
+
+            // Continue work on this next time, try to get the little flame icon to toggle between states when the setting is changed.
+
+            RefreshHeatSettingsPanel(0, "OFF");
+        }
+
+        protected void RefreshHeatSettingsPanel(int currentHeatValue, string settingName)
+        {
+            heatSettingTextDisplayPanel.Components.Clear();
+            heatSettingTextDisplayPanel.Tag = currentHeatValue;
+            CreateCenteredTextLabel(settingName, new Vector2(1, 1), 16, heatSettingTextDisplayPanel, 1.00f);
+        }
+
+        private void ChangeHeat_OnMouseClick(BaseScreenComponent sender, Vector2 position)
+        {
+            int currentHeatValue = (int)heatSettingTextDisplayPanel.Tag;
+            string settingName = "OFF";
+
+            if ((bool)sender.Tag == true)
+                currentHeatValue++;
+            else
+                currentHeatValue--;
+
+            currentHeatValue = Mathf.Clamp(currentHeatValue, 0, 3);
+
+            heatSettingTextDisplayPanel.Tag = currentHeatValue;
+
+            switch (currentHeatValue)
+            {
+                default:
+                case 0: settingName = "OFF"; break;
+                case 1: settingName = "LOW"; break;
+                case 2: settingName = "MED"; break;
+                case 3: settingName = "HIGH"; break;
+            }
+
+            RefreshHeatSettingsPanel(currentHeatValue, settingName);
         }
 
         protected void SetupButtons()
