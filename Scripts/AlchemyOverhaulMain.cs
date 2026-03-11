@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		3/9/2026, 8:30 AM
+// Last Edit:		3/11/2026, 8:50 AM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:
@@ -90,6 +90,8 @@ namespace AlchemyOverhaul
             LoadTextures();
 
             DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(AOConstants.ItemIds.TestPotion, ItemGroups.UselessItems1, typeof(ItemTestPotion)); // Register Test Potion item.
+
+            Ingredients.Database.IngredientDatabaseInitializer.Initialize();
 
             RegisterConsoleCommands();
 

@@ -71,7 +71,8 @@
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Textures/Right_Green_Arrow_Up_1.png",
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Textures/Sort_Button_Icon_Percent_1.png",
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Crafting/UI/AOBrewingLocalItemListScroller.cs",
-        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Textures/Effect_Icons/Unknown_Effect.png"
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Textures/Effect_Icons/Unknown_Effect.png",
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Ingredients/Database/IngredientDatabaseInitializer.cs"
     ],
     "Dependencies": []
 }

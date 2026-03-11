@@ -1,41 +1,32 @@
 using System.Collections.Generic;
-using DaggerfallWorkshop.Game.Items;
 using AlchemyOverhaul.Ingredients.Definitions;
 
 namespace AlchemyOverhaul.Ingredients.Database
 {
     public static class IngredientDatabase
     {
-        private static readonly Dictionary<int, IngredientDefinition> byTemplateIndex
-            = BuildDatabase();
+        private static readonly Dictionary<int, IngredientDefinition> ingredients
+            = new Dictionary<int, IngredientDefinition>();
 
-        private static Dictionary<int, IngredientDefinition> BuildDatabase()
+        public static void Register(IngredientDefinition definition)
         {
-            var dict = new Dictionary<int, IngredientDefinition>();
-
-            // Example ingredient
-            dict.Add(512, new IngredientDefinition(
-                templateIndex: 512,
-                ingredientId: "nimroot",
-                displayName: "Nimroot",
-                primaryEffects: new List<IngredientEffectEntry>
-                {
-                    new IngredientEffectEntry("restore_health", 5f),
-                    new IngredientEffectEntry("fortify_agility", 3f),
-                    new IngredientEffectEntry("resist_fire", 10f),
-                    new IngredientEffectEntry("drain_fatigue", 2f),
-                },
-                secretEffect: new IngredientEffectEntry("paralysis", 1f)
-            ));
-
-            return dict; // Eventually turn these into a .json list or something, to be more easily edited later on. 
+            ingredients[definition.TemplateIndex] = definition;
         }
 
-        public static bool TryGet(
-            DaggerfallUnityItem item,
-            out IngredientDefinition def)
+        public static IngredientDefinition Get(int templateIndex)
         {
-            return byTemplateIndex.TryGetValue(item.TemplateIndex, out def);
+            ingredients.TryGetValue(templateIndex, out var def);
+            return def;
+        }
+
+        public static bool Contains(int templateIndex)
+        {
+            return ingredients.ContainsKey(templateIndex);
+        }
+
+        public static IEnumerable<IngredientDefinition> All()
+        {
+            return ingredients.Values;
         }
     }
 }

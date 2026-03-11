@@ -7,6 +7,8 @@ using DaggerfallConnect.Arena2;
 using System;
 using System.Linq;
 using AlchemyOverhaul;
+using AlchemyOverhaul.Ingredients.Database;
+using AlchemyOverhaul.Ingredients.Definitions;
 
 namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 {
@@ -167,6 +169,8 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         List<DaggerfallUnityItem> localItemsFiltered = new List<DaggerfallUnityItem>();
 
         DaggerfallUnityItem[] brewingSlots = new DaggerfallUnityItem[7];
+
+        DaggerfallUnityItem hoveredItem;
 
         protected override void Setup()
         {
@@ -462,6 +466,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
                 ingredientInputItemButtons[i].BackgroundColor = Color.clear;
                 ingredientInputItemButtons[i].OnMouseClick += BrewingInputItems_OnLeftClick; // Likely just clear this ingredient slot and return item to local inventory scroller.
                 ingredientInputItemButtons[i].OnMouseEnter += BrewingInputItems_OnMouseEnter; // Likely just update the "Primary Info" hover text box and tooltip text.
+                ingredientInputItemButtons[i].OnMouseLeave += BrewingInputItems_OnMouseLeave;
 
                 // Icon image panel
                 ingredientInputItemImagePanels[i] = DaggerfallUI.AddPanel(ingredientInputItemButtons[i], AutoSizeModes.ScaleToFit);
@@ -525,7 +530,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         protected void SetupPrimaryHoverInfoText()
         {
             int maxLineWidth = 29;
-            float textScale = 0.65f;
+            float textScale = 0.8f;
 
             primaryHoverInfoTextPanels = new Panel[7];
             ingredientEffectImageIconPanels = new Panel[7];
@@ -551,6 +556,10 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
                     CreateCenteredTextLabel("Nothing Ever Happens", new Vector2(1, 1), maxLineWidth, ingredientEffectInfoTextPanels[i], textScale);
                 }
+                else if (i == 5)
+                    ingredientEffectInfoTextPanels[i] = DaggerfallUI.AddPanel(new Rect(0, 0, 44, 16), primaryHoverInfoTextPanels[i]);
+                else
+                    ingredientEffectInfoTextPanels[i] = DaggerfallUI.AddPanel(new Rect(0, 0, 90, 7), primaryHoverInfoTextPanels[i]);
             }
 
             RefreshPrimaryHoverInfoPanel();
@@ -558,11 +567,22 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
         protected void RefreshPrimaryHoverInfoPanel()
         {
+            IngredientDefinition def = null;
+            DaggerfallUnityItem item = hoveredItem;
+            if (item != null) { def = IngredientDatabase.Get(item.TemplateIndex); }
+
             for (int i = 0; i < primaryHoverInfoTextPanels.Length; i++)
             {
-                // Set effect icon image
-                //
+                ingredientEffectInfoTextPanels[i].Components.Clear();
+                if (i <= 4 && def != null && def.PrimaryEffects.Count >= i + 1)
+                {
+                    CreateCenteredTextLabel(def.PrimaryEffects[i].EffectId, new Vector2(1, 1), 29, ingredientEffectInfoTextPanels[i], 0.8f);
+                }
             }
+
+            // Work on this more later today, I'll want to eventually fix some of this weird logic to make it more simple to use on my side.
+
+            // When I work on this again, see if I can get the Brew button to work and make a potion with atleast 2 ingredients with matching effects selected in the slots.
         }
 
         protected void SetupHeatSettingsPanels()
@@ -589,8 +609,6 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
             //heatActiveIconPanel = DaggerfallUI.AddPanel(new Rect(46, 163, 9, 15), middleMainPanel);
             //heatSettingButtonPanel = DaggerfallUI.AddPanel(new Rect(33, 180, 34, 14), middleMainPanel);
-
-            // Continue work on this next time, try to get the little flame icon to toggle between states when the setting is changed.
 
             RefreshHeatSettingsPanel(0, "OFF");
         }
@@ -719,7 +737,8 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             // Update the info panel
             if (primaryHoverTextPanel != null)
             {
-                //UpdateItemInfoPanel(item);
+                hoveredItem = item;
+                RefreshPrimaryHoverInfoPanel();
             }
         }
 
@@ -751,7 +770,14 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
         protected virtual void BrewingInputItems_OnMouseEnter(BaseScreenComponent sender)
         {
-            //
+            hoveredItem = (DaggerfallUnityItem)sender.Tag;
+            RefreshPrimaryHoverInfoPanel();
+        }
+
+        protected virtual void BrewingInputItems_OnMouseLeave(BaseScreenComponent sender)
+        {
+            hoveredItem = null;
+            RefreshPrimaryHoverInfoPanel();
         }
 
         protected void FreeBrewingInputSlots()
