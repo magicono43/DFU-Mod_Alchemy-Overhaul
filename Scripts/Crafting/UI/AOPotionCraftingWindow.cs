@@ -687,11 +687,14 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
         protected void AttemptToAddItemToIngredientInput(DaggerfallUnityItem item)
         {
-            // Next time I work on this, likely using the "HashSet" thing, prevent non-unique items from being added to the current brewing inputs.
-            // Should be fairly simple, just have a pop-up informing the user that they can't add duplicates or whatever, something like that.
-            // After that, do more testing, and probably try to get the effects on the ingredients to actually make unique potions, not just the current test one.
+            // Next, probably try to get the effects on the ingredients to actually make unique potions, not just the current test one.
+            // I might change the multiple ingredient rule later, but heavily penalize the result the more ingredients are duplicated, but I'll see on that one.
 
-            if (item.IsAStack())
+            if (DetermineIfIngredientIsDuplicate(item)) { return; }
+
+            bool isStack = item.IsAStack();
+
+            if (isStack)
                 item = localItems.SplitStack(item, 1);
 
             if (item.ItemTemplate.isLiquid) // Eventually make a proper list of valid "solvents" that will fit in this slot.
@@ -703,12 +706,15 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
                 }
                 else
                 {
-                    localItems.AddItem(brewingSlots[6], noStack: true);
+                    if (isStack)
+                        localItems.AddItem(brewingSlots[6]); // The weird if statement here is to try to prevent the weird unstacking behavior when replacing the same ingredient with another.
+                    else
+                        localItems.AddItem(brewingSlots[6], noStack: true);
                     brewingSlots[6] = item;
                     localItems.RemoveItem(item);
                 }
             }
-            else // For all other ingredients, loop through the slots to see which one is open, if full than put replace the last slot with this item instead, if valid.
+            else // For all other ingredients, loop through the slots to see which one is open, if full then replace the last slot with this item instead, if valid.
             {
                 for (int i = 0; i < brewingSlots.Length - 1; i++)
                 {
@@ -733,6 +739,30 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             localAOItemListScroller.Items = localItemsFiltered;
 
             DaggerfallUI.Instance.PlayOneShot(DaggerfallUI.Instance.GetAudioClip(SoundClips.ButtonClick));
+        }
+
+        private bool DetermineIfIngredientIsDuplicate(DaggerfallUnityItem item)
+        {
+            DaggerfallUI.Instance.PlayOneShot(DaggerfallUI.Instance.GetAudioClip(SoundClips.ButtonClick));
+
+            for (int i = 0; i < brewingSlots.Length - 1; i++)
+            {
+                if (brewingSlots[i] != null && brewingSlots[i].TemplateIndex == item.TemplateIndex)
+                {
+                    TextFile.Token[] tokens = DaggerfallUnity.Instance.TextProvider.CreateTokens(
+                            TextFile.Formatting.JustifyCenter,
+                            "You cannot use multiple of the same",
+                            "ingredient when brewing.");
+                    DaggerfallMessageBox messageBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, DaggerfallUI.UIManager.TopWindow);
+
+                    messageBox.SetTextTokens(tokens);
+                    messageBox.ClickAnywhereToClose = true;
+                    messageBox.Show();
+
+                    return true;
+                }
+            }
+            return false;
         }
 
         protected virtual void LocalItemListScroller_OnHover(DaggerfallUnityItem item)
