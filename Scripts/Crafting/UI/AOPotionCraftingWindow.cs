@@ -141,6 +141,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         Button exitButton;
         Button reduceHeatButton;
         Button increaseHeatButton;
+        Button brewButton;
 
         AOBrewingLocalItemListScroller localAOItemListScroller;
 
@@ -652,6 +653,10 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             exitButton = DaggerfallUI.AddButton(new Rect(0, 0, 35, 15), exitButtonPanel);
             exitButton.OnMouseClick += ExitButton_OnMouseClick;
             exitButton.ClickSound = DaggerfallUI.Instance.GetAudioClip(SoundClips.ButtonClick);
+
+            brewButton = DaggerfallUI.AddButton(new Rect(0, 0, 35, 13), brewButtonActivePanel);
+            brewButton.OnMouseClick += BrewPotion_OnMouseClick;
+            brewButton.ClickSound = DaggerfallUI.Instance.GetAudioClip(SoundClips.ButtonClick);
         }
 
         public static TextLabel CreateCenteredTextLabel(string text, Vector2 position, int maxWidth, Panel parentPanel, float textScale = 1, Color32? color = null)
@@ -788,6 +793,47 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
                 localItems.AddItem(brewingSlots[i]);
                 brewingSlots[i] = null;
             }
+        }
+
+        private void BrewPotion_OnMouseClick(BaseScreenComponent sender, Vector2 position)
+        {
+            if (!DetermineIfBrewingInputsAreValid()) { return; }
+
+            // Actually create a potion, even if the effects don't match, for right now just make it have some minor effect in that case, later will be actual negatives of some sort probably.
+            // After that have the items in the brewing input get removed, since those were used in the making of the potion.
+        }
+
+        private bool DetermineIfBrewingInputsAreValid()
+        {
+            int ingredCount = 0;
+            int solventCount = 0;
+            HashSet<int> uniqueTemplates = new HashSet<int>();
+
+            for (int i = 0; i < brewingSlots.Length; i++)
+            {
+                DaggerfallUnityItem item = brewingSlots[i];
+                if (item == null) { continue; }
+
+                uniqueTemplates.Add(brewingSlots[i].TemplateIndex);
+                if (i <= 5) { ingredCount++; }
+                if (i == 6) { solventCount++; }
+            }
+
+            if (solventCount <= 0 || ingredCount <= 1 || uniqueTemplates.Count <= 1)
+            {
+                TextFile.Token[] tokens = DaggerfallUnity.Instance.TextProvider.CreateTokens(
+                            TextFile.Formatting.JustifyCenter,
+                            "1 Solvent and atleast 2 unique Ingredients",
+                            "are required to brew a potion.");
+                DaggerfallMessageBox messageBox = new DaggerfallMessageBox(DaggerfallUI.UIManager);
+
+                messageBox.SetTextTokens(tokens);
+                messageBox.ClickAnywhereToClose = true;
+                messageBox.Show();
+
+                return false;
+            }
+            return true;
         }
 
         private void ExitButton_OnMouseClick(BaseScreenComponent sender, Vector2 position)
