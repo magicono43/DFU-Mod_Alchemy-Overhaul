@@ -397,7 +397,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
                 {
                     DaggerfallUnityItem item = localItems.GetItem(i);
                     // Add if item is an ingredient
-                    if (item.IsIngredient && !item.IsEnchanted)
+                    if (item.IsIngredient && !item.IsEquipped && !item.IsEnchanted)
                     {
                         AddLocalItem(item);
                     }
@@ -687,6 +687,10 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
         protected void AttemptToAddItemToIngredientInput(DaggerfallUnityItem item)
         {
+            // Next time I work on this, likely using the "HashSet" thing, prevent non-unique items from being added to the current brewing inputs.
+            // Should be fairly simple, just have a pop-up informing the user that they can't add duplicates or whatever, something like that.
+            // After that, do more testing, and probably try to get the effects on the ingredients to actually make unique potions, not just the current test one.
+
             if (item.IsAStack())
                 item = localItems.SplitStack(item, 1);
 
@@ -795,12 +799,32 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             }
         }
 
+        protected void DeleteBrewingInputSlots()
+        {
+            for (int i = 0; i < brewingSlots.Length; i++)
+            {
+                brewingSlots[i] = null;
+            }
+        }
+
         private void BrewPotion_OnMouseClick(BaseScreenComponent sender, Vector2 position)
         {
             if (!DetermineIfBrewingInputsAreValid()) { return; }
 
-            // Actually create a potion, even if the effects don't match, for right now just make it have some minor effect in that case, later will be actual negatives of some sort probably.
-            // After that have the items in the brewing input get removed, since those were used in the making of the potion.
+            AlchemyOverhaulMain.CreateTestPotion();
+
+            DaggerfallUI.Instance.PlayOneShot(DaggerfallUI.Instance.GetAudioClip(SoundClips.MakePotion));
+
+            TextFile.Token[] tokens = DaggerfallUnity.Instance.TextProvider.CreateTokens(
+                            TextFile.Formatting.JustifyCenter,
+                            "You brewed a potion.");
+            DaggerfallMessageBox messageBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, DaggerfallUI.UIManager.TopWindow);
+
+            messageBox.SetTextTokens(tokens);
+            messageBox.ClickAnywhereToClose = true;
+            messageBox.Show();
+
+            RefreshAfterBrewingPotion();
         }
 
         private bool DetermineIfBrewingInputsAreValid()
@@ -819,13 +843,13 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
                 if (i == 6) { solventCount++; }
             }
 
-            if (solventCount <= 0 || ingredCount <= 1 || uniqueTemplates.Count <= 1)
+            if (solventCount <= 0 || ingredCount <= 1 || uniqueTemplates.Count <= 2)
             {
                 TextFile.Token[] tokens = DaggerfallUnity.Instance.TextProvider.CreateTokens(
                             TextFile.Formatting.JustifyCenter,
                             "1 Solvent and atleast 2 unique Ingredients",
                             "are required to brew a potion.");
-                DaggerfallMessageBox messageBox = new DaggerfallMessageBox(DaggerfallUI.UIManager);
+                DaggerfallMessageBox messageBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, DaggerfallUI.UIManager.TopWindow);
 
                 messageBox.SetTextTokens(tokens);
                 messageBox.ClickAnywhereToClose = true;
@@ -834,6 +858,14 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
                 return false;
             }
             return true;
+        }
+
+        public void RefreshAfterBrewingPotion()
+        {
+            DeleteBrewingInputSlots();
+            RefreshBrewingIngredientInputPanels();
+            RefreshLocalItemsFilteredList();
+            RefreshPrimaryHoverInfoPanel();
         }
 
         private void ExitButton_OnMouseClick(BaseScreenComponent sender, Vector2 position)

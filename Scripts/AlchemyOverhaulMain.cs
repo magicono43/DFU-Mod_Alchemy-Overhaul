@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		3/11/2026, 8:00 PM
+// Last Edit:		3/12/2026, 8:45 AM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:
@@ -185,21 +185,26 @@ namespace AlchemyOverhaul
 
             public static string Execute(params string[] args)
             {
-                DaggerfallWorkshop.Game.Entity.PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
-
-                DaggerfallUnityItem item = ItemBuilder.CreateItem(ItemGroups.UselessItems1, AOConstants.ItemIds.TestPotion);
-
-                PotionData data = PotionRegistry.CreatePotion(AOConstants.PotionIds.TestHealRegenV1);
-
-                if (data == null)
-                    return "Failed to create potion.";
-
-                ModSaveData.AddPotion(item.UID, data);
-
-                playerEntity.Items.AddItem(item);
-
-                return "Gave you a test potion.";
+                return CreateTestPotion();
             }
+        }
+
+        public static string CreateTestPotion()
+        {
+            DaggerfallWorkshop.Game.Entity.PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
+
+            DaggerfallUnityItem item = ItemBuilder.CreateItem(ItemGroups.UselessItems1, AOConstants.ItemIds.TestPotion);
+
+            PotionData data = PotionRegistry.CreatePotion(AOConstants.PotionIds.TestHealRegenV1);
+
+            if (data == null)
+                return "Failed to create potion.";
+
+            ModSaveData.AddPotion(item.UID, data);
+
+            playerEntity.Items.AddItem(item);
+
+            return "Gave you a test potion.";
         }
 
         private static class ChangeTestNumber
