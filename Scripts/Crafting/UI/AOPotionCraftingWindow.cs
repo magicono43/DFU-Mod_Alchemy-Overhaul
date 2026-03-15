@@ -9,6 +9,12 @@ using System.Linq;
 using AlchemyOverhaul;
 using AlchemyOverhaul.Ingredients.Database;
 using AlchemyOverhaul.Ingredients.Definitions;
+using AlchemyOverhaul.Data.Definitions;
+using AlchemyOverhaul.Effects;
+using AlchemyOverhaul.Potions;
+using AlchemyOverhaul.Data.Enums;
+using AlchemyOverhaul.Systems;
+using AlchemyOverhaul.Data.Runtime;
 
 namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 {
@@ -841,7 +847,56 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         {
             if (!DetermineIfBrewingInputsAreValid()) { return; }
 
-            AlchemyOverhaulMain.CreateTestPotion();
+            List<IngredientDefinition> defs = new List<IngredientDefinition>();
+            for (int i = 0; i < brewingSlots.Length - 1; i++)
+            {
+                DaggerfallUnityItem item = brewingSlots[i];
+                if (item == null) { continue; }
+                IngredientDefinition def = IngredientDatabase.Get(item.TemplateIndex);
+                if (def != null) { defs.Add(def); }
+            }
+
+            Dictionary<string, List<IngredientEffectEntry>> effectBuckets = new Dictionary<string, List<IngredientEffectEntry>>();
+            foreach (var definition in defs)
+            {
+                foreach (var effect in definition.PrimaryEffects)
+                {
+                    if (!effectBuckets.TryGetValue(effect.EffectId, out var list))
+                    {
+                        list = new List<IngredientEffectEntry>();
+                        effectBuckets.Add(effect.EffectId, list);
+                    }
+
+                    list.Add(effect);
+                }
+            }
+
+            List<PotionEffectBlueprint> potionEffects = new List<PotionEffectBlueprint>();
+            foreach (var kvp in effectBuckets)
+            {
+                string effectKey = kvp.Key;
+                List<IngredientEffectEntry> contributors = kvp.Value;
+
+                // Continue working from here, check ChatGPT for the rest.
+
+                if (contributors.Count < 2)
+                    continue;
+
+                potionEffects.Add(BuildPotionEffect(effectKey, contributors));
+            }
+
+            // Next time I work on this, add some more vanilla effects to the enums and database, then add some more ingredients that have those, then actually try to craft and test
+            // a potion made ingame with those effects and such, see what happens, if anything.
+
+            DaggerfallUnityItem potItem = ItemBuilder.CreateItem(ItemGroups.UselessItems1, AOConstants.ItemIds.TestPotion);
+
+            PotionDefinition potDef = PotionResolver.CreateNewPotionDefinition(potItem.UID.ToString(), potionEffects.ToArray());
+
+            PotionData data = PotionRegistry.CreatePotion(potDef.Id);
+
+            AlchemyOverhaulMain.AddPotionToSaveData(potItem.UID, data);
+
+            AlchemyOverhaulMain.AddPotionToPlayerInventory(potItem);
 
             DaggerfallUI.Instance.PlayOneShot(DaggerfallUI.Instance.GetAudioClip(SoundClips.MakePotion));
 
@@ -855,6 +910,53 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             messageBox.Show();
 
             RefreshAfterBrewingPotion();
+        }
+
+        private static PotionEffectBlueprint BuildPotionEffect(string effectKey, List<IngredientEffectEntry> contributors)
+        {
+            EffectDefinition effectDef = null;
+            int minMag = 0;
+            int maxMag = 0;
+            int minDur = 0;
+            int maxDur = 0;
+
+            foreach (var entry in contributors)
+            {
+                if (EffectDatabase.TryGet(effectKey, out effectDef))
+                {
+                    if (effectDef.UsesDuration)
+                    {
+                        minDur += Mathf.RoundToInt(effectDef.BaseDurationSeconds);
+                        maxDur += Mathf.RoundToInt(effectDef.BaseDurationSeconds + entry.BaseMagnitude);
+                    }
+
+                    if (effectDef.UsesMagnitude)
+                    {
+                        minMag += Mathf.RoundToInt(entry.BaseMagnitude);
+                        maxMag += Mathf.RoundToInt(entry.BaseMagnitude);
+                    }
+                }
+            }
+
+            if (!effectDef.UsesDuration && !effectDef.UsesMagnitude) { return null; }
+            if (maxDur <= 0 && maxMag <= 0) { return null; }
+            if (maxDur > 0 && minDur <= 0) { minDur = 1; }
+            if (maxMag > 0 && minMag <= 0) { minMag = 1; }
+
+            PotionEffectDurationType durType = PotionEffectDurationType.Timed;
+            if (!effectDef.UsesDuration || maxDur <= 0) { durType = PotionEffectDurationType.Instant; }
+
+            return new PotionEffectBlueprint
+            {
+                EffectKey = effectKey,
+                MinMagnitude = minMag,
+                MaxMagnitude = maxMag,
+                MinDuration = minDur,
+                MaxDuration = maxDur,
+                DurationType = durType,
+                ScalingModel = EffectScalingModel.Additive,
+                IdentificationLevel = EffectIdentificationLevel.Full
+            };
         }
 
         private bool DetermineIfBrewingInputsAreValid()

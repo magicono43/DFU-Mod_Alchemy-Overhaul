@@ -49,5 +49,17 @@ namespace AlchemyOverhaul.Potions
             potionDefinitions.TryGetValue(potionId, out PotionDefinition potion);
             return potion;
         }
+
+        public static PotionDefinition CreateNewPotionDefinition(string uniqueID, PotionEffectBlueprint[] blueprints)
+        {
+            PotionDefinition definition = new PotionDefinition
+            {
+                Id = uniqueID,
+                Effects = blueprints
+            };
+
+            potionDefinitions.Add(uniqueID, definition);
+            return definition;
+        }
     }
 }
