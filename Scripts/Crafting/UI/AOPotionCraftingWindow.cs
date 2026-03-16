@@ -589,7 +589,11 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
             // Work on this more later today, I'll want to eventually fix some of this weird logic to make it more simple to use on my side.
 
-            // When I work on this again, see if I can get the Brew button to work and make a potion with atleast 2 ingredients with matching effects selected in the slots.
+            // Next time I work on this. See if I can get the "EffectId" text above to instead be the "Display Name" for the effect in question, the ID is using the name DFU
+            // understands, which sometimes has weird formatting characters.
+            // Also, do more testing and adding effects, more testing after that and even more testing and continue from there when stuff seems to feel like it is
+            // solidly working. Then maybe try to get some clean up and reorganization going on with this sort of mess. Don't want to get too far in when everything
+            // is kind of looking like a confusing mess all scattered around seemingly arbitrarily.
         }
 
         protected void SetupHeatSettingsPanels()
@@ -688,12 +692,10 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         protected virtual void LocalItemListScroller_OnItemClick(DaggerfallUnityItem item)
         {
             AttemptToAddItemToIngredientInput(item);
-            // Make the above a method for adding the clicked ingredient to the ingredient input panel, if valid of course, also remember the solvent thing.
         }
 
         protected void AttemptToAddItemToIngredientInput(DaggerfallUnityItem item)
         {
-            // Next, probably try to get the effects on the ingredients to actually make unique potions, not just the current test one.
             // I might change the multiple ingredient rule later, but heavily penalize the result the more ingredients are duplicated, but I'll see on that one.
 
             if (DetermineIfIngredientIsDuplicate(item)) { return; }
@@ -884,9 +886,6 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
                 potionEffects.Add(BuildPotionEffect(effectKey, contributors));
             }
-
-            // Next time I work on this, add some more vanilla effects to the enums and database, then add some more ingredients that have those, then actually try to craft and test
-            // a potion made ingame with those effects and such, see what happens, if anything.
 
             DaggerfallUnityItem potItem = ItemBuilder.CreateItem(ItemGroups.UselessItems1, AOConstants.ItemIds.TestPotion);
 

@@ -7,7 +7,10 @@ namespace AlchemyOverhaul.Data.Enums
         RestoreHealth,
         RegenerateHealth,
         Paralysis,
-        // etc
+        Jumping,
+        Slowfall,
+        InvisibilityTrue,
+        FortifySpeed,
     }
     
     [Flags]

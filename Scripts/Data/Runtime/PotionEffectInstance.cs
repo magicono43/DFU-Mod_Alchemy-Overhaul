@@ -29,11 +29,11 @@ namespace AlchemyOverhaul.Data.Runtime
             if (string.IsNullOrEmpty(effectKey))
                 throw new ArgumentException("EffectKey cannot be null or empty.");
 
-            if (magnitude <= 0)
-                throw new ArgumentOutOfRangeException(nameof(magnitude));
+            if (magnitude <= 0) { }
+                //throw new ArgumentOutOfRangeException(nameof(magnitude));
 
-            if (durationType == PotionEffectDurationType.Timed && duration <= 0)
-                throw new ArgumentOutOfRangeException(nameof(duration));
+            if (durationType == PotionEffectDurationType.Timed && duration <= 0) { }
+                //throw new ArgumentOutOfRangeException(nameof(duration));
 
             EffectKey = effectKey;
             Magnitude = magnitude;
