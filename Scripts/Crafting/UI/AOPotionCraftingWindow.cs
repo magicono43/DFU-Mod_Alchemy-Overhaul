@@ -583,15 +583,17 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
                 ingredientEffectInfoTextPanels[i].Components.Clear();
                 if (i <= 4 && def != null && def.PrimaryEffects.Count >= i + 1)
                 {
-                    CreateCenteredTextLabel(def.PrimaryEffects[i].EffectId, new Vector2(1, 1), 29, ingredientEffectInfoTextPanels[i], 0.8f);
+                    string effectDisplayName = "Unknown";
+                    EffectDefinition effectDef = null;
+                    if (EffectDatabase.TryGet(def.PrimaryEffects[i].EffectId, out effectDef)) { effectDisplayName = effectDef.DisplayName; }
+                    else {effectDisplayName = def.PrimaryEffects[i].EffectId; }
+                    CreateCenteredTextLabel(effectDisplayName, new Vector2(1, 1), 29, ingredientEffectInfoTextPanels[i], 0.8f);
                 }
             }
 
             // Work on this more later today, I'll want to eventually fix some of this weird logic to make it more simple to use on my side.
 
-            // Next time I work on this. See if I can get the "EffectId" text above to instead be the "Display Name" for the effect in question, the ID is using the name DFU
-            // understands, which sometimes has weird formatting characters.
-            // Also, do more testing and adding effects, more testing after that and even more testing and continue from there when stuff seems to feel like it is
+            // Next time I work on this, do more testing and adding effects, more testing after that and even more testing and continue from there when stuff seems to feel like it is
             // solidly working. Then maybe try to get some clean up and reorganization going on with this sort of mess. Don't want to get too far in when everything
             // is kind of looking like a confusing mess all scattered around seemingly arbitrarily.
         }
