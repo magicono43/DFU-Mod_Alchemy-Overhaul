@@ -4,6 +4,12 @@ namespace AlchemyOverhaul.Data.Enums
 {
     public enum PotionEffectKey
     {
+        Climbing,
+        FireResist,
+        FrostResist,
+        PoisonResist,
+        ShockResist,
+        MagicResist,
         RestoreHealth,
         RegenerateHealth,
         Paralysis,

@@ -13,8 +13,74 @@ namespace AlchemyOverhaul.Effects
         {
             var dict = new Dictionary<string, EffectDefinition>();
 
-            dict.Add("restore_health",
-                new EffectDefinition("restore_health", "Restore Health")
+            dict.Add(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Climbing),
+                new EffectDefinition(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Climbing), "Climbing")
+                {
+                    Kind = PotionEffectKey.Climbing,
+                    IsHostile = false,
+                    UsesDuration = true,
+                    UsesMagnitude = false,
+                    BaseDurationSeconds = 10f,
+                    SkillScalingFactor = 0.3f,
+                });
+
+            dict.Add(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.FireResist),
+                new EffectDefinition(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.FireResist), "Fire Resistance")
+                {
+                    Kind = PotionEffectKey.FireResist,
+                    IsHostile = false,
+                    UsesDuration = true,
+                    UsesMagnitude = true,
+                    BaseDurationSeconds = 7f,
+                    SkillScalingFactor = 0.5f,
+                });
+
+            dict.Add(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.FrostResist),
+                new EffectDefinition(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.FrostResist), "Frost Resistance")
+                {
+                    Kind = PotionEffectKey.FrostResist,
+                    IsHostile = false,
+                    UsesDuration = true,
+                    UsesMagnitude = true,
+                    BaseDurationSeconds = 7f,
+                    SkillScalingFactor = 0.5f,
+                });
+
+            dict.Add(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.PoisonResist),
+                new EffectDefinition(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.PoisonResist), "Poison Resistance")
+                {
+                    Kind = PotionEffectKey.PoisonResist,
+                    IsHostile = false,
+                    UsesDuration = true,
+                    UsesMagnitude = true,
+                    BaseDurationSeconds = 7f,
+                    SkillScalingFactor = 0.5f,
+                });
+
+            dict.Add(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.ShockResist),
+                new EffectDefinition(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.ShockResist), "Shock Resistance")
+                {
+                    Kind = PotionEffectKey.ShockResist,
+                    IsHostile = false,
+                    UsesDuration = true,
+                    UsesMagnitude = true,
+                    BaseDurationSeconds = 7f,
+                    SkillScalingFactor = 0.5f,
+                });
+
+            dict.Add(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.MagicResist),
+                new EffectDefinition(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.MagicResist), "Magic Resistance")
+                {
+                    Kind = PotionEffectKey.MagicResist,
+                    IsHostile = false,
+                    UsesDuration = true,
+                    UsesMagnitude = true,
+                    BaseDurationSeconds = 7f,
+                    SkillScalingFactor = 0.5f,
+                });
+
+            dict.Add(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RestoreHealth),
+                new EffectDefinition(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RestoreHealth), "Restore Health")
                 {
                     Kind = PotionEffectKey.RestoreHealth,
                     IsHostile = false,
@@ -23,8 +89,8 @@ namespace AlchemyOverhaul.Effects
                     SkillScalingFactor = 0.5f,
                 });
 
-            dict.Add("regenerate_health",
-                new EffectDefinition("regenerate_health", "Regenerate Health")
+            dict.Add(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RegenerateHealth),
+                new EffectDefinition(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RegenerateHealth), "Regenerate Health")
                 {
                     Kind = PotionEffectKey.RegenerateHealth,
                     IsHostile = false,
@@ -45,8 +111,8 @@ namespace AlchemyOverhaul.Effects
                     SkillScalingFactor = 0.2f,
                 });
 
-            dict.Add("jumping",
-                new EffectDefinition("jumping", "Jumping")
+            dict.Add(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Jumping),
+                new EffectDefinition(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Jumping), "Jumping")
                 {
                     Kind = PotionEffectKey.Jumping,
                     IsHostile = false,
@@ -56,8 +122,8 @@ namespace AlchemyOverhaul.Effects
                     SkillScalingFactor = 0.4f,
                 });
 
-            dict.Add("slowfall",
-                new EffectDefinition("slowfall", "Slowfall")
+            dict.Add(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Slowfall),
+                new EffectDefinition(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Slowfall), "Slowfall")
                 {
                     Kind = PotionEffectKey.Slowfall,
                     IsHostile = false,
@@ -67,8 +133,8 @@ namespace AlchemyOverhaul.Effects
                     SkillScalingFactor = 0.6f,
                 });
 
-            dict.Add("invisibility_true",
-                new EffectDefinition("invisibility_true", "Invisibility True")
+            dict.Add(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.InvisibilityTrue),
+                new EffectDefinition(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.InvisibilityTrue), "Invisibility True")
                 {
                     Kind = PotionEffectKey.InvisibilityTrue,
                     IsHostile = false,

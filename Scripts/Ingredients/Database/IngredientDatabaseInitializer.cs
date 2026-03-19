@@ -16,12 +16,12 @@ namespace AlchemyOverhaul.Ingredients.Database
                     displayName: "Cactus",
                     primaryEffects: new List<IngredientEffectEntry>
                     {
-                        new IngredientEffectEntry("Restore Health", 1f),
-                        new IngredientEffectEntry("Paralysis", 1f),
-                        new IngredientEffectEntry("Jumping", 1f),
-                        new IngredientEffectEntry("Invisibility True", 1f)
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RestoreHealth), 1f),
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Paralysis), 1f),
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Jumping), 1f),
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.InvisibilityTrue), 1f)
                     },
-                    secretEffect: new IngredientEffectEntry("Restore Health", 1f)
+                    secretEffect: new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RestoreHealth), 1f)
                 )
             );
 
@@ -33,11 +33,11 @@ namespace AlchemyOverhaul.Ingredients.Database
                     primaryEffects: new List<IngredientEffectEntry>
                     {
                         new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Paralysis), 1f),
-                        new IngredientEffectEntry("Restore Health", 1f),
-                        new IngredientEffectEntry("Slowfall", 1f),
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RestoreHealth), 1f),
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Slowfall), 1f),
                         new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.FortifySpeed), 10f)
                     },
-                    secretEffect: new IngredientEffectEntry("Paralysis", 1f)
+                    secretEffect: new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Paralysis), 1f)
                 )
             );
 
@@ -48,12 +48,12 @@ namespace AlchemyOverhaul.Ingredients.Database
                     displayName: "Root Tendrils",
                     primaryEffects: new List<IngredientEffectEntry>
                     {
-                        new IngredientEffectEntry("Regenerate Health", 3f),
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RegenerateHealth), 3f),
                         new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Paralysis), 2f),
-                        new IngredientEffectEntry("Jumping", 2f),
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Jumping), 2f),
                         new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.FortifySpeed), 5f)
                     },
-                    secretEffect: new IngredientEffectEntry("Paralysis", 3f)
+                    secretEffect: new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Paralysis), 3f)
                 )
             );
 
@@ -64,12 +64,12 @@ namespace AlchemyOverhaul.Ingredients.Database
                     displayName: "Twigs",
                     primaryEffects: new List<IngredientEffectEntry>
                     {
-                        new IngredientEffectEntry("Invisibility True", 2f),
-                        new IngredientEffectEntry("Restore Health", 4f),
-                        new IngredientEffectEntry("Regenerate Health", 2f),
-                        new IngredientEffectEntry("Slowfall", 3f)
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.InvisibilityTrue), 2f),
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RestoreHealth), 4f),
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RegenerateHealth), 2f),
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Slowfall), 3f)
                     },
-                    secretEffect: new IngredientEffectEntry("Slowfall", 4f)
+                    secretEffect: new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Slowfall), 4f)
                 )
             );
         }

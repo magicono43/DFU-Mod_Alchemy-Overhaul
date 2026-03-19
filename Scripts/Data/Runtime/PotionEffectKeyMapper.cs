@@ -8,6 +8,12 @@ namespace AlchemyOverhaul.Data.Runtime
         {
             switch (key)
             {
+                case PotionEffectKey.Climbing:        return "Climbing";
+                case PotionEffectKey.FireResist:      return "ElementalResistance-Fire";
+                case PotionEffectKey.FrostResist:     return "ElementalResistance-Frost";
+                case PotionEffectKey.PoisonResist:    return "ElementalResistance-Poison";
+                case PotionEffectKey.ShockResist:     return "ElementalResistance-Shock";
+                case PotionEffectKey.MagicResist:     return "ElementalResistance-Magicka";
                 case PotionEffectKey.RestoreHealth:   return "Heal-Health";
                 case PotionEffectKey.RegenerateHealth:return "Regenerate";
                 case PotionEffectKey.Paralysis:       return "Paralyze";
