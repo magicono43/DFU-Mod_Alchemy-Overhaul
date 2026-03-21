@@ -593,8 +593,8 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
             // Work on this more later today, I'll want to eventually fix some of this weird logic to make it more simple to use on my side.
 
-            // Next time I work on this, do more testing and adding effects, more testing after that and even more testing and continue from there when stuff seems to feel like it is
-            // solidly working. Then maybe try to get some clean up and reorganization going on with this sort of mess. Don't want to get too far in when everything
+            // Next, now that I tested all the spell effects appear to be working at a basic level on potions, maybe I should do some cleanup stuff as said in the below line before going further.
+            // Try to get some clean up and reorganization going on with this sort of mess. Don't want to get too far in when everything
             // is kind of looking like a confusing mess all scattered around seemingly arbitrarily.
         }
 

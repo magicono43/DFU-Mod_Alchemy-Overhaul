@@ -1,4 +1,4 @@
-Last Edit: 1/28/2026, 10:50 PM
+Last Edit: 3/20/2026, 5:45 PM
 
 
 1. Ingredients can have up to 5 different effects associated with them, the 5th is always a "special" one that is only expressed when certain 
@@ -61,3 +61,14 @@ the gold value as well more than likely.
 inventory window isn't super necessary, since I don't want to override that window or do massive janky hacking to get everything to work with the existing somewhat limited 
 vanilla item descriptions and macro-text code. The potions will still be usable from the magic menu and inventory, but descriptions of effects and such likely won't work 
 well from the inventory, so the custom window as mentioned will be used for viewing these more than likely. 
+
+
+
+3/20/2026:
+
+Just thought of something that might be a good idea for a "supporting mod" of sorts. Basically a custom window that would be an optional replacement for the 
+vanilla trade window where you click on shelves in a shop. In this optional window it would function the same way, but likely take all the items from all the 
+shelves currently in that building. That could be useful on its own, but with this custom window the modder could make it easier for other mods to add onto it with 
+messaging or something, so stuff like say my Alchemy Overhaul ingredients and their effects could show up in this window when moused over, unlike in the vanilla window 
+where those wouldn't show up, just an idea that I might have to consider when I'm getting closer to finishing this Alchemy Overhaul mod for initial release, will see. 
+

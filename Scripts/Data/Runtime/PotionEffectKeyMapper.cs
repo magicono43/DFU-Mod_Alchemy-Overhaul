@@ -26,7 +26,7 @@ namespace AlchemyOverhaul.Data.Runtime
                 case PotionEffectKey.ContinuousDamageSpellPoints: return "ContinuousDamage-SpellPoints";
                 case PotionEffectKey.DamageFatigue:               return "Damage-Fatigue";
                 case PotionEffectKey.DamageHealth:                return "Damage-Health";
-                case PotionEffectKey.DamageSpellPoints:           return "Damage-Health";
+                case PotionEffectKey.DamageSpellPoints:           return "Damage-SpellPoints";
                 case PotionEffectKey.DamageAgility:               return "Drain-Agility";
                 case PotionEffectKey.DamageEndurance:             return "Drain-Endurance";
                 case PotionEffectKey.DamageIntelligence:          return "Drain-Intelligence";

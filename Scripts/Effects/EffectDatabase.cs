@@ -333,7 +333,7 @@ namespace AlchemyOverhaul.Effects
                 });
 
             dict.Add(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.ComprehendLanguages),
-                new EffectDefinition(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.ComprehendLanguages), "Comprehend Languages")
+                new EffectDefinition(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.ComprehendLanguages), "Comprehend Languages") // The display name size needs to be reduced to fit.
                 {
                     Kind = PotionEffectKey.ComprehendLanguages,
                     IsHostile = false,
@@ -344,7 +344,7 @@ namespace AlchemyOverhaul.Effects
                 });
 
             dict.Add(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.DispelMagic),
-                new EffectDefinition(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.DispelMagic), "Dispel Magic")
+                new EffectDefinition(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.DispelMagic), "Dispel Magic") // Acts a bit weird, so will have to keep an eye on this effect for later.
                 {
                     Kind = PotionEffectKey.DispelMagic,
                     IsHostile = true,
