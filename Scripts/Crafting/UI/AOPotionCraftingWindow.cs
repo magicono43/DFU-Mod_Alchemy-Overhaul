@@ -611,21 +611,6 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
         protected void SetupBrewingResultInfoText()
         {
-            int maxLineWidth = 92;
-            float textScale = 0.75f;
-
-            brewingResultTextPanels = new Panel[5]; // Will definitely want to have this dynamically expandable later, for now static value jsut for testing.
-
-            for (int i = 0; i < 5; i++)
-            {
-                brewingResultTextPanels[i] = DaggerfallUI.AddPanel(brewingResultTextPanelRects[i], resultInfoPanel);
-                brewingResultTextPanels[i].Name = i.ToString();
-                brewingResultTextPanels[i].Tag = null;
-                //brewingResultTextPanels[i].BackgroundColor = new Color32(255, 0, 0, 110);
-                brewingResultTextPanels[i].BackgroundColor = Color.clear;
-                CreateCenteredTextLabel("Nothing Ever Happens", new Vector2(1, 0), maxLineWidth, brewingResultTextPanels[i], textScale);
-            }
-
             RefreshBrewingResultInfoPanel();
         }
 
@@ -636,6 +621,35 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             if (item != null) { def = IngredientDatabase.Get(item.TemplateIndex); }
 
             string[] descripTextList = CollectBrewingResultInfoText();
+            int neededLines = descripTextList.Length;
+
+            int resPanH = 55;
+            int maxLineWidth = 92;
+            float textScale = 0.75f;
+            int yOff = 5;
+            int height = 10;
+            int yAdj = 11;
+
+            if (neededLines > 5)
+            {
+                height = Mathf.RoundToInt(resPanH / neededLines);
+                yAdj = height;
+                textScale = textScale - ((neededLines - 5) * 0.07f);
+            }
+
+            resultInfoPanel.Components.Clear();
+            brewingResultTextPanels = new Panel[neededLines];
+            for (int i = 0; i < brewingResultTextPanels.Length; i++)
+            {
+                brewingResultTextPanels[i] = DaggerfallUI.AddPanel(new Rect(5, yOff, 91, height), resultInfoPanel);
+                yOff = yOff + yAdj;
+
+                brewingResultTextPanels[i].Name = i.ToString();
+                brewingResultTextPanels[i].Tag = null;
+                //brewingResultTextPanels[i].BackgroundColor = new Color32(255, 0, 0, 110);
+                brewingResultTextPanels[i].BackgroundColor = Color.clear;
+                //CreateCenteredTextLabel("Nothing Ever Happens", new Vector2(1, 0), 92, brewingResultTextPanels[i], fontScale);
+            }
 
             for (int i = 0; i < brewingResultTextPanels.Length; i++)
             {
@@ -643,7 +657,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
                 if (descripTextList.Length > i)
                 {
-                    CreateCenteredTextLabel(descripTextList[i], new Vector2(1, 0), 92, brewingResultTextPanels[i], 0.7f);
+                    CreateCenteredTextLabel(descripTextList[i], new Vector2(1, 0), maxLineWidth, brewingResultTextPanels[i], textScale);
                 }
             }
         }

@@ -9,8 +9,8 @@ namespace AlchemyOverhaul.Crafting.UI
         {
             List<string> descs = new List<string>();
 
-            // Tomorrow, maybe see about working on what happens when you have more than 2 ingredients with a matching effect on them, also what happens if you have more than 4-5
-            // effects to display on the info window, will see next time I suppose.
+            // Tomorrow, maybe see about working on what happens when you have more than 2 ingredients with a matching effect on them, so mostly combination math stuff.
+            // Also just more testing in general for all the different spell effects and such, for their text especially when combined as well, etc.
 
             foreach (PotionEffectBlueprint effect in effects)
             {
