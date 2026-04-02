@@ -20,7 +20,7 @@ namespace AlchemyOverhaul.Effects
                     IsHostile = false,
                     UsesDuration = true,
                     UsesMagnitude = false,
-                    BaseDurationSeconds = 10f,
+                    BaseDurationSeconds = 4f,
                     SkillScalingFactor = 0.3f,
                 });
 

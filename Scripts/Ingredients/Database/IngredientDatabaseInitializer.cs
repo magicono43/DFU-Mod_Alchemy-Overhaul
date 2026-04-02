@@ -16,10 +16,10 @@ namespace AlchemyOverhaul.Ingredients.Database
                     displayName: "Cactus",
                     primaryEffects: new List<IngredientEffectEntry>
                     {
-                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.PacifyAnimal), 1f),
-                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.PacifyDaedra), 1f),
-                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.PacifyHumanoid), 1f),
-                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.PacifyUndead), 1f)
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Climbing), 2f),
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.FireResist), 5f),
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.PacifyHumanoid), 20f),
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.PacifyUndead), 20f)
                     },
                     secretEffect: new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RestoreHealth), 1f)
                 )
@@ -32,10 +32,10 @@ namespace AlchemyOverhaul.Ingredients.Database
                     displayName: "Clover",
                     primaryEffects: new List<IngredientEffectEntry>
                     {
-                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.PacifyAnimal), 1f),
-                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.PacifyDaedra), 1f),
-                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.PacifyHumanoid), 1f),
-                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.PacifyUndead), 1f)
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Climbing), 5f),
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.FireResist), 6f),
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.PacifyHumanoid), 20f),
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.PacifyUndead), 20f)
                     },
                     secretEffect: new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Paralysis), 1f)
                 )

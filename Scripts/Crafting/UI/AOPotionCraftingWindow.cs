@@ -15,6 +15,7 @@ using AlchemyOverhaul.Potions;
 using AlchemyOverhaul.Data.Enums;
 using AlchemyOverhaul.Systems;
 using AlchemyOverhaul.Data.Runtime;
+using AlchemyOverhaul.Crafting.UI;
 
 namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 {
@@ -142,6 +143,9 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         Panel[] ingredientEffectImageIconPanels;
         Panel[] ingredientEffectInfoTextPanels;
 
+        Rect[] brewingResultTextPanelRects = brewResultTextPanelRects;
+        Panel[] brewingResultTextPanels;
+
         Panel heatSettingTextDisplayPanel;
 
         Button exitButton;
@@ -172,6 +176,11 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         };
         */
 
+        static Rect[] brewResultTextPanelRects = new Rect[]
+        {
+            new Rect(5, 5, 91, 10), new Rect(5, 16, 91, 10), new Rect(5, 27, 91, 10), new Rect(5, 38, 91, 10), new Rect(5, 49, 91, 10)
+        };
+
         ItemCollection localItems = new ItemCollection();
         List<DaggerfallUnityItem> localItemsFiltered = new List<DaggerfallUnityItem>();
 
@@ -201,10 +210,9 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             SetupLocalItemListScroller();
             SetupIngredientInputPanels();
             SetupPrimaryHoverInfoText();
+            SetupBrewingResultInfoText();
             SetupHeatSettingsPanels();
             SetupButtons();
-
-            // Next time I work on this, maybe get the very basic display of text on the "Primary Hover Info Text Panel" set-up at the very least, then maybe after that the heat setting? Will see.
         }
 
         public override void OnPush()
@@ -593,9 +601,92 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
             // Work on this more later today, I'll want to eventually fix some of this weird logic to make it more simple to use on my side.
 
+            // Maybe see if I can just make this a partial class, then split it all up into separate scripts using the same partial class.
+            // That way I don't have to worry about all the instanced BS or whatever, and still have the visual organization atleast of stuff in different scripts, will see.
+
             // Next, now that I tested all the spell effects appear to be working at a basic level on potions, maybe I should do some cleanup stuff as said in the below line before going further.
             // Try to get some clean up and reorganization going on with this sort of mess. Don't want to get too far in when everything
             // is kind of looking like a confusing mess all scattered around seemingly arbitrarily.
+        }
+
+        protected void SetupBrewingResultInfoText()
+        {
+            int maxLineWidth = 92;
+            float textScale = 0.75f;
+
+            brewingResultTextPanels = new Panel[5]; // Will definitely want to have this dynamically expandable later, for now static value jsut for testing.
+
+            for (int i = 0; i < 5; i++)
+            {
+                brewingResultTextPanels[i] = DaggerfallUI.AddPanel(brewingResultTextPanelRects[i], resultInfoPanel);
+                brewingResultTextPanels[i].Name = i.ToString();
+                brewingResultTextPanels[i].Tag = null;
+                //brewingResultTextPanels[i].BackgroundColor = new Color32(255, 0, 0, 110);
+                brewingResultTextPanels[i].BackgroundColor = Color.clear;
+                CreateCenteredTextLabel("Nothing Ever Happens", new Vector2(1, 0), maxLineWidth, brewingResultTextPanels[i], textScale);
+            }
+
+            RefreshBrewingResultInfoPanel();
+        }
+
+        protected void RefreshBrewingResultInfoPanel()
+        {
+            IngredientDefinition def = null;
+            DaggerfallUnityItem item = hoveredItem;
+            if (item != null) { def = IngredientDatabase.Get(item.TemplateIndex); }
+
+            string[] descripTextList = CollectBrewingResultInfoText();
+
+            for (int i = 0; i < brewingResultTextPanels.Length; i++)
+            {
+                brewingResultTextPanels[i].Components.Clear();
+
+                if (descripTextList.Length > i)
+                {
+                    CreateCenteredTextLabel(descripTextList[i], new Vector2(1, 0), 92, brewingResultTextPanels[i], 0.7f);
+                }
+            }
+        }
+
+        private string[] CollectBrewingResultInfoText()
+        {
+            List<IngredientDefinition> defs = new List<IngredientDefinition>();
+            for (int i = 0; i < brewingSlots.Length - 1; i++)
+            {
+                DaggerfallUnityItem item = brewingSlots[i];
+                if (item == null) { continue; }
+                IngredientDefinition def = IngredientDatabase.Get(item.TemplateIndex);
+                if (def != null) { defs.Add(def); }
+            }
+
+            Dictionary<string, List<IngredientEffectEntry>> effectBuckets = new Dictionary<string, List<IngredientEffectEntry>>();
+            foreach (var definition in defs)
+            {
+                foreach (var effect in definition.PrimaryEffects)
+                {
+                    if (!effectBuckets.TryGetValue(effect.EffectId, out var list))
+                    {
+                        list = new List<IngredientEffectEntry>();
+                        effectBuckets.Add(effect.EffectId, list);
+                    }
+
+                    list.Add(effect);
+                }
+            }
+
+            List<PotionEffectBlueprint> potionEffects = new List<PotionEffectBlueprint>();
+            foreach (var kvp in effectBuckets)
+            {
+                string effectKey = kvp.Key;
+                List<IngredientEffectEntry> contributors = kvp.Value;
+
+                if (contributors.Count < 2)
+                    continue;
+
+                potionEffects.Add(BuildPotionEffect(effectKey, contributors));
+            }
+
+            return ResultInfoTextConstructor.GetInfoTextBasedOnPotionEffect(potionEffects);
         }
 
         protected void SetupHeatSettingsPanels()
@@ -745,6 +836,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             }
 
             RefreshBrewingIngredientInputPanels();
+            RefreshBrewingResultInfoPanel();
             RefreshLocalItemsFilteredList();
             localAOItemListScroller.Items = localItemsFiltered;
 
@@ -788,6 +880,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             {
                 hoveredItem = item;
                 RefreshPrimaryHoverInfoPanel();
+                RefreshBrewingResultInfoPanel();
             }
         }
 
@@ -811,6 +904,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             brewingSlots[slotIndex] = null;
 
             RefreshBrewingIngredientInputPanels();
+            RefreshBrewingResultInfoPanel();
             RefreshLocalItemsFilteredList();
             localAOItemListScroller.Items = localItemsFiltered;
 
@@ -821,12 +915,14 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         {
             hoveredItem = (DaggerfallUnityItem)sender.Tag;
             RefreshPrimaryHoverInfoPanel();
+            RefreshBrewingResultInfoPanel();
         }
 
         protected virtual void BrewingInputItems_OnMouseLeave(BaseScreenComponent sender)
         {
             hoveredItem = null;
             RefreshPrimaryHoverInfoPanel();
+            RefreshBrewingResultInfoPanel();
         }
 
         protected void FreeBrewingInputSlots()
@@ -837,6 +933,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
                 localItems.AddItem(brewingSlots[i]);
                 brewingSlots[i] = null;
             }
+            RefreshBrewingResultInfoPanel();
         }
 
         protected void DeleteBrewingInputSlots()
@@ -845,9 +942,15 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             {
                 brewingSlots[i] = null;
             }
+            RefreshBrewingResultInfoPanel();
         }
 
         private void BrewPotion_OnMouseClick(BaseScreenComponent sender, Vector2 position)
+        {
+            BrewPotion();
+        }
+
+        private void BrewPotion()
         {
             if (!DetermineIfBrewingInputsAreValid()) { return; }
 
@@ -880,8 +983,6 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             {
                 string effectKey = kvp.Key;
                 List<IngredientEffectEntry> contributors = kvp.Value;
-
-                // Continue working from here, check ChatGPT for the rest.
 
                 if (contributors.Count < 2)
                     continue;
@@ -999,6 +1100,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             RefreshBrewingIngredientInputPanels();
             RefreshLocalItemsFilteredList();
             RefreshPrimaryHoverInfoPanel();
+            RefreshBrewingResultInfoPanel();
         }
 
         private void ExitButton_OnMouseClick(BaseScreenComponent sender, Vector2 position)
