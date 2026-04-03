@@ -30,6 +30,7 @@ namespace AlchemyOverhaul.Crafting.UI
                     case "ElementalResistance-Magicka": descs.Add(minMag+ "% to " + maxMag+ "% chance to Resist Magic effects, for " +minDur+ " to " +maxDur+ " Rounds."); break;
                     case "Jumping": descs.Add("Jumping for " +minDur+ " to " +maxDur+ " Rounds."); break;
                     case "Paralyze": descs.Add("Paralysis for " +minDur+ " to " +maxDur+ " Rounds."); break;
+                    case "Shield": descs.Add("Shield " +minMag+ " to " +maxMag+ " points, for " +minDur+ " to " +maxDur+ " Rounds."); break;
                     case "Slowfall": descs.Add("Slowfall for " +minDur+ " to " +maxDur+ " Rounds."); break;
                     case "WaterBreathing": descs.Add("Water Breathing for " +minDur+ " to " +maxDur+ " Rounds."); break;
                     case "ContinuousDamage-Fatigue": descs.Add("Damage Fatigue " +minMag+ " to " +maxMag+ " each round, for " +minDur+ " to " +maxDur+ " Rounds."); break;

@@ -101,6 +101,17 @@ namespace AlchemyOverhaul.Effects
                     SkillScalingFactor = 0.2f,
                 });
 
+            dict.Add(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Shield),
+                new EffectDefinition(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Shield), "Shield")
+                {
+                    Kind = PotionEffectKey.Shield,
+                    IsHostile = false,
+                    UsesDuration = true,
+                    UsesMagnitude = true,
+                    BaseDurationSeconds = 5f,
+                    SkillScalingFactor = 0.2f,
+                });
+
             dict.Add(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Slowfall),
                 new EffectDefinition(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.Slowfall), "Slowfall")
                 {

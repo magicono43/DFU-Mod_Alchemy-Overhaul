@@ -17,6 +17,7 @@ namespace AlchemyOverhaul.Data.Runtime
                 case PotionEffectKey.MagicResist:                 return "ElementalResistance-Magicka";
                 case PotionEffectKey.Jumping:                     return "Jumping";
                 case PotionEffectKey.Paralysis:                   return "Paralyze";
+                case PotionEffectKey.Shield:                      return "Shield";
                 case PotionEffectKey.Slowfall:                    return "Slowfall";
                 case PotionEffectKey.WaterBreathing:              return "WaterBreathing";
 

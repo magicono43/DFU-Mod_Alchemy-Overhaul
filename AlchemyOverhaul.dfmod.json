@@ -73,7 +73,12 @@
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Crafting/UI/AOBrewingLocalItemListScroller.cs",
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Textures/Effect_Icons/Unknown_Effect.png",
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Ingredients/Database/IngredientDatabaseInitializer.cs",
-        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Crafting/UI/ResultInfoTextConstructor.cs"
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Crafting/UI/ResultInfoTextConstructor.cs",
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Player/Knowledge/Ingredients/IngredientKnowledge.cs",
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Player/Knowledge/Effects/EffectKnowledge.cs",
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Player/Knowledge/Recipes/RecipeKnowledge.cs",
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Player/Skills/AlchemySkill.cs",
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Player/Formula/PlayerFormulas.cs"
     ],
     "Dependencies": []
 }

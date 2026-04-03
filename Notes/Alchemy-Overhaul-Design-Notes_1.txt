@@ -1,4 +1,4 @@
-Last Edit: 3/20/2026, 5:45 PM
+Last Edit: 4/3/2026, 8:00 AM
 
 
 1. Ingredients can have up to 5 different effects associated with them, the 5th is always a "special" one that is only expressed when certain 
@@ -71,4 +71,13 @@ vanilla trade window where you click on shelves in a shop. In this optional wind
 shelves currently in that building. That could be useful on its own, but with this custom window the modder could make it easier for other mods to add onto it with 
 messaging or something, so stuff like say my Alchemy Overhaul ingredients and their effects could show up in this window when moused over, unlike in the vanilla window 
 where those wouldn't show up, just an idea that I might have to consider when I'm getting closer to finishing this Alchemy Overhaul mod for initial release, will see. 
+
+
+4/3/2026:
+
+So in terms of effect combining when brewing potions. I think the way I'm going to deal with how effects change based on the ingredients used, how many having matching effect pairs 
+and such. Will be having the ingredients base values for that effect add with the base value of the effect itself. Then the only time multiplication might happen is in some more 
+rare cases, such as a secret effect being activated, what solvent was used. Or more than likely all external factors will be potential multipliers/dividers, such as alchemy tools, 
+heat setting used player skill, player attributes, station type used, etc. That way it could hopefully could make the math more simple and less confusing to have these factors be 
+how it works across the board basically, instead of having to constantly make decisions arbitrarily if something should add or multiply, etc. 
 

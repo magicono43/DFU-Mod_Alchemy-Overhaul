@@ -12,6 +12,7 @@ namespace AlchemyOverhaul.Data.Enums
         MagicResist,
         Jumping,
         Paralysis,
+        Shield,
         Slowfall,
         WaterBreathing,
         ContinuousDamageFatigue,
