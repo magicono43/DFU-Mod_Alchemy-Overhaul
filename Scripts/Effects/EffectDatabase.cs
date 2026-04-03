@@ -504,7 +504,7 @@ namespace AlchemyOverhaul.Effects
                     IsHostile = false,
                     UsesDuration = false,
                     UsesMagnitude = true,
-                    BaseDurationSeconds = 3f,
+                    BaseDurationSeconds = 1f,
                     SkillScalingFactor = 0.5f,
                 });
 
@@ -515,7 +515,7 @@ namespace AlchemyOverhaul.Effects
                     IsHostile = false,
                     UsesDuration = false,
                     UsesMagnitude = true,
-                    BaseDurationSeconds = 3f,
+                    BaseDurationSeconds = 1f,
                     SkillScalingFactor = 0.5f,
                 });
 
@@ -526,7 +526,7 @@ namespace AlchemyOverhaul.Effects
                     IsHostile = false,
                     UsesDuration = false,
                     UsesMagnitude = true,
-                    BaseDurationSeconds = 3f,
+                    BaseDurationSeconds = 1f,
                     SkillScalingFactor = 0.5f,
                 });
 
@@ -537,7 +537,7 @@ namespace AlchemyOverhaul.Effects
                     IsHostile = false,
                     UsesDuration = false,
                     UsesMagnitude = true,
-                    BaseDurationSeconds = 3f,
+                    BaseDurationSeconds = 1f,
                     SkillScalingFactor = 0.5f,
                 });
 
@@ -548,7 +548,7 @@ namespace AlchemyOverhaul.Effects
                     IsHostile = false,
                     UsesDuration = false,
                     UsesMagnitude = true,
-                    BaseDurationSeconds = 3f,
+                    BaseDurationSeconds = 1f,
                     SkillScalingFactor = 0.5f,
                 });
 
@@ -559,7 +559,7 @@ namespace AlchemyOverhaul.Effects
                     IsHostile = false,
                     UsesDuration = false,
                     UsesMagnitude = true,
-                    BaseDurationSeconds = 3f,
+                    BaseDurationSeconds = 1f,
                     SkillScalingFactor = 0.5f,
                 });
 
@@ -570,7 +570,7 @@ namespace AlchemyOverhaul.Effects
                     IsHostile = false,
                     UsesDuration = false,
                     UsesMagnitude = true,
-                    BaseDurationSeconds = 3f,
+                    BaseDurationSeconds = 1f,
                     SkillScalingFactor = 0.5f,
                 });
 
@@ -581,7 +581,7 @@ namespace AlchemyOverhaul.Effects
                     IsHostile = false,
                     UsesDuration = false,
                     UsesMagnitude = true,
-                    BaseDurationSeconds = 3f,
+                    BaseDurationSeconds = 1f,
                     SkillScalingFactor = 0.5f,
                 });
 
@@ -592,7 +592,7 @@ namespace AlchemyOverhaul.Effects
                     IsHostile = false,
                     UsesDuration = false,
                     UsesMagnitude = true,
-                    BaseDurationSeconds = 3f,
+                    BaseDurationSeconds = 1f,
                     SkillScalingFactor = 0.5f,
                 });
 
@@ -603,7 +603,7 @@ namespace AlchemyOverhaul.Effects
                     IsHostile = false,
                     UsesDuration = false,
                     UsesMagnitude = true,
-                    BaseDurationSeconds = 3f,
+                    BaseDurationSeconds = 1f,
                     SkillScalingFactor = 0.5f,
                 });
 
@@ -614,7 +614,7 @@ namespace AlchemyOverhaul.Effects
                     IsHostile = false,
                     UsesDuration = false,
                     UsesMagnitude = true,
-                    BaseDurationSeconds = 3f,
+                    BaseDurationSeconds = 1f,
                     SkillScalingFactor = 0.5f,
                 });
 

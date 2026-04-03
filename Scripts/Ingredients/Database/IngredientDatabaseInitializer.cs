@@ -11,6 +11,58 @@ namespace AlchemyOverhaul.Ingredients.Database
         {
             IngredientDatabase.Register(
                 new IngredientDefinition(
+                    templateIndex: 58,
+                    ingredientId: "small tooth",
+                    displayName: "Small Tooth",
+                    primaryEffects: new List<IngredientEffectEntry>
+                    {
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RestoreHealth), 1f)
+                    },
+                    secretEffect: new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RestoreSpellPoints), 1f)
+                )
+            );
+
+            IngredientDatabase.Register(
+                new IngredientDefinition(
+                    templateIndex: 69,
+                    ingredientId: "sulphur",
+                    displayName: "Sulphur",
+                    primaryEffects: new List<IngredientEffectEntry>
+                    {
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RestoreHealth), 3f)
+                    },
+                    secretEffect: new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.FireResist), 1f)
+                )
+            );
+
+            IngredientDatabase.Register(
+                new IngredientDefinition(
+                    templateIndex: 19,
+                    ingredientId: "red rose",
+                    displayName: "Red Rose",
+                    primaryEffects: new List<IngredientEffectEntry>
+                    {
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RestoreHealth), 6f)
+                    },
+                    secretEffect: new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.DamageWillpower), 1f)
+                )
+            );
+
+            IngredientDatabase.Register(
+                new IngredientDefinition(
+                    templateIndex: 30,
+                    ingredientId: "aloe",
+                    displayName: "Aloe",
+                    primaryEffects: new List<IngredientEffectEntry>
+                    {
+                        new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.RestoreHealth), 10f)
+                    },
+                    secretEffect: new IngredientEffectEntry(PotionEffectKeyMapper.ToDFUEffectKey(PotionEffectKey.DamagePersonality), 1f)
+                )
+            );
+
+            IngredientDatabase.Register(
+                new IngredientDefinition(
                     templateIndex: 32,
                     ingredientId: "cactus",
                     displayName: "Cactus",

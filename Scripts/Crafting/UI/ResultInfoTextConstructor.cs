@@ -69,10 +69,13 @@ namespace AlchemyOverhaul.Crafting.UI
                     case "FreeAction": descs.Add("Free Action for " +minDur+ " to " +maxDur+ " Rounds."); break;
                     case "Heal-Agility": descs.Add("Heal Agility " +minMag+ " to " +maxMag+ " points."); break;
                     case "Heal-Endurance": descs.Add("Heal Endurance " + minMag+ " to " +maxMag+ " points."); break;
+                    case "Heal-Fatigue": descs.Add("Restore Fatigue by " +minMag+ " to " +maxMag+ " points."); break;
+                    case "Heal-Health": descs.Add("Restore Health by " +minMag+ " to " +maxMag+ " points."); break;
                     case "Heal-Intelligence": descs.Add("Heal Intelligence " + minMag+ " to " +maxMag+ " points."); break;
                     case "Heal-Luck": descs.Add("Heal Luck " + minMag+ " to " +maxMag+ " points."); break;
                     case "Heal-Personality": descs.Add("Heal Personality " + minMag+ " to " +maxMag+ " points."); break;
                     case "Heal-Speed": descs.Add("Heal Speed " + minMag+ " to " +maxMag+ " points."); break;
+                    case "Heal-SpellPoints": descs.Add("Restore Spell Points by " +minMag+ " to " +maxMag+ " points."); break;
                     case "Heal-Strength": descs.Add("Heal Strength " + minMag+ " to " +maxMag+ " points."); break;
                     case "Heal-Willpower": descs.Add("Heal Willpower " + minMag+ " to " +maxMag+ " points."); break;
                     case "Regenerate": descs.Add("Regenerate Health " +minMag+ " to " +maxMag+ " points each round, for " +minDur+ " to " +maxDur+ " Rounds."); break;
