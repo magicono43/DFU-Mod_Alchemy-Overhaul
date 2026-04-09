@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		4/3/2026, 8:45 AM
+// Last Edit:		4/8/2026, 10:00 PM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:
@@ -167,6 +167,7 @@ namespace AlchemyOverhaul
             Debug.Log("[AlchemyOverhaul] Trying to register console commands.");
             try
             {
+                ConsoleCommandsDatabase.RegisterCommand(ChangeAlchemyLevel.command, ChangeAlchemyLevel.description, ChangeAlchemyLevel.usage, ChangeAlchemyLevel.Execute);
                 ConsoleCommandsDatabase.RegisterCommand(GiveTestPotion.name, GiveTestPotion.description, GiveTestPotion.usage, GiveTestPotion.Execute);
                 ConsoleCommandsDatabase.RegisterCommand(ChangeTestNumber.command, ChangeTestNumber.description, ChangeTestNumber.usage, ChangeTestNumber.Execute);
                 ConsoleCommandsDatabase.RegisterCommand(ChangeButtonRect.command, ChangeButtonRect.description, ChangeButtonRect.usage, ChangeButtonRect.Execute);
@@ -174,6 +175,25 @@ namespace AlchemyOverhaul
             catch (Exception e)
             {
                 Debug.LogError(string.Format("Error Registering AlchemyOverhaul Console commands: {0}", e.Message));
+            }
+        }
+
+        private static class ChangeAlchemyLevel
+        {
+            public static readonly string command = "alclvl";
+            public static readonly string description = "Changes your current alchemy from 1 to 100.";
+            public static readonly string usage = "alclvl [value]";
+
+            public static string Execute(params string[] args)
+            {
+                if (args.Length < 1 || args.Length > 1) return "Invalid entry, see usage notes.";
+
+                if (!int.TryParse(args[0], out int num))
+                    return string.Format("`{0}` is not a number, please use a number for [value].", args[0]);
+
+                Player.Skills.AlchemySkill.SetLevel(num);
+                Player.Skills.AlchemySkill.ZeroCurrentXP();
+                return string.Format("Alchemy Skill Set To: {0}", num);
             }
         }
 

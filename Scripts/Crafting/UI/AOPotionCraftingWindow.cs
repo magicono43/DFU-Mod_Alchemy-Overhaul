@@ -16,6 +16,7 @@ using AlchemyOverhaul.Data.Enums;
 using AlchemyOverhaul.Systems;
 using AlchemyOverhaul.Data.Runtime;
 using AlchemyOverhaul.Crafting.UI;
+using AlchemyOverhaul.Player.Skills;
 
 namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 {
@@ -1025,16 +1026,20 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             messageBox.ClickAnywhereToClose = true;
             messageBox.Show();
 
+            AlchemySkill.AddExperience(1);
+
             RefreshAfterBrewingPotion();
         }
 
-        private static PotionEffectBlueprint BuildPotionEffect(string effectKey, List<IngredientEffectEntry> contributors)
+        public static PotionEffectBlueprint BuildPotionEffect(string effectKey, List<IngredientEffectEntry> contributors)
         {
             EffectDefinition effectDef = null;
             int minMag = 0;
             int maxMag = 0;
             int minDur = 0;
             int maxDur = 0;
+
+            float skillMod = 1 + (AlchemySkill.Level * 0.02f);
 
             foreach (var entry in contributors)
             {
@@ -1054,6 +1059,11 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
                 }
             }
 
+            minMag = Mathf.FloorToInt(minMag * skillMod);
+            maxMag = Mathf.FloorToInt(maxMag * skillMod);
+            minDur = Mathf.FloorToInt(minDur * skillMod);
+            maxDur = Mathf.FloorToInt(maxDur * skillMod);
+
             if (!effectDef.UsesDuration && !effectDef.UsesMagnitude) { return null; }
             if (maxDur <= 0 && maxMag <= 0) { return null; }
             if (maxDur > 0 && minDur <= 0) { minDur = 1; }
@@ -1070,6 +1080,28 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
                 MinDuration = minDur,
                 MaxDuration = maxDur,
                 DurationType = durType,
+                ScalingModel = EffectScalingModel.Additive,
+                IdentificationLevel = EffectIdentificationLevel.Full
+            };
+        }
+
+        public static PotionEffectBlueprint BuildPotionEffect(PotionEffectInstance eff)
+        {
+            EffectDefinition effectDef = null;
+
+            if (!EffectDatabase.TryGet(eff.EffectKey, out effectDef)) { return null; }
+
+            if (!effectDef.UsesDuration && !effectDef.UsesMagnitude) { return null; }
+            if (eff.Duration <= 0 && eff.Magnitude <= 0) { return null; }
+
+            return new PotionEffectBlueprint
+            {
+                EffectKey = eff.EffectKey,
+                MinMagnitude = eff.Magnitude,
+                MaxMagnitude = eff.Magnitude,
+                MinDuration = eff.Duration,
+                MaxDuration = eff.Duration,
+                DurationType = eff.DurationType,
                 ScalingModel = EffectScalingModel.Additive,
                 IdentificationLevel = EffectIdentificationLevel.Full
             };

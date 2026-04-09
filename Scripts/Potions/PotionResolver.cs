@@ -61,5 +61,10 @@ namespace AlchemyOverhaul.Potions
             potionDefinitions.Add(uniqueID, definition);
             return definition;
         }
+
+        public static void ClearPotionDefinitions()
+        {
+            potionDefinitions.Clear();
+        }
     }
 }

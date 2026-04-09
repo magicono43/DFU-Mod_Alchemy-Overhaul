@@ -8,6 +8,7 @@ using AlchemyOverhaul.Data.Save;
 using AlchemyOverhaul.Systems;
 using AlchemyOverhaul.Data.Runtime;
 using AlchemyOverhaul.Ingredients.Knowledge;
+using AlchemyOverhaul.Player.Skills;
 
 namespace AlchemyOverhaul
 {
@@ -26,6 +27,11 @@ namespace AlchemyOverhaul
             
             // IngredientId -> learned flags
             public Dictionary<string, IngredientEffectKnowledge> IngredientKnowledge = new Dictionary<string, IngredientEffectKnowledge>();
+
+            // ===== Alchemy Skill =====
+            public int AlchemyLevel = 1;
+            public int AlchemyExperience = 0;
+            public int AlchemyTotalExperience = 0; // optional but useful
         }
 
         internal AlchemyOverhaulSaveState state;
@@ -36,7 +42,10 @@ namespace AlchemyOverhaul
         {
             state = new AlchemyOverhaulSaveState
             {
-                Version = CURRENT_SAVE_VERSION
+                Version = CURRENT_SAVE_VERSION,
+                AlchemyLevel = 1,
+                AlchemyExperience = 0,
+                AlchemyTotalExperience = 0
             };
         }
 
@@ -44,7 +53,10 @@ namespace AlchemyOverhaul
         {
             return new AlchemyOverhaulSaveState
             {
-                Version = CURRENT_SAVE_VERSION
+                Version = CURRENT_SAVE_VERSION,
+                AlchemyLevel = 1,
+                AlchemyExperience = 0,
+                AlchemyTotalExperience = 0
             };
         }
 
@@ -53,6 +65,12 @@ namespace AlchemyOverhaul
             // Always regenerate from runtime truth
             SyncPotionSaveData();
             state.IngredientKnowledge = IngredientKnowledgeSystem.GetSaveData();
+
+            // ===== Save Alchemy Skill =====
+            state.AlchemyLevel = AlchemySkill.Level;
+            state.AlchemyExperience = AlchemySkill.Experience;
+            state.AlchemyTotalExperience = AlchemySkill.TotalExperience;
+
             return state;
         }
 
@@ -76,6 +94,13 @@ namespace AlchemyOverhaul
             PotionRegistry.Clear();
             PotionRegistry.LoadFromSave(state.PotionItems);
             IngredientKnowledgeSystem.LoadFromSave(state.IngredientKnowledge);
+
+            // ===== Load Alchemy Skill =====
+            AlchemySkill.LoadFromSave(
+                state.AlchemyLevel,
+                state.AlchemyExperience,
+                state.AlchemyTotalExperience
+            );
 
             // Immediate reconciliation
             PotionCleanupSystem.RunCleanup(GameManager.Instance.PlayerEntity);

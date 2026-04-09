@@ -61,6 +61,7 @@ namespace AlchemyOverhaul.Systems
         public static void LoadFromSave(Dictionary<ulong, PotionDataSave> saveData)
         {
             potionsById.Clear();
+            PotionResolver.ClearPotionDefinitions();
 
             if (saveData == null)
                 return;
@@ -77,6 +78,14 @@ namespace AlchemyOverhaul.Systems
                 // Definition must exist
                 if (string.IsNullOrEmpty(runtime.PotionDefinitionId))
                     continue;
+
+                List<PotionEffectBlueprint> potionEffects = new List<PotionEffectBlueprint>();
+                foreach (var potEff in save.Data.Effects)
+                {
+                    potionEffects.Add(DaggerfallWorkshop.Game.UserInterfaceWindows.AOPotionCraftingWindow.BuildPotionEffect(potEff));
+                }
+
+                PotionResolver.CreateNewPotionDefinition(runtime.PotionDefinitionId, potionEffects.ToArray());
 
                 PotionDefinition definition =
                     PotionResolver.ResolveById(runtime.PotionDefinitionId);
