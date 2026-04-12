@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		4/11/2026, 9:30 PM
+// Last Edit:		4/12/2026, 6:30 PM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:
@@ -179,7 +179,7 @@ namespace AlchemyOverhaul
             try
             {
                 ConsoleCommandsDatabase.RegisterCommand(ChangeAlchemyLevel.command, ChangeAlchemyLevel.description, ChangeAlchemyLevel.usage, ChangeAlchemyLevel.Execute);
-                // Likely add console command next time to make testing the tools easier for now, will see.
+                ConsoleCommandsDatabase.RegisterCommand(AddAllAlchemyTools.command, AddAllAlchemyTools.description, AddAllAlchemyTools.usage, AddAllAlchemyTools.Execute);
                 ConsoleCommandsDatabase.RegisterCommand(GiveTestPotion.name, GiveTestPotion.description, GiveTestPotion.usage, GiveTestPotion.Execute);
                 ConsoleCommandsDatabase.RegisterCommand(ChangeTestNumber.command, ChangeTestNumber.description, ChangeTestNumber.usage, ChangeTestNumber.Execute);
                 ConsoleCommandsDatabase.RegisterCommand(ChangeButtonRect.command, ChangeButtonRect.description, ChangeButtonRect.usage, ChangeButtonRect.Execute);
@@ -206,6 +206,26 @@ namespace AlchemyOverhaul
                 Player.Skills.AlchemySkill.SetLevel(num);
                 Player.Skills.AlchemySkill.ZeroCurrentXP();
                 return string.Format("Alchemy Skill Set To: {0}", num);
+            }
+        }
+
+        private static class AddAllAlchemyTools
+        {
+            public static readonly string command = "addalchemytools";
+            public static readonly string description = "Adds All Alchemy Tool Items To Inventory.";
+            public static readonly string usage = "addalchemytools";
+
+            public static string Execute(params string[] args)
+            {
+                DaggerfallWorkshop.Game.Entity.PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
+
+                for (int i = 0; i < 4; i++)
+                {
+                    DaggerfallUnityItem item = ItemBuilder.CreateItem(ItemGroups.UselessItems1, 88880001 + i);
+                    playerEntity.Items.AddItem(item);
+                }
+
+                return "Gave you ALL the repair tool items.";
             }
         }
 

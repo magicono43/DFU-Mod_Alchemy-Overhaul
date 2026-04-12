@@ -79,7 +79,11 @@
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Player/Knowledge/Recipes/RecipeKnowledge.cs",
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Player/Skills/AlchemySkill.cs",
         "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Player/Formula/PlayerFormulas.cs",
-        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Items/Tools/AlchemyTools.cs"
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Scripts/Items/Tools/AlchemyTools.cs",
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Textures/Tools/88880004_0-0.png",
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Textures/Tools/88880002_0-0.png",
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Textures/Tools/88880003_0-0.png",
+        "Assets/Game/Mods/DFU-Mod_Alchemy-Overhaul/Textures/Tools/88880001_0-0.png"
     ],
     "Dependencies": []
 }
