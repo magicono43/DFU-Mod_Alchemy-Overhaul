@@ -14,6 +14,8 @@ namespace AlchemyOverhaul.Crafting.UI
 
             foreach (PotionEffectBlueprint effect in effects)
             {
+                if (effect == null) { continue; }
+
                 string key = effect.EffectKey;
                 int minMag = effect.MinMagnitude;
                 int maxMag = effect.MaxMagnitude;

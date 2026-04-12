@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		4/8/2026, 10:00 PM
+// Last Edit:		4/11/2026, 9:30 PM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:
@@ -16,6 +16,7 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game.Items;
 using Wenzil.Console;
 using AlchemyOverhaul.Items;
+using AlchemyOverhaul.Items.Tools;
 using AlchemyOverhaul.Systems;
 using AlchemyOverhaul.Data.Runtime;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
@@ -27,6 +28,12 @@ namespace AlchemyOverhaul
     {
         public static AlchemyOverhaulMain Instance;
         public static AlchemyOverhaulSaveData ModSaveData;
+
+        // Next time I work on this, maybe see if I can see how I can improve the save data stuff, as well as make it less confusing, as
+        // I'm not sure ChatGPT needed to do some of the stuff it did necessarily, but yeah I'm not certain. It does work now, but there
+        // really seems to be alot of fluff, but I'll see. Maybe I will just continue working on other features instead, not certain.
+        // Will have to see what I feel like doing at whatever time. Suppose I could try implementing alchemy tools or something as well,
+        // probably just in logic at first and see what that all entails with the save data and such, will see obviously. 
 
         static Mod mod;
 
@@ -90,6 +97,10 @@ namespace AlchemyOverhaul
             LoadTextures();
 
             DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(AOConstants.ItemIds.TestPotion, ItemGroups.UselessItems1, typeof(ItemTestPotion)); // Register Test Potion item.
+            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(AOConstants.ItemIds.MortarAndPestle, ItemGroups.UselessItems1, typeof(ItemMortarAndPestle)); // Register Mortar And Pestle item.
+            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(AOConstants.ItemIds.Retort, ItemGroups.UselessItems1, typeof(ItemRetort)); // Register Retort item.
+            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(AOConstants.ItemIds.Calcinator, ItemGroups.UselessItems1, typeof(ItemCalcinator)); // Register Calcinator item.
+            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(AOConstants.ItemIds.Alembic, ItemGroups.UselessItems1, typeof(ItemAlembic)); // Register Alembic item.
 
             Ingredients.Database.IngredientDatabaseInitializer.Initialize();
 
@@ -168,6 +179,7 @@ namespace AlchemyOverhaul
             try
             {
                 ConsoleCommandsDatabase.RegisterCommand(ChangeAlchemyLevel.command, ChangeAlchemyLevel.description, ChangeAlchemyLevel.usage, ChangeAlchemyLevel.Execute);
+                // Likely add console command next time to make testing the tools easier for now, will see.
                 ConsoleCommandsDatabase.RegisterCommand(GiveTestPotion.name, GiveTestPotion.description, GiveTestPotion.usage, GiveTestPotion.Execute);
                 ConsoleCommandsDatabase.RegisterCommand(ChangeTestNumber.command, ChangeTestNumber.description, ChangeTestNumber.usage, ChangeTestNumber.Execute);
                 ConsoleCommandsDatabase.RegisterCommand(ChangeButtonRect.command, ChangeButtonRect.description, ChangeButtonRect.usage, ChangeButtonRect.Execute);

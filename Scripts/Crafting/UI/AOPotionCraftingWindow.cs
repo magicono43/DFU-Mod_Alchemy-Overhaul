@@ -160,6 +160,10 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         Button[] ingredientInputItemButtons;
         Panel[] ingredientInputItemImagePanels;
 
+        Rect[] alchemyToolInputButtonRects = toolButtonRects;
+        Button[] alchemyToolInputButtons;
+        Panel[] alchemyToolItemImagePanels;
+
         static Rect[] inputItemButtonRects = new Rect[]
         {
             new Rect(26, 0, 23, 22), new Rect(52, 0, 23, 22), new Rect(0, 22, 23, 22), new Rect(78, 22, 23, 22), new Rect(0, 47, 23, 22), new Rect(78, 47, 23, 22), new Rect(39, 39, 23, 22)
@@ -177,6 +181,11 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         };
         */
 
+        static Rect[] toolButtonRects = new Rect[]
+        {
+            new Rect(0, 0, 23, 22), new Rect(26, 0, 23, 22), new Rect(52, 0, 23, 22), new Rect(78, 0, 23, 22)
+        };
+
         static Rect[] brewResultTextPanelRects = new Rect[]
         {
             new Rect(5, 5, 91, 10), new Rect(5, 16, 91, 10), new Rect(5, 27, 91, 10), new Rect(5, 38, 91, 10), new Rect(5, 49, 91, 10)
@@ -186,6 +195,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         List<DaggerfallUnityItem> localItemsFiltered = new List<DaggerfallUnityItem>();
 
         DaggerfallUnityItem[] brewingSlots = new DaggerfallUnityItem[7];
+        DaggerfallUnityItem[] alchemyToolSlots = new DaggerfallUnityItem[4];
 
         DaggerfallUnityItem hoveredItem;
 
@@ -211,6 +221,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             SetupLocalItemListScroller();
             SetupIngredientInputPanels();
             SetupPrimaryHoverInfoText();
+            SetupAlchemyToolPanels();
             SetupBrewingResultInfoText();
             SetupHeatSettingsPanels();
             SetupButtons();
@@ -610,6 +621,90 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             // is kind of looking like a confusing mess all scattered around seemingly arbitrarily.
         }
 
+        protected void SetupAlchemyToolPanels()
+        {
+            alchemyToolInputButtons = new Button[4];
+            alchemyToolItemImagePanels = new Panel[4];
+            for (int i = 0; i < alchemyToolSlots.Length; i++) { alchemyToolSlots[i] = null; }
+
+            for (int i = 0; i < 4; i++)
+            {
+                // Buttons (also handle highlight colours)
+                alchemyToolInputButtons[i] = DaggerfallUI.AddButton(alchemyToolInputButtonRects[i], alchemyToolsPanel);
+                alchemyToolInputButtons[i].Name = i.ToString();
+                alchemyToolInputButtons[i].Tag = null; // Use the tag to store reference to the DaggerfallUnityItem, if none than keep this null.
+                alchemyToolInputButtons[i].ToolTip = defaultToolTip;
+                alchemyToolInputButtons[i].ToolTipText = ""; // Make this the name of the item, and if not that, show the name of the slot, such as "Solvent" etc.
+                alchemyToolInputButtons[i].BackgroundColor = Color.clear;
+                alchemyToolInputButtons[i].OnMouseClick += AlchemyTools_OnLeftClick;
+
+                // Icon image panel
+                alchemyToolItemImagePanels[i] = DaggerfallUI.AddPanel(alchemyToolInputButtons[i], AutoSizeModes.ScaleToFit);
+                alchemyToolItemImagePanels[i].HorizontalAlignment = HorizontalAlignment.Center;
+                alchemyToolItemImagePanels[i].VerticalAlignment = VerticalAlignment.Middle;
+                alchemyToolItemImagePanels[i].MaxAutoScale = 1f;
+            }
+
+            RefreshAlchemyToolPanels();
+        }
+
+        protected void RefreshAlchemyToolPanels()
+        {
+            /*
+            // Update images and tooltips
+            for (int i = 0; i < alchemyToolSlots.Length; i++)
+            {
+                // Get item and image
+                DaggerfallUnityItem item = alchemyToolSlots[i];
+                if (item == null) { ClearBrewingInputSlot(i); continue; }
+                ImageData image = DaggerfallUnity.Instance.ItemHelper.GetInventoryImage(item);
+
+                // Set image to button icon
+                ingredientInputItemImagePanels[i].BackgroundTexture = image.texture;
+                // Use texture size if base image size is zero (i.e. new images that are not present in classic data)
+                if (image.width != 0 && image.height != 0)
+                    ingredientInputItemImagePanels[i].Size = new Vector2(image.width, image.height);
+                else
+                    ingredientInputItemImagePanels[i].Size = new Vector2(image.texture.width, image.texture.height);
+
+                // Set Tag to item object
+                ingredientInputItemButtons[i].Tag = item;
+
+                // Tooltip text
+                ingredientInputItemButtons[i].ToolTipText = item.LongName;
+            }
+            */
+        }
+
+        protected virtual void AlchemyTools_OnLeftClick(BaseScreenComponent sender, Vector2 position)
+        {
+            AlchemyTools_OnItemClick(sender, position);
+        }
+
+        protected virtual void AlchemyTools_OnItemClick(BaseScreenComponent sender, Vector2 position)
+        {
+            ToggleAlchemyTool(sender, position);
+        }
+
+        protected void ToggleAlchemyTool(BaseScreenComponent sender, Vector2 position)
+        {
+            /*
+            int slotIndex = int.Parse(sender.Name);
+            DaggerfallUnityItem item = (DaggerfallUnityItem)sender.Tag;
+            if (item == null) { return; }
+
+            localItems.AddItem(item);
+            brewingSlots[slotIndex] = null;
+
+            RefreshBrewingIngredientInputPanels();
+            RefreshBrewingResultInfoPanel();
+            RefreshLocalItemsFilteredList();
+            localAOItemListScroller.Items = localItemsFiltered;
+            */
+
+            DaggerfallUI.Instance.PlayOneShot(DaggerfallUI.Instance.GetAudioClip(SoundClips.ButtonClick));
+        }
+
         protected void SetupBrewingResultInfoText()
         {
             RefreshBrewingResultInfoPanel();
@@ -895,7 +990,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             {
                 hoveredItem = item;
                 RefreshPrimaryHoverInfoPanel();
-                RefreshBrewingResultInfoPanel();
+                //RefreshBrewingResultInfoPanel();
             }
         }
 
@@ -930,14 +1025,14 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         {
             hoveredItem = (DaggerfallUnityItem)sender.Tag;
             RefreshPrimaryHoverInfoPanel();
-            RefreshBrewingResultInfoPanel();
+            //RefreshBrewingResultInfoPanel();
         }
 
         protected virtual void BrewingInputItems_OnMouseLeave(BaseScreenComponent sender)
         {
             hoveredItem = null;
             RefreshPrimaryHoverInfoPanel();
-            RefreshBrewingResultInfoPanel();
+            //RefreshBrewingResultInfoPanel();
         }
 
         protected void FreeBrewingInputSlots()
@@ -1039,7 +1134,21 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             int minDur = 0;
             int maxDur = 0;
 
-            float skillMod = 1 + (AlchemySkill.Level * 0.02f);
+            float magMods = 1f;
+            float durMods = 1f;
+
+            float skillMod = AlchemySkill.Level * 0.02f;
+
+            int[] toolQualities = new int[4] {0, 0, 0, 0};
+
+            float mortarMod = toolQualities[0] * 0.075f;
+            float alembicMod = toolQualities[1] * 0.2f;
+            float retortMod = toolQualities[2] * 0.1f;
+            float calcinatorMod = toolQualities[3] * 0.2f;
+
+            // 4-11-2026, 8:40 AM: Tested "Restore Health" on its own, all worked as expected.
+
+            // Test this stuff out tomorrow, then if it is working as expected, start working on probably the UI stuff for the tools, then after maybe actually make them custom items.
 
             foreach (var entry in contributors)
             {
@@ -1059,10 +1168,21 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
                 }
             }
 
-            minMag = Mathf.FloorToInt(minMag * skillMod);
-            maxMag = Mathf.FloorToInt(maxMag * skillMod);
-            minDur = Mathf.FloorToInt(minDur * skillMod);
-            maxDur = Mathf.FloorToInt(maxDur * skillMod);
+            if (effectDef.IsHostile)
+            {
+                magMods += skillMod + mortarMod + calcinatorMod - alembicMod;
+                durMods += skillMod + mortarMod + calcinatorMod - alembicMod;
+            }
+            else
+            {
+                magMods += skillMod + mortarMod + calcinatorMod + retortMod;
+                durMods += skillMod + mortarMod + calcinatorMod + retortMod;
+            }
+
+            minMag = Mathf.FloorToInt(minMag * magMods);
+            maxMag = Mathf.FloorToInt(maxMag * magMods);
+            minDur = Mathf.FloorToInt(minDur * durMods);
+            maxDur = Mathf.FloorToInt(maxDur * durMods);
 
             if (!effectDef.UsesDuration && !effectDef.UsesMagnitude) { return null; }
             if (maxDur <= 0 && maxMag <= 0) { return null; }

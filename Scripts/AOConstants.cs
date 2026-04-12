@@ -9,7 +9,11 @@ namespace AlchemyOverhaul
         public static class ItemIds
         {
             // Custom DFU item template IDs
-            public const int TestPotion = 1234588311;
+            public const int TestPotion = 88880000;
+            public const int MortarAndPestle = 88880001;
+            public const int Retort = 88880002;
+            public const int Calcinator = 88880003;
+            public const int Alembic = 88880004;
         }
 
         public static class PotionIds

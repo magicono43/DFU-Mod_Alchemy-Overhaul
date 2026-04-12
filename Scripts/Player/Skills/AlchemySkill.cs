@@ -46,7 +46,7 @@ namespace AlchemyOverhaul.Player.Skills
 
         private static void NotifyLevelChange()
         {
-            DaggerfallWorkshop.Game.DaggerfallUI.AddHUDText($"Your Alchemy Skill Is Now {Level}", 4f);
+            DaggerfallWorkshop.Game.DaggerfallUI.AddHUDText($"Your Alchemy Skill Is Now {Level}", 2f);
         }
 
         public static void AddExperience(int amount)
