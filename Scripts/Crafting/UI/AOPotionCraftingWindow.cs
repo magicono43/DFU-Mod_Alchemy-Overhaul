@@ -163,6 +163,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         Rect[] alchemyToolInputButtonRects = toolButtonRects;
         Button[] alchemyToolInputButtons;
         Panel[] alchemyToolItemImagePanels;
+        Panel[] alchemyToolSlotDisabledPanels;
 
         static Rect[] inputItemButtonRects = new Rect[]
         {
@@ -196,6 +197,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
         DaggerfallUnityItem[] brewingSlots = new DaggerfallUnityItem[7];
         DaggerfallUnityItem[] alchemyToolSlots = new DaggerfallUnityItem[4];
+        bool[] alchemyToolActiveSlots = new bool[] { true, true, true, true};
 
         DaggerfallUnityItem hoveredItem;
 
@@ -625,6 +627,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         {
             alchemyToolInputButtons = new Button[4];
             alchemyToolItemImagePanels = new Panel[4];
+            alchemyToolSlotDisabledPanels = new Panel[4];
             for (int i = 0; i < alchemyToolSlots.Length; i++) { alchemyToolSlots[i] = null; }
 
             for (int i = 0; i < 4; i++)
@@ -643,6 +646,15 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
                 alchemyToolItemImagePanels[i].HorizontalAlignment = HorizontalAlignment.Center;
                 alchemyToolItemImagePanels[i].VerticalAlignment = VerticalAlignment.Middle;
                 alchemyToolItemImagePanels[i].MaxAutoScale = 1f;
+
+                // Slot visual for being disabled image panel
+                alchemyToolSlotDisabledPanels[i] = DaggerfallUI.AddPanel(alchemyToolInputButtons[i], AutoSizeModes.ScaleToFit);
+                alchemyToolSlotDisabledPanels[i].Size = new Vector2(alchemyToolInputButtons[i].Size.x / 1.35f, alchemyToolInputButtons[i].Size.y / 1.35f);
+                alchemyToolSlotDisabledPanels[i].HorizontalAlignment = HorizontalAlignment.Center;
+                alchemyToolSlotDisabledPanels[i].VerticalAlignment = VerticalAlignment.Middle;
+                alchemyToolSlotDisabledPanels[i].MaxAutoScale = 1f;
+                alchemyToolSlotDisabledPanels[i].BackgroundTexture = sortIconXmarkTexture;
+                alchemyToolSlotDisabledPanels[i].Enabled = false;
             }
 
             RefreshAlchemyToolPanels();
@@ -650,30 +662,66 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
         protected void RefreshAlchemyToolPanels()
         {
-            /*
+            alchemyToolSlots[0] = FindAlchemyTool(AOConstants.ItemIds.MortarAndPestle);
+            alchemyToolSlots[1] = FindAlchemyTool(AOConstants.ItemIds.Alembic);
+            alchemyToolSlots[2] = FindAlchemyTool(AOConstants.ItemIds.Retort);
+            alchemyToolSlots[3] = FindAlchemyTool(AOConstants.ItemIds.Calcinator);
+
             // Update images and tooltips
             for (int i = 0; i < alchemyToolSlots.Length; i++)
             {
                 // Get item and image
                 DaggerfallUnityItem item = alchemyToolSlots[i];
-                if (item == null) { ClearBrewingInputSlot(i); continue; }
+                if (item == null) { ClearToolSlot(i); continue; }
                 ImageData image = DaggerfallUnity.Instance.ItemHelper.GetInventoryImage(item);
 
                 // Set image to button icon
-                ingredientInputItemImagePanels[i].BackgroundTexture = image.texture;
+                alchemyToolItemImagePanels[i].BackgroundTexture = image.texture;
                 // Use texture size if base image size is zero (i.e. new images that are not present in classic data)
                 if (image.width != 0 && image.height != 0)
-                    ingredientInputItemImagePanels[i].Size = new Vector2(image.width, image.height);
+                    alchemyToolItemImagePanels[i].Size = new Vector2(image.width, image.height);
                 else
-                    ingredientInputItemImagePanels[i].Size = new Vector2(image.texture.width, image.texture.height);
+                    alchemyToolItemImagePanels[i].Size = new Vector2(image.texture.width, image.texture.height);
 
                 // Set Tag to item object
-                ingredientInputItemButtons[i].Tag = item;
+                alchemyToolInputButtons[i].Tag = item;
 
                 // Tooltip text
-                ingredientInputItemButtons[i].ToolTipText = item.LongName;
+                alchemyToolInputButtons[i].ToolTipText = item.LongName;
             }
-            */
+        }
+
+        public DaggerfallUnityItem FindAlchemyTool(int templateIndex)
+        {
+            DaggerfallUnityItem bestTool = null;
+            List<DaggerfallUnityItem> validTools = localItems.SearchItems(ItemGroups.UselessItems1, templateIndex);
+
+            foreach (DaggerfallUnityItem tool in validTools)
+            {
+                // Once I implement different qualities of the tools, I'll fully implement this later to account for that and pick the best one.
+                bestTool = tool;
+            }
+            return bestTool;
+        }
+
+        protected void ClearToolSlot(int slotIndex)
+        {
+            alchemyToolInputButtons[slotIndex].ToolTipText = GetToolSlotName(slotIndex);
+            alchemyToolInputButtons[slotIndex].Tag = null;
+            alchemyToolItemImagePanels[slotIndex].BackgroundTexture = null;
+        }
+
+        protected string GetToolSlotName(int slotIndex)
+        {
+            string name = "Tool Slot";
+            switch (slotIndex)
+            {
+                case 0: name = "Mortar And Pestle"; break;
+                case 1: name = "Alembic"; break;
+                case 2: name = "Retort"; break;
+                case 3: name = "Calcinator"; break;
+            }
+            return name;
         }
 
         protected virtual void AlchemyTools_OnLeftClick(BaseScreenComponent sender, Vector2 position)
@@ -688,19 +736,16 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
         protected void ToggleAlchemyTool(BaseScreenComponent sender, Vector2 position)
         {
-            /*
             int slotIndex = int.Parse(sender.Name);
             DaggerfallUnityItem item = (DaggerfallUnityItem)sender.Tag;
             if (item == null) { return; }
 
-            localItems.AddItem(item);
-            brewingSlots[slotIndex] = null;
+            if (!alchemyToolSlotDisabledPanels[slotIndex].Enabled) { alchemyToolSlotDisabledPanels[slotIndex].Enabled = true; }
+            else { alchemyToolSlotDisabledPanels[slotIndex].Enabled = false; }
 
+            RefreshAlchemyToolPanels();
             RefreshBrewingIngredientInputPanels();
             RefreshBrewingResultInfoPanel();
-            RefreshLocalItemsFilteredList();
-            localAOItemListScroller.Items = localItemsFiltered;
-            */
 
             DaggerfallUI.Instance.PlayOneShot(DaggerfallUI.Instance.GetAudioClip(SoundClips.ButtonClick));
         }
@@ -1139,7 +1184,12 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
             float skillMod = AlchemySkill.Level * 0.02f;
 
-            int[] toolQualities = new int[4] {0, 0, 0, 0};
+            int[] toolQualities = new int[4] {5, 5, 5, 5};
+
+            for (int i = 0; i < Instance.alchemyToolSlotDisabledPanels.Length; i++)
+            {
+                if (Instance.alchemyToolSlotDisabledPanels[i].Enabled) { toolQualities[i] = 0; }
+            }
 
             float mortarMod = toolQualities[0] * 0.075f;
             float alembicMod = toolQualities[1] * 0.2f;
