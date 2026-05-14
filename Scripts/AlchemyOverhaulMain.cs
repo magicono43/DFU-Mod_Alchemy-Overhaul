@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		4/19/2026, 7:30 PM
+// Last Edit:		5/13/2026, 11:15 PM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:
@@ -221,11 +221,14 @@ namespace AlchemyOverhaul
 
                 for (int i = 0; i < 4; i++)
                 {
-                    DaggerfallUnityItem item = ItemBuilder.CreateItem(ItemGroups.UselessItems1, 88880001 + i);
-                    playerEntity.Items.AddItem(item);
+                    for (int k = 0; k < 5; k++)
+                    {
+                        DaggerfallUnityItem item = AOToolItemBuilder.CreateAlchemyTool((Data.Enums.AlchemyToolType)i, (Data.Enums.AlchemyToolQuality)k);
+                        playerEntity.Items.AddItem(item);
+                    }
                 }
 
-                return "Gave you ALL the repair tool items.";
+                return "Gave you ALL the alchemy tool items.";
             }
         }
 

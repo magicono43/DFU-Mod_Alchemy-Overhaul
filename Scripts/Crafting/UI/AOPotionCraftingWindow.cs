@@ -1184,7 +1184,7 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
             float skillMod = AlchemySkill.Level * 0.02f;
 
-            int[] toolQualities = new int[4] {5, 5, 5, 5};
+            int[] toolQualities = new int[4] {5, 5, 5, 5}; // 5/13/2026, 11:15 PM: Next time I work on this, make it so these are determined by the quality of tools currently in your inventory.
 
             for (int i = 0; i < Instance.alchemyToolSlotDisabledPanels.Length; i++)
             {
@@ -1195,10 +1195,6 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             float alembicMod = toolQualities[1] * 0.2f;
             float retortMod = toolQualities[2] * 0.1f;
             float calcinatorMod = toolQualities[3] * 0.2f;
-
-            // 4-11-2026, 8:40 AM: Tested "Restore Health" on its own, all worked as expected.
-
-            // Test this stuff out tomorrow, then if it is working as expected, start working on probably the UI stuff for the tools, then after maybe actually make them custom items.
 
             foreach (var entry in contributors)
             {

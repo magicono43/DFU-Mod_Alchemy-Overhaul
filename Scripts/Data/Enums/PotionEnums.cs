@@ -75,6 +75,23 @@ namespace AlchemyOverhaul.Data.Enums
         SpellResistance,
         WaterWalking
     }
+
+    public enum AlchemyToolType
+    {
+        MortarAndPestle,
+        Retort,
+        Calcinator,
+        Alembic
+    }
+
+    public enum AlchemyToolQuality
+    {
+        Novice,
+        Apprentice,
+        Journeyman,
+        Expert,
+        Master
+    }
     
     [Flags]
     public enum PotionBrewFlags
