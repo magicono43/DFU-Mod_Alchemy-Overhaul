@@ -694,12 +694,16 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         public DaggerfallUnityItem FindAlchemyTool(int templateIndex)
         {
             DaggerfallUnityItem bestTool = null;
+            int bestQuality = -1;
             List<DaggerfallUnityItem> validTools = localItems.SearchItems(ItemGroups.UselessItems1, templateIndex);
 
             foreach (DaggerfallUnityItem tool in validTools)
             {
-                // Once I implement different qualities of the tools, I'll fully implement this later to account for that and pick the best one.
-                bestTool = tool;
+                if (tool.message > bestQuality)
+                {
+                    bestQuality = tool.message;
+                    bestTool = tool;
+                }
             }
             return bestTool;
         }
@@ -1184,7 +1188,15 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
             float skillMod = AlchemySkill.Level * 0.02f;
 
-            int[] toolQualities = new int[4] {5, 5, 5, 5}; // 5/13/2026, 11:15 PM: Next time I work on this, make it so these are determined by the quality of tools currently in your inventory.
+            int[] toolQualities = new int[4] {0, 0, 0, 0};
+
+            for (int i = 0; i < Instance.alchemyToolSlots.Length; i++)
+            {
+                if (Instance.alchemyToolSlots[i] != null)
+                {
+                    toolQualities[i] = Instance.alchemyToolSlots[i].message + 1;
+                }
+            }
 
             for (int i = 0; i < Instance.alchemyToolSlotDisabledPanels.Length; i++)
             {

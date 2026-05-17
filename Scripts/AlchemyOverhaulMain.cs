@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Kirk.O
 // Created On: 	    1/13/2026, 10:00 PM
-// Last Edit:		5/13/2026, 11:15 PM
+// Last Edit:		5/17/2026, 12:40 AM
 // Version:			1.00
 // Special Thanks:  
 // Modifier:
@@ -29,11 +29,12 @@ namespace AlchemyOverhaul
         public static AlchemyOverhaulMain Instance;
         public static AlchemyOverhaulSaveData ModSaveData;
 
+        // 5-17-2026, next time I work on this, determine what I should work on, since I mostly got the basic alchemy tools implemented for the time being.
+
         // Next time I work on this, maybe see if I can see how I can improve the save data stuff, as well as make it less confusing, as
         // I'm not sure ChatGPT needed to do some of the stuff it did necessarily, but yeah I'm not certain. It does work now, but there
         // really seems to be alot of fluff, but I'll see. Maybe I will just continue working on other features instead, not certain.
-        // Will have to see what I feel like doing at whatever time. Suppose I could try implementing alchemy tools or something as well,
-        // probably just in logic at first and see what that all entails with the save data and such, will see obviously. 
+        // Will have to see what I feel like doing at whatever time.
 
         static Mod mod;
 
